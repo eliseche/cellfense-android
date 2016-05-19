@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/menu"
+    android:gravity="center"
+    android:paddingTop="90dip">
+	
+	<ImageView android:id="@+id/imageTop" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:background="@drawable/menu_separator_top"
+		android:layout_gravity="center" >
+	</ImageView>
+    <Button 
+		android:id="@+id/button_new_game"		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="@string/button_new_game"
+		android:textSize="20sp"
+		android:textColor="@color/menu"
+		android:layout_marginBottom="10dip" />
+	<Button 
+		android:id="@+id/button_unlocked"		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="@string/unlock_art"
+		android:textSize="20sp"
+		android:textColor="@color/menu"
+		android:layout_marginBottom="10dip"
+		android:visibility="invisible"/>
+	<Button 
+		android:id="@+id/button_options"		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="@string/button_options"
+		android:textSize="20sp"
+		android:textColor="@color/menu"
+		android:layout_marginBottom="10dip" />
+	<Button 
+		android:id="@+id/button_about"		
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content" 
+		android:text="@string/button_about"
+		android:textSize="20sp"
+		android:textColor="@color/menu" />	 
+	<ImageView android:id="@+id/imageBottom" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:background="@drawable/menu_separator_bottom"
+		android:layout_gravity="center" >
+	</ImageView>
+</LinearLayout>

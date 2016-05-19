@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/about">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    	android:orientation="vertical"    	 
+    	android:layout_height="fill_parent" 
+    	android:layout_width="fill_parent"
+    	android:gravity="center" >    	
+    	<ImageView android:id="@+id/imageTop" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:background="@drawable/menu_separator_top">
+		</ImageView>
+		<TextView android:id="@+id/developed"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:text="@string/Developed_by" />		
+		<TextView android:id="@+id/author01"        	
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Alejandro Eliseche" /> 	
+	   	<TextView android:id="@+id/author02"        	
+	   	    android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Luis Floreani" />
+	   	<TextView android:id="@+id/author03"        	
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Leonardo Greco" />
+		<TextView android:id="@+id/author04"        	
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Martin Gonzalez" 
+	           android:paddingBottom="10dip"/>
+	 	<TextView android:id="@+id/artBy"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:text="@string/Art_by" />		
+		<TextView android:id="@+id/author05"        	
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Ezequiel Salatino" />
+		<TextView android:id="@+id/author06"        	
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Alejandro Romero" 
+	           android:paddingBottom="10dip"/>	    	
+	    <TextView android:id="@+id/music"
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:text="@string/Music_by"/>	                                 	 
+		<ImageView android:id="@+id/imageBottom" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:background="@drawable/menu_separator_bottom" 
+			android:paddingBottom="10dip">
+		</ImageView>
+		<TextView android:id="@+id/version"        	
+	           android:layout_width="wrap_content"
+	           android:layout_height="wrap_content" 
+	           android:text="Cellfense v1.0" />	
+	</LinearLayout>	
+</LinearLayout>

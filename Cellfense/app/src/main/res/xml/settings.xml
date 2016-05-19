@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+	<PreferenceCategory android:title="@string/music">
+		<CheckBoxPreference android:key="music" android:title="@string/play_music"
+			android:summaryOn="@string/music_summary_on"
+			android:summaryOff="@string/music_summary_off"
+			android:defaultValue="true" />
+		<com.quitarts.cellfense.SeekBarPreference android:key="musicVolume" android:title="@string/music_volume"
+			android:dependency="music"
+			android:summary="@string/music_volume_summary" />						
+	</PreferenceCategory>
+	<PreferenceCategory android:title="@string/sound">
+		<CheckBoxPreference android:key="sound" android:title="@string/play_sound" 
+			android:summaryOn="@string/sound_summary_on"
+			android:summaryOff="@string/sound_summary_off"			 
+			android:defaultValue="true" />
+		<com.quitarts.cellfense.SeekBarPreference android:key="soundVolume" android:title="@string/sound_volume"
+			android:dependency="sound"
+			android:summary="@string/sound_volume_summary" />				
+	</PreferenceCategory>	
+</PreferenceScreen>
