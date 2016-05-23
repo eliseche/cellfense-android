@@ -9,6 +9,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 
+import com.quitarts.cellfense.ui.OptionsPreferenceActivity;
+
 public class SoundManager {	
 	private static HashMap<SoundType, Integer> soundPoolHash;		
 	private static SoundPool soundPool;
@@ -43,13 +45,13 @@ public class SoundManager {
 	}
 	
 	public static void playSound(SoundType soundType, boolean loopSound) {		
-		if(Options.getSound()) {
+		if(OptionsPreferenceActivity.getSound()) {
 			int loop = 0;
 			if(loopSound == true) {
 				loop = -1;			
 			}
 			
-			soundPool.play(soundPoolHash.get(soundType), Options.getSoundVolume() / 100.0f, Options.getSoundVolume() / 100.0f, 1, loop, 1.0f);			
+			soundPool.play(soundPoolHash.get(soundType), OptionsPreferenceActivity.getSoundVolume() / 100.0f, OptionsPreferenceActivity.getSoundVolume() / 100.0f, 1, loop, 1.0f);
 		}				
 	}	
 	
@@ -58,13 +60,13 @@ public class SoundManager {
 	}
 	
 	public static void playMusic(MusicType musicType, boolean loopMusic, boolean mute, boolean seekRandom) {				
-		if(Options.getMusic()) {			
+		if(OptionsPreferenceActivity.getMusic()) {
 			MediaPlayer mediaPlayer = mediaPlayerHash.get(musicType);			
 			if(mute) {
 				mediaPlayer.setVolume(0.0f, 0.0f);
 			}
 			else {
-				mediaPlayer.setVolume(Options.getMusicVolume() / 100.0f, Options.getMusicVolume() / 100.0f);				
+				mediaPlayer.setVolume(OptionsPreferenceActivity.getMusicVolume() / 100.0f, OptionsPreferenceActivity.getMusicVolume() / 100.0f);
 			}		
 						
 			if(seekRandom) {
@@ -88,7 +90,7 @@ public class SoundManager {
 	}
 	
 	public static void pauseMusics() {
-		if(Options.getMusic()) {
+		if(OptionsPreferenceActivity.getMusic()) {
 			Collection c = mediaPlayerHash.values();	    
 		    Iterator itr = c.iterator();
 		    while(itr.hasNext()) {
@@ -99,7 +101,7 @@ public class SoundManager {
 	}
 	
 	public static void resumeMusics() {
-		if(Options.getMusic()) {
+		if(OptionsPreferenceActivity.getMusic()) {
 			Collection c = mediaPlayerHash.values();	    
 		    Iterator itr = c.iterator();
 		    while(itr.hasNext()) {
@@ -110,14 +112,14 @@ public class SoundManager {
 	}
 	
 	public static void pauseMusicFade(MusicType musicType) {
-		if(Options.getMusic()) {
+		if(OptionsPreferenceActivity.getMusic()) {
 			final MediaPlayer mp = mediaPlayerHash.get(musicType);		
 			
 			musicThread = new Thread() {
 				@Override
 				public void run() {
 					int waited = 0;
-					float volDown = Options.getMusicVolume();				
+					float volDown = OptionsPreferenceActivity.getMusicVolume();
 					try {					
 						while(waited < 2500) {							
 							if(volDown >= 0) {	
@@ -140,7 +142,7 @@ public class SoundManager {
 	}	
 	
 	public static void resumeMusicFade(MusicType musicType) {
-		if(Options.getMusic()) {
+		if(OptionsPreferenceActivity.getMusic()) {
 			final MediaPlayer mp = mediaPlayerHash.get(musicType);		
 			
 			musicThread = new Thread() {			
@@ -150,7 +152,7 @@ public class SoundManager {
 					float volDown = 0;				
 					try {					
 						while(waited < 2500) {							
-							if(volDown <= Options.getMusicVolume()) {								
+							if(volDown <= OptionsPreferenceActivity.getMusicVolume()) {
 								mp.setVolume(volDown / 100.0f, volDown / 100.0f);																	
 							}									
 							else {

@@ -19,23 +19,27 @@
     <string name="about_music_by">Música por Taking Off</string>
     <string name="about_version">Cellfense v1.2</string>
     <!-- End About -->
+
+    <!-- Options -->
+    <string name="option_music">Música</string>
+    <string name="option_play_music">Reproducir música</string>
+    <string name="option_play_music_summary_on">Música activada</string>
+    <string name="option_play_music_summary_off">Música desactivada</string>
+    <string name="option_play_music_volume">Volumen de música</string>
+    <string name="option_play_music_volume_summary">Ajustar volumen de música</string>
+    <string name="option_sound">Efectos de sonido</string>
+    <string name="option_play_sound">Reproducir efectos de sonido</string>
+    <string name="option_play_sound_summary_on">Efectos de sonido activado</string>
+    <string name="option_play_sound_summary_off">Efectos de sonido desactivado</string>
+    <string name="option_play_sound_volume">Volumen de efectos</string>
+    <string name="option_play_sound_volume_summary">Ajustar volumen de efectos de sonido</string>
+    <!-- End Options -->
+
     <string name="app_name">Cellfense</string>
     <string name="button_new_game_static">Challenge Mode</string>
     <string name="button_tutorial">Tutorial</string>
     <string name="options_title">Opciones</string>
     <string name="about_title">Acerca De Cellfense</string>
-    <string name="music">Música</string>
-    <string name="play_music">Reproducir música</string>
-    <string name="music_summary_on">Música activada</string>
-    <string name="music_summary_off">Música desactivada</string>
-    <string name="music_volume">Volumen de música</string>
-    <string name="music_volume_summary">Ajustar volumen de música</string>
-    <string name="sound">Efectos de sonido</string>
-    <string name="play_sound">Reproducir efectos</string>
-    <string name="sound_summary_on">Efectos de sonido activado</string>
-    <string name="sound_summary_off">Efectos de sonido desactivado</string>
-    <string name="sound_volume">Volumen de efectos</string>
-    <string name="sound_volume_summary">Ajustar volumen de efectos de sonido</string>
     <string name="loading_message">Cargando. Por favor espere...</string>
     <string name="game_over_dialog_message">- GAME OVER -</string>
     <string name="gameover_maxcombo_dialog_message">Combo Maximo:</string>
