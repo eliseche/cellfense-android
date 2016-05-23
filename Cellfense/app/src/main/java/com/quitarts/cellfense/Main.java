@@ -10,6 +10,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 
+import com.quitarts.cellfense.ui.AboutActivity;
+
 public class Main extends Activity implements OnClickListener {   
 	private Typeface tf;
 	private SharedPreferences sp;
@@ -67,7 +69,7 @@ public class Main extends Activity implements OnClickListener {
 				startActivity(new Intent(Main.this, Options.class));			
 				break;
 			case R.id.button_about:
-				startActivity(new Intent(Main.this, About.class));
+				startActivity(new Intent(Main.this, AboutActivity.class));
 				break;
 			case R.id.button_unlocked:
 				startActivity(new Intent(getApplicationContext(), Tutorial.class));

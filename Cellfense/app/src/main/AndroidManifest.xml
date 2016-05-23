@@ -44,7 +44,7 @@
             android:label="@string/options_title"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".About"
+            android:name=".ui.AboutActivity"
             android:configChanges="orientation|keyboardHidden"
             android:label="@string/about_title"
             android:screenOrientation="portrait" />
