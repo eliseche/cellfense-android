@@ -1,4 +1,4 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.ui;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -30,7 +30,14 @@ import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
 
-public class LevelSelection extends Activity implements OnClickListener {
+import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.GameSurfaceView;
+import com.quitarts.cellfense.LevelDataSet;
+import com.quitarts.cellfense.LevelXmlHandler;
+import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.Utils;
+
+public class LevelActivity extends Activity implements OnClickListener {
 	private static final boolean TESTMODE = false;
 	private HashMap<Integer, ArrayList<String>> levels;
 	private SharedPreferences sp;
@@ -57,7 +64,7 @@ public class LevelSelection extends Activity implements OnClickListener {
 	
 	public void onClick(View v) {
 		if(v.getId() <= levelLimit){
-			gameSurfaceView = new GameSurfaceView(LevelSelection.this, this, v.getId());
+			gameSurfaceView = new GameSurfaceView(LevelActivity.this, this, v.getId());
 			setContentView(gameSurfaceView);
 		}						
 	}
@@ -66,7 +73,7 @@ public class LevelSelection extends Activity implements OnClickListener {
 		if(keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
 	    	if(gameSurfaceView != null && !gameSurfaceView.getGameControl().isGamePaused()){
 	    		gameSurfaceView.getGameControl().pause();
-	    		gameSurfaceView.showExitConfirmDialog(LevelSelection.this);
+	    		gameSurfaceView.showExitConfirmDialog(LevelActivity.this);
 	    		return true;
 	    	}	    		
 	    }	

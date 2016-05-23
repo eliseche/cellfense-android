@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Main -->
+    <string name="main_newgame">Juego Nuevo</string>
+    <string name="main_unlocked">Arte desbloqueado</string>
+    <string name="main_options">Opciones</string>
+    <string name="main_about">Acerca De</string>
+    <!-- End Main -->
+
     <!-- About -->
     <string name="about_developed_by">Diseñado y desarrollado por QuitArts</string>
     <string name="about_author01">Alejandro Eliseche</string>
@@ -13,12 +20,9 @@
     <string name="about_version">Cellfense v1.2</string>
     <!-- End About -->
     <string name="app_name">Cellfense</string>
-    <string name="button_new_game">Juego Nuevo</string>
     <string name="button_new_game_static">Challenge Mode</string>
     <string name="button_tutorial">Tutorial</string>
-    <string name="button_options">Opciones</string>
     <string name="options_title">Opciones</string>
-    <string name="button_about">Acerca De</string>
     <string name="about_title">Acerca De Cellfense</string>
     <string name="music">Música</string>
     <string name="play_music">Reproducir música</string>
@@ -48,7 +52,6 @@
     <string name="Play_Again_dialog_message">Jugar otra vez?</string>
     <string name="post_score">Post</string>
     <string name="Sell_Tower">Vender Torre</string>
-    <string name="unlock_art">Arte desbloqueado</string>
     <string name="tutorial_S1_SCREEN1">Observa la posicion de los enemigos</string>
     <string name="tutorial_S1_SCREEN1_2"> en esta pantalla.</string>
     <string name="tutorial_S1_SCREEN1_3">Toca la flecha para preparar tu defensa.</string>

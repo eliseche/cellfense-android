@@ -1,20 +1,22 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.ui;
 
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class Tutorial extends Activity {
+import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.Utils;
+
+public class ArtActivity extends Activity {
 	private LinearLayout ll;
 	private int unlockedLimit;
 	private int counter = 0;

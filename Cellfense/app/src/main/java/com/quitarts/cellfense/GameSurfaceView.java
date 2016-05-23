@@ -1,6 +1,7 @@
 package com.quitarts.cellfense;
 
 import com.quitarts.cellfense.SoundManager.MusicType;
+import com.quitarts.cellfense.ui.LevelActivity;
 
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -13,7 +14,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
-	private LevelSelection levelSelection;
+	private LevelActivity levelSelection;
 	private ProgressDialog loadingDialog;
 	private GameControl gameControl;
 	private Thread gameThread;	
@@ -74,7 +75,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         }	
     };
     
-    public GameSurfaceView(Context context, LevelSelection ls, int startLevel) {
+    public GameSurfaceView(Context context, LevelActivity ls, int startLevel) {
 		super(context);
 		levelSelection = ls;
 		showLoadingDialog(context);		
