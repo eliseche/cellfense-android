@@ -19,23 +19,27 @@
     <string name="about_music_by">Music by Taking Off</string>
     <string name="about_version">Cellfesne v1.2</string>
     <!-- End About -->
+
+    <!-- Options -->
+    <string name="option_music">Music</string>
+    <string name="option_play_music">Play background music</string>
+    <string name="option_play_music_summary_on">Background music on</string>
+    <string name="option_play_music_summary_off">Background music off</string>
+    <string name="option_play_music_volume">Music Volume</string>
+    <string name="option_play_music_volume_summary">Set the music volume</string>
+    <string name="option_sound">Sound Effects</string>
+    <string name="option_play_sound">Play sound effects</string>
+    <string name="option_play_sound_summary_on">Sounds on</string>
+    <string name="option_play_sound_summary_off">Sounds off</string>
+    <string name="option_play_sound_volume">Sound Volume</string>
+    <string name="option_play_sound_volume_summary">Set the sound volume</string>
+    <!-- End Options -->
+
     <string name="app_name">Cellfense</string>
     <string name="button_new_game_static">Challenge Mode</string>
     <string name="button_tutorial">Tutorial</string>
     <string name="options_title">Options</string>
     <string name="about_title">About Cellfense</string>
-    <string name="music">Music</string>
-    <string name="play_music">Play background music</string>
-    <string name="music_summary_on">Background music on</string>
-    <string name="music_summary_off">Background music off</string>
-    <string name="music_volume">Music Volume</string>
-    <string name="music_volume_summary">Set the music volume</string>
-    <string name="sound">Sound Effects</string>
-    <string name="play_sound">Play sound effects</string>
-    <string name="sound_summary_on">Sounds on</string>
-    <string name="sound_summary_off">Sounds off</string>
-    <string name="sound_volume">Sound Volume</string>
-    <string name="sound_volume_summary">Set the sound volume</string>
     <string name="loading_message">Loading. Please wait...</string>
     <string name="game_over_dialog_message">- GAME OVER -</string>
     <string name="gameover_maxcombo_dialog_message">MaxCombo:</string>

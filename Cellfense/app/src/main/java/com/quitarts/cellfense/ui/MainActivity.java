@@ -11,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 
 import com.quitarts.cellfense.ContextContainer;
-import com.quitarts.cellfense.Options;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
 
@@ -25,23 +24,23 @@ public class MainActivity extends Activity implements OnClickListener {
 
         setContentView(R.layout.activity_main);
 
-        initData();
+        init();
         initViews();
     }
 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_button_newgame:
-                startActivity(new Intent(this, LevelActivity.class));
+                startActivity(new Intent(MainActivity.this, LevelActivity.class));
                 break;
             case R.id.main_button_unlocked:
-                startActivity(new Intent(this, ArtActivity.class));
+                startActivity(new Intent(MainActivity.this, ArtActivity.class));
                 break;
             case R.id.main_button_options:
-                startActivity(new Intent(this, Options.class));
+                startActivity(new Intent(MainActivity.this, OptionsPreferenceActivity.class));
                 break;
             case R.id.main_button_about:
-                startActivity(new Intent(this, AboutActivity.class));
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
                 break;
             default:
                 break;
@@ -60,7 +59,7 @@ public class MainActivity extends Activity implements OnClickListener {
         super.onDestroy();
     }
 
-    private void initData() {
+    private void init() {
         // Set ApplicationContext
         ContextContainer.setApplicationContext(getApplicationContext());
         // Set canvas
