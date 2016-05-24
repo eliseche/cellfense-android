@@ -768,7 +768,7 @@ public class GameControl {
 	}
 	
 	public boolean showNewUnlockedArtMessage() {
-		Toast.makeText(ContextContainer.getApplicationContext(), ContextContainer.getApplicationContext().getResources().getText(R.string.unlock_art) , Toast.LENGTH_LONG).show();
+		Toast.makeText(ContextContainer.getApplicationContext(), ContextContainer.getApplicationContext().getResources().getText(R.string.main_unlocked) , Toast.LENGTH_LONG).show();
 		return true;
 	}
 	

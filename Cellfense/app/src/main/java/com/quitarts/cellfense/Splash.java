@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
+import com.quitarts.cellfense.ui.MainActivity;
+
 public class Splash extends Activity {
 	protected boolean active = true;
 	protected int splashTime = 2000;
@@ -28,7 +30,7 @@ public class Splash extends Activity {
 				}catch (InterruptedException e) {
 				}finally {
 					finish();
-					startActivity(new Intent(Splash.this, Main.class));					
+					startActivity(new Intent(Splash.this, MainActivity.class));
 				}				
 			}
 		};
