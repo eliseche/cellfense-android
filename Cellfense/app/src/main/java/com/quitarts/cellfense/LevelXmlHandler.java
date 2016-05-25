@@ -8,7 +8,7 @@ public class LevelXmlHandler extends DefaultHandler {
 	private boolean in_resources = false;
 	private boolean in_stringArray = false;
 	private boolean in_item= false;
-	private int wave = 1;
+	private int wave = 0;
 	//private LevelDataSet levelDataSet;
 
 	/*public LevelDataSet getParsedData() {

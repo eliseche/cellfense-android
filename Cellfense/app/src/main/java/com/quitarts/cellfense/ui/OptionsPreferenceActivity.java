@@ -8,6 +8,7 @@ import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 
 public class OptionsPreferenceActivity extends PreferenceActivity {
+    // TODO: total refactor, move to LinearLayout instead of PreferenceActivity (no flexifility)
     // Music vars
     private static final String OPT_MUSIC = "music";
     private static final boolean OPT_MUSIC_VALUE = true;
