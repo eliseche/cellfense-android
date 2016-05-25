@@ -180,7 +180,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private void stopThreadGameAndShowLevels() {
     	gameControl.stop();
     	destroyGameThread();    	
-    	levelSelection.setLevelSelectionContentView();
+    	//levelSelection.setLevelSelectionContentView();
 	}
 
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {

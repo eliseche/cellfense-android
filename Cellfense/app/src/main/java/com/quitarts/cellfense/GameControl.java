@@ -26,7 +26,7 @@ import android.view.SurfaceHolder;
 import android.widget.Toast;
 
 public class GameControl {
-	private final int TUTORIAL_LEVEL = 1;
+	private final int TUTORIAL_LEVEL = 0;
 	private final int TUTORIAL_TOWER_X = 4;
 	private final int TUTORIAL_TOWER_Y = 4;
 	private SurfaceHolder surfaceHolder;	
