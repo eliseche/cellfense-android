@@ -2,6 +2,8 @@ package com.quitarts.cellfense;
 import java.util.ArrayList;
 import com.quitarts.cellfense.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.Tower.TowerType;
+import com.quitarts.cellfense.game.LevelDataSet;
+
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
