@@ -9,11 +9,10 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
-import com.quitarts.cellfense.ContextContainer;
-import com.quitarts.cellfense.game.LevelDataSet;
-import com.quitarts.cellfense.helpers.ParserLevelXml;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.game.LevelDataSet;
+import com.quitarts.cellfense.helpers.ParserLevelXml;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
@@ -37,7 +36,6 @@ public class LevelActivity extends Activity implements AdapterView.OnItemClickLi
 
         init();
 
-        ContextContainer.setApplicationContext(this);
         Utils.setLevelUnlockedValues();
     }
 

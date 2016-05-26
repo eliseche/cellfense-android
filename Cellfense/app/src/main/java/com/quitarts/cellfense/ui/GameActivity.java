@@ -3,7 +3,6 @@ package com.quitarts.cellfense.ui;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.view.KeyEvent;
 
 import com.quitarts.cellfense.GameSurfaceView;

@@ -38,12 +38,12 @@ public class ArtActivity extends Activity {
     }
 
     private void init() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
         imageCounterLimit = Integer.valueOf(sharedPreferences.getString(Utils.UNLOCKED_ART, "0"));
     }
 
     private void initViews() {
-        Typeface typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/tseries_c.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/tseries_c.ttf");
 
         layoutContainer = (RelativeLayout) findViewById(R.id.art_layout_container);
 
@@ -68,7 +68,7 @@ public class ArtActivity extends Activity {
     }
 
     private void updateUi() {
-        layoutContainer.setBackgroundDrawable(getApplicationContext().getResources().getDrawable(idsImages[imageCounter]));
+        layoutContainer.setBackgroundDrawable(getResources().getDrawable(idsImages[imageCounter]));
         textViewImageCounter.setText(String.valueOf(imageCounter + 1) + "/" + String.valueOf(imageCounterLimit));
     }
 }
