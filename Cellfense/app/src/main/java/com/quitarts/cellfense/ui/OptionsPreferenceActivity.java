@@ -3,6 +3,7 @@ package com.quitarts.cellfense.ui;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
@@ -23,6 +24,9 @@ public class OptionsPreferenceActivity extends PreferenceActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        int paddingPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 98, getResources().getDisplayMetrics());
+        getListView().setPadding(0, paddingPixels, 0, 0);
 
         addPreferencesFromResource(R.xml.settings);
     }

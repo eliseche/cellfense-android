@@ -7,7 +7,7 @@
             android:summaryOff="@string/option_play_music_summary_off"
             android:summaryOn="@string/option_play_music_summary_on"
             android:title="@string/option_play_music" />
-        <com.quitarts.cellfense.SeekBarPreference
+        <com.quitarts.cellfense.helpers.SeekBarPreference
             android:dependency="music"
             android:key="musicVolume"
             android:summary="@string/option_play_music_volume_summary"
@@ -20,7 +20,7 @@
             android:summaryOff="@string/option_play_sound_summary_off"
             android:summaryOn="@string/option_play_sound_summary_on"
             android:title="@string/option_play_sound" />
-        <com.quitarts.cellfense.SeekBarPreference
+        <com.quitarts.cellfense.helpers.SeekBarPreference
             android:dependency="sound"
             android:key="soundVolume"
             android:summary="@string/option_play_sound_volume_summary"
