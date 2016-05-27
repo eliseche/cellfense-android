@@ -28,8 +28,9 @@ public class MainActivity extends Activity implements OnClickListener {
         initViews();
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.main_button_newgame:
                 startActivity(new Intent(MainActivity.this, LevelActivity.class));
                 break;

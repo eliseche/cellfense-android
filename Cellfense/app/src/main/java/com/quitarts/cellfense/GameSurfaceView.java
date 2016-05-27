@@ -1,9 +1,5 @@
 package com.quitarts.cellfense;
 
-import com.quitarts.cellfense.SoundManager.MusicType;
-import com.quitarts.cellfense.ui.GameActivity;
-import com.quitarts.cellfense.ui.LevelActivity;
-
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -13,6 +9,10 @@ import android.os.Message;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+
+import com.quitarts.cellfense.SoundManager.MusicType;
+import com.quitarts.cellfense.ui.GameActivity;
+import com.quitarts.cellfense.ui.LevelActivity;
 
 public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callback {
 	private GameActivity levelSelection;
@@ -49,7 +49,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         	else if(msg.what == Utils.TUTORIAL_S5_L1_POPUP_WIN){
         		gameControl.showTutorialLevel1Win();
         	}
-        	else if(msg.what == Utils.TUTORIAL_S11_L2_POPUP_LOSE){
+        	else if(msg.what == Utils.TUTORIAL_S11_L2_POPUP_LOSE)
+			{
         		gameControl.showTutorialLevel2Lose();
         	}
         	else if(msg.what == Utils.TUTORIAL_S11_L2_POPUP_WIN){
@@ -76,10 +77,10 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         }	
     };
     
-    public GameSurfaceView(Context context, GameActivity ls, int startLevel) {
-		super(context);
-		levelSelection = ls;
-		showLoadingDialog(context);		
+    public GameSurfaceView(GameActivity gameActivity, int startLevel) {
+		super(gameActivity);
+		this.levelSelection = gameActivity;
+		showLoadingDialog(gameActivity);
 		SurfaceHolder surfaceHolder = this.getHolder();
 		surfaceHolder.addCallback(this);
 		gameControl = new GameControl(surfaceHolder, gameSurfaceViewHandler, startLevel);
@@ -180,8 +181,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 	
     private void stopThreadGameAndShowLevels() {
     	gameControl.stop();
-    	destroyGameThread();    	
-    	//levelSelection.setLevelSelectionContentView();
+    	destroyGameThread();
+		levelSelection.finish();
 	}
 
 	public void surfaceChanged(SurfaceHolder arg0, int arg1, int arg2, int arg3) {

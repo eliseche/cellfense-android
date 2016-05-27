@@ -25,10 +25,9 @@ public class OptionsPreferenceActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        int paddingPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 98, getResources().getDisplayMetrics());
-        getListView().setPadding(0, paddingPixels, 0, 0);
-
         addPreferencesFromResource(R.xml.settings);
+
+        initViews();
     }
 
     public static boolean getMusic() {
@@ -45,5 +44,10 @@ public class OptionsPreferenceActivity extends PreferenceActivity {
 
     public static int getSoundVolume() {
         return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getInt(OPT_SOUND_VOLUME, OPT_SOUND_VOLUME_VALUE);
+    }
+
+    private void initViews() {
+        int paddingPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 98, getResources().getDisplayMetrics());
+        getListView().setPadding(0, paddingPixels, 0, 0);
     }
 }

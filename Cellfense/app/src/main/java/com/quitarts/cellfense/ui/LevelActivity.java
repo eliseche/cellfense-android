@@ -25,6 +25,7 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 public class LevelActivity extends Activity implements AdapterView.OnItemClickListener {
+    private LinkedHashMap<Integer, String> levelScore;
     private GridView gridView;
     private LevelAdapter levelAdapter;
 
@@ -35,8 +36,7 @@ public class LevelActivity extends Activity implements AdapterView.OnItemClickLi
         setContentView(R.layout.activity_level_selector);
 
         init();
-
-        Utils.setLevelUnlockedValues();
+        initViews();
     }
 
     @Override
@@ -49,14 +49,19 @@ public class LevelActivity extends Activity implements AdapterView.OnItemClickLi
     }
 
     private void init() {
+        // Instantiate unlocked art per level
+        Utils.setLevelUnlockedValues();
+        // Load levels from xml and fill data in LevelDataSet
         loadAndParseLevels();
         LinkedHashMap<Integer, ArrayList<String>> levels = LevelDataSet.getLevels();
         SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
 
-        LinkedHashMap<Integer, String> levelScore = new LinkedHashMap<>();
+        levelScore = new LinkedHashMap<>();
         for (Integer level : levels.keySet())
             levelScore.put(level, sharedPreferences.getString(level.toString(), ""));
+    }
 
+    private void initViews() {
         levelAdapter = new LevelAdapter(this, levelScore);
         gridView = (GridView) findViewById(R.id.level_selector_gridview);
         gridView.setOnItemClickListener(this);

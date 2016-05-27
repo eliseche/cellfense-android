@@ -17,7 +17,6 @@ public class ArtActivity extends Activity {
     private int imageCounterLimit;
     private RelativeLayout layoutContainer;
     private TextView textViewImageCounter;
-
     private int[] idsImages = {
             R.drawable.art01, R.drawable.art02, R.drawable.art03, R.drawable.art04,
             R.drawable.art05, R.drawable.art06, R.drawable.art07, R.drawable.art08,
@@ -34,7 +33,20 @@ public class ArtActivity extends Activity {
 
         init();
         initViews();
-        ;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (imageCounter < imageCounterLimit - 1)
+                imageCounter++;
+            else
+                imageCounter = 0;
+
+            updateUi();
+        }
+
+        return true;
     }
 
     private void init() {
@@ -51,20 +63,6 @@ public class ArtActivity extends Activity {
         textViewImageCounter.setTypeface(typeface);
 
         updateUi();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (imageCounter < imageCounterLimit - 1)
-                imageCounter++;
-            else
-                imageCounter = 0;
-
-            updateUi();
-        }
-
-        return true;
     }
 
     private void updateUi() {

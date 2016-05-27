@@ -24,18 +24,16 @@ public class GameActivity extends Activity {
     }
 
     private void init(int level) {
-        gameSurfaceView = new GameSurfaceView(GameActivity.this, this, level);
+        gameSurfaceView = new GameSurfaceView(this, level);
         setContentView(gameSurfaceView);
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        // TODO: Not checked in refactor
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
             if (gameSurfaceView != null && !gameSurfaceView.getGameControl().isGamePaused()) {
                 gameSurfaceView.getGameControl().pause();
-                gameSurfaceView.showExitConfirmDialog(GameActivity.this);
-                return true;
+                gameSurfaceView.showExitConfirmDialog(this);
             }
         }
 
