@@ -1,7 +1,7 @@
 package com.quitarts.cellfense;
 
 import java.util.ArrayList;
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 

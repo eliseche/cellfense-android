@@ -12,6 +12,9 @@ import com.quitarts.cellfense.R;
 
 import java.util.LinkedHashMap;
 
+/**
+ * GridView adapter
+ */
 public class LevelAdapter extends BaseAdapter {
     private Context context;
     private LinkedHashMap<Integer, String> levelScore;
@@ -71,11 +74,11 @@ public class LevelAdapter extends BaseAdapter {
         if (isUnlocked(level)) {
             viewHolder.level.setText(String.valueOf(level));
             viewHolder.score.setText(score);
-            view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.button));
+            view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.menu_button));
         } else {
             viewHolder.level.setText("");
             viewHolder.score.setText("");
-            view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.lock));
+            view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.menu_lock));
         }
 
         return view;

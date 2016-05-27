@@ -1,6 +1,7 @@
 package com.quitarts.cellfense;
 
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import android.graphics.drawable.BitmapDrawable;
 
 public class GraphicObject implements Cloneable {
@@ -11,7 +12,7 @@ public class GraphicObject implements Cloneable {
 	protected float yCenter = 0;
 	
 	public GraphicObject(DrawableType drawableType) {
-		bitmap = FactoryDrawable.createDrawable(drawableType);		
+		bitmap = FactoryDrawable.createDrawable(drawableType);
 	}
 	
 	public BitmapDrawable getGraphic() {

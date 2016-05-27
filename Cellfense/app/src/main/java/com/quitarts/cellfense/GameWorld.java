@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import com.quitarts.cellfense.Critter.CritterType;
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.GameControl.TutorialState;
 import com.quitarts.cellfense.SoundManager.SoundType;
 import com.quitarts.cellfense.Tower.TowerType;
@@ -48,8 +48,8 @@ public class GameWorld {
 		gameWorldWidth = screenWidth;
 		gameWorldHeight = screenHeight * 2;
 		background = BitmapFactory.decodeResource(ContextContainer
-				.getApplicationContext().getResources(), R.drawable.background);
-		lta = new Lta(DrawableType.LTA, 1, 15, 100);
+				.getApplicationContext().getResources(), R.drawable.screen_background);
+		lta = new Lta(DrawableType.GUN_LTA_POWER_SPRITE, 1, 15, 100);
 		lta.start();
 		generateMap();
 

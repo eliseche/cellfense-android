@@ -2,7 +2,8 @@
 package com.quitarts.cellfense;
 
 
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.SoundManager.MusicType;
 import com.quitarts.cellfense.SoundManager.SoundType;
 import com.quitarts.cellfense.Tower.TowerType;
@@ -148,8 +149,8 @@ public class GameControl {
 		config.wave = startLevel;
 		if(startLevel == TUTORIAL_LEVEL){
 			tutorialState = TutorialState.S1_L1_SCREEN1;
-			this.tutorialImage = FactoryDrawable.createDrawable(DrawableType.TUTORIAL_ENEMY);
-			this.tutorialImageFinger = FactoryDrawable.createDrawable(DrawableType.FINGER);
+			this.tutorialImage = FactoryDrawable.createDrawable(DrawableType.TUTORIAL_VS);
+			this.tutorialImageFinger = FactoryDrawable.createDrawable(DrawableType.TUTORIAL_FINGER);
 			this.yValueFingerImage = Utils.getCanvasHeight() - tutorialImageFinger.getMinimumHeight()/2;
 			this.yValueOriginalFingerImage = Utils.getCanvasHeight() - tutorialImageFinger.getMinimumHeight()/2;
 		}
@@ -464,7 +465,7 @@ public class GameControl {
 			 float velX = dx / dt;
 			 float velY = dy / dt;
 			 
-			 Bullet bullet = new Bullet(DrawableType.LTA_BULLET, 1, 15, 15);
+			 Bullet bullet = new Bullet(DrawableType.GUN_LTA_FIRE_SPRITE, 1, 15, 15);
 			 int angle = (int)Math.toDegrees(Math.atan2(dx, dy));
 			 if(angle < 0) {
 				 angle = 180 + Math.abs(angle);
@@ -782,7 +783,7 @@ public class GameControl {
     			);
     	builder.setCancelable(false);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.yes_dialog_message), 
+	    		ContextContainer.getApplicationContext().getResources().getText(R.string.yes),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				resetGame();
@@ -792,7 +793,7 @@ public class GameControl {
 	    			}
 	    		});
 	    builder.setNegativeButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.no_dialog_message),
+	    		ContextContainer.getApplicationContext().getResources().getText(R.string.no),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				gameSurfaceViewHandler.sendEmptyMessage(Utils.DIALOG_GAMEOVER_ID);
@@ -1044,7 +1045,7 @@ public class GameControl {
     			ContextContainer.getApplicationContext().getResources().getText(R.string.Play_Again_dialog_message)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.yes_dialog_message), 
+	    		ContextContainer.getApplicationContext().getResources().getText(R.string.yes),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				resetGame();
@@ -1054,7 +1055,7 @@ public class GameControl {
 	           }
 	       });
 	    builder.setNegativeButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.no_dialog_message),
+	    		ContextContainer.getApplicationContext().getResources().getText(R.string.no),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				gameSurfaceViewHandler.sendEmptyMessage(Utils.DIALOG_GAMEOVER_ID);

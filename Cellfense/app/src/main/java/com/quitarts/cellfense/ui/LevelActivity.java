@@ -24,6 +24,9 @@ import java.util.LinkedHashMap;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+/**
+ * Screen that display list of locked / unlocked levels
+ */
 public class LevelActivity extends Activity implements AdapterView.OnItemClickListener {
     private LinkedHashMap<Integer, String> levelScore;
     private GridView gridView;

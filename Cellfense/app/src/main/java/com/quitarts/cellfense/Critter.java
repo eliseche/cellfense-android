@@ -8,7 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.pathfinder.Path;
 import com.quitarts.pathfinder.Path.Step;
 
@@ -42,15 +42,15 @@ public class Critter extends MovableTileAnimation {
 		super(drawableType, tileRows, tileColumns, frameSkipDelay, true);		
 		energyBarPaint.setColor(Color.rgb(43, 180, 9));
 		
-		if(drawableType == DrawableType.SPIDER) {
+		if(drawableType == DrawableType.ENEMY_SPIDER_SPRITE) {
 			type = CritterType.SPIDER;
 			setAdvanceDirection(0, 1);
 		}
-		if(drawableType == DrawableType.CATERPILLAR) {
+		if(drawableType == DrawableType.ENEMY_CATERPILLAR_SPRITE) {
 			type = CritterType.CATERPILLAR;
 			setAdvanceDirection(0, 1);			
 		}			
-		if(drawableType == DrawableType.CHIP_INFECTED) {
+		if(drawableType == DrawableType.ENEMY_CHIP_INFECTED_SPRITE) {
 			type = CritterType.CHIP;
 			setAdvanceDirection(0, 1);
 		}

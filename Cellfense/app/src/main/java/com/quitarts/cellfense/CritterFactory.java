@@ -2,19 +2,19 @@ package com.quitarts.cellfense;
 
 import java.util.ArrayList;
 import com.quitarts.cellfense.Critter.CritterType;
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 
 public class CritterFactory {
 	Critter critter;
 	
 	public Critter createRandomLevel(DrawableType drawableType) {
-		if(drawableType == DrawableType.SPIDER) {
+		if(drawableType == DrawableType.ENEMY_SPIDER_SPRITE) {
 			critter = new Critter(drawableType, 1, 7, 20);			
 		}
-		if(drawableType == DrawableType.CATERPILLAR) {
+		if(drawableType == DrawableType.ENEMY_CATERPILLAR_SPRITE) {
 			critter = new Critter(drawableType, 1, 7, 55);		
 		}
-		if(drawableType == DrawableType.CHIP_INFECTED) {
+		if(drawableType == DrawableType.ENEMY_CHIP_INFECTED_SPRITE) {
 			critter = new Critter(drawableType, 1, 5, 20);		
 		}
 				
@@ -30,13 +30,13 @@ public class CritterFactory {
 		for(int i = 0; i < level.length; i += 3) {
 			int pos = i;
 			if(level[pos].equals("spider")) {
-				critter = new Critter(DrawableType.SPIDER, 1, 7, 50);					
+				critter = new Critter(DrawableType.ENEMY_SPIDER_SPRITE, 1, 7, 50);
 			}
 			else if(level[pos].equals("caterpillar")) {
-				critter = new Critter(DrawableType.CATERPILLAR, 1, 7, 55);					
+				critter = new Critter(DrawableType.ENEMY_CATERPILLAR_SPRITE, 1, 7, 55);
 			}
 			else if(level[pos].equals("chip")) {
-				critter = new Critter(DrawableType.CHIP_INFECTED, 1, 5, 30);					
+				critter = new Critter(DrawableType.ENEMY_CHIP_INFECTED_SPRITE, 1, 5, 30);
 			}			
 			
 			critter.setX(Utils.convertXGridToWorld(Integer.parseInt(level[++pos].toString()) - 1, critter.getWidth()));			
@@ -68,9 +68,9 @@ public class CritterFactory {
 	public static Critter createCritter(CritterType ct, int xGrid, int yGrid){
 		Critter cr1;
 		if(ct == CritterType.SPIDER)
-		 cr1 = new Critter(DrawableType.SPIDER, 1, 7, 50);
+		 cr1 = new Critter(DrawableType.ENEMY_SPIDER_SPRITE, 1, 7, 50);
 		else// (ct == CritterType.CATERPILLAR)
-			cr1 = new Critter(DrawableType.CATERPILLAR,  1, 7, 55);	
+			cr1 = new Critter(DrawableType.ENEMY_CATERPILLAR_SPRITE,  1, 7, 55);
 		cr1.setX(Utils.convertXGridToWorld(xGrid - 1, cr1.getWidth()));			
 		cr1.setY(Utils.convertYGridToWorld(yGrid - 1  + Utils.getGridYOffset(), cr1.getHeight()));
 		/*

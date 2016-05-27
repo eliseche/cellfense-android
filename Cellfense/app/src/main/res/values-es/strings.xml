@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Si</string>
+    <string name="no">No</string>
+
     <!-- Main -->
     <string name="main_newgame">Juego Nuevo</string>
     <string name="main_unlocked">Arte desbloqueado</string>
@@ -35,6 +38,10 @@
     <string name="option_play_sound_volume_summary">Ajustar volumen de efectos de sonido</string>
     <!-- End Options -->
 
+    <!-- Dialog -->
+    <string name="dialog_message_exit">Salir del juego?</string>
+    <!-- End Dialog -->
+
     <string name="app_name">Cellfense</string>
     <string name="button_new_game_static">Challenge Mode</string>
     <string name="button_tutorial">Tutorial</string>
@@ -44,9 +51,6 @@
     <string name="game_over_dialog_message">- GAME OVER -</string>
     <string name="gameover_maxcombo_dialog_message">Combo Maximo:</string>
     <string name="gameover_try_again_dialog_message">Intentar otra vez?</string>
-    <string name="yes_dialog_message">Si</string>
-    <string name="no_dialog_message">No</string>
-    <string name="exit_game_dialog_message">Salir del juego?</string>
     <string name="score">Puntos: </string>
     <string name="Wave">N</string>
     <string name="Block_Message">Bloqueado! </string>

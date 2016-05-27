@@ -10,7 +10,8 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 
 public class Tower extends TileAnimation {
 	private int gridPositionX;
@@ -46,16 +47,16 @@ public class Tower extends TileAnimation {
 	public Tower(DrawableType drawableType, int tileRows, int tileColumns, int frameSkipDelay, boolean repeat) {
 		super(drawableType, tileRows, tileColumns, frameSkipDelay, repeat);
 		
-		if(drawableType == DrawableType.TURRET_CAPACITOR) {
+		if(drawableType == DrawableType.GUN_TURRET_CAPACITOR_SPRITE) {
 			type = TowerType.TURRET_CAPACITOR;			
 		}
 		
-		if(drawableType == DrawableType.TURRET_TANK) {
+		if(drawableType == DrawableType.GUN_TURRET_TANK_SPRITE) {
 			type = TowerType.TURRET_TANK;
-			turretBase = FactoryDrawable.createDrawable(DrawableType.TURRET_TANK_BASE);			
+			turretBase = FactoryDrawable.createDrawable(DrawableType.GUN_TURRET_TANK_BASE);
 		}		
 		
-		if(drawableType == DrawableType.TURRET_BOMB) {
+		if(drawableType == DrawableType.GUN_TURRET_BOMB_SPRITE) {
 			type = TowerType.TURRET_BOMB;			
 		}
 		
@@ -155,7 +156,7 @@ public class Tower extends TileAnimation {
 				this.explosionPaint.setStrokeWidth(Utils.getCellSize()/2);
 			}
 			else{
-				setTileAnimation(DrawableType.BOMB_CRATER, 1, 1, 0, false);
+				setTileAnimation(DrawableType.GUN_TURRET_BOMB_CRATER, 1, 1, 0, false);
 				if(rangeShootPaint.getAlpha() > 0){
 					int alphaValue = rangeShootPaint.getAlpha() - 10;
 					if(alphaValue < 10)
@@ -209,7 +210,7 @@ public class Tower extends TileAnimation {
 		accumExplotsionTime = 0;
 		configRangeShootPaint();
 
-		setTileAnimation(DrawableType.TURRET_BOMB, 1, 8, 150, true);
+		setTileAnimation(DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
 		this.start();
 	}
 	

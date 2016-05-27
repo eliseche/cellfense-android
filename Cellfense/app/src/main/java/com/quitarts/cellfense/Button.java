@@ -1,6 +1,6 @@
 package com.quitarts.cellfense;
 
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 
 public class Button extends GraphicObject {		
 	public Button(DrawableType drawableType) {

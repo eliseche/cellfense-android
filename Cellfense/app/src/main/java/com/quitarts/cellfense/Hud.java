@@ -1,6 +1,8 @@
 package com.quitarts.cellfense;
 import java.util.ArrayList;
-import com.quitarts.cellfense.FactoryDrawable.DrawableType;
+
+import com.quitarts.cellfense.game.FactoryDrawable;
+import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.Tower.TowerType;
 import com.quitarts.cellfense.game.LevelDataSet;
 
@@ -13,8 +15,7 @@ import android.graphics.Paint.Style;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 
-public class Hud {	
-	private Drawable resourceBitmap;
+public class Hud {
 	private Paint resourceAndLifePaint;
 	private Paint scorePaint;
 	private Paint wavePaint;
@@ -121,21 +122,21 @@ public class Hud {
 		
 	public boolean hudClick(int x, int y) {		
 		if(buttonCapacitor.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR)) {			
-			Tower towerHud = new Tower(DrawableType.TURRET_CAPACITOR, 1, 7, 30, false); 			
+			Tower towerHud = new Tower(DrawableType.GUN_TURRET_CAPACITOR_SPRITE, 1, 7, 30, false);
 			towerHud.setX(x);
 			towerHud.setY(y);			
 			gameControl.addTower(towerHud);
 			return true;
 		}
 		else if(buttonTank.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(TowerType.TURRET_TANK)) {
-			Tower towerHud = new Tower(DrawableType.TURRET_TANK, 1, 7, 50, false); 			
+			Tower towerHud = new Tower(DrawableType.GUN_TURRET_TANK_SPRITE, 1, 7, 50, false);
 			towerHud.setX(x);
 			towerHud.setY(y);			
 			gameControl.addTower(towerHud);	
 			return true;
 		}
 		else if(buttonBomb.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(TowerType.TURRET_BOMB)) {
-			Tower towerHud = new Tower(DrawableType.TURRET_BOMB, 1, 8, 150, true);
+			Tower towerHud = new Tower(DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
 			towerHud.setX(x);
 			towerHud.setY(y);			
 			gameControl.addTower(towerHud);
@@ -241,11 +242,11 @@ public class Hud {
 	}
 	
 	public void pressOnNextWaveButton(){
-		buttonNextWave.setGraphicObject(DrawableType.NEXT_WAVE_OFF);
+		buttonNextWave.setGraphicObject(DrawableType.HUD_READY_PUSHED);
 	}
 	
 	public void pressOffNextWaveButton(){
-		buttonNextWave.setGraphicObject(DrawableType.NEXT_WAVE);
+		buttonNextWave.setGraphicObject(DrawableType.HUD_READY);
 	}	
 	
 	public void drawButtonNextWave(Canvas c,int dt) {	
@@ -293,14 +294,13 @@ public class Hud {
 	private void initialize() {
 		hud = FactoryDrawable.createDrawable(DrawableType.HUD);
 		hud.setAlpha(80);
-		buttonCapacitor = new Button(DrawableType.BUTTON_CAPACITOR);
+		buttonCapacitor = new Button(DrawableType.GUN_TURRET_CAPACITOR);
 		Utils.setCellSize(buttonCapacitor.getHeight());
-		buttonTank = new Button(DrawableType.BUTTON_TANK);
-		buttonBomb = new Button(DrawableType.BUTTON_BOMB);
-		buttonNextWave = new Button(DrawableType.NEXT_WAVE);
+		buttonTank = new Button(DrawableType.GUN_TURRET_TANK);
+		buttonBomb = new Button(DrawableType.GUN_TURRET_BOMB);
+		buttonNextWave = new Button(DrawableType.HUD_READY);
 		buttonNextWave.setX(buttonNextWave.getWidth());
-		buttonNextWave.setY(Utils.getCanvasHeight() - (buttonNextWave.getHeight()));		
-		resourceBitmap = FactoryDrawable.createDrawable(DrawableType.SCORE_HUD);	
+		buttonNextWave.setY(Utils.getCanvasHeight() - (buttonNextWave.getHeight()));
 		Typeface tf = Typeface.createFromAsset(ContextContainer.getApplicationContext().getAssets(),"fonts/Discognate.ttf");		
 		resourceAndLifePaint = new Paint();
 		resourceAndLifePaint.setTypeface(tf);
@@ -321,13 +321,13 @@ public class Hud {
 		turretPricePaint.setTextSize(10 * Utils.getScaleFactor());
 		turretPricePaint.setColor(Color.WHITE);
 		turretPricePaint.setAntiAlias(true);
-		buttonUpDownHudControl = new Button(DrawableType.BUTTON_ARROW_DOWN);
+		buttonUpDownHudControl = new Button(DrawableType.HUD_ARROW);
 		barsPaint = new Paint();       
 		barsPaint.setStyle(Style.FILL);
 		barsPaint.setARGB(255, 102, 102, 255);		
 		separatorPaint = new Paint();       
 		separatorPaint.setStyle(Style.FILL);
 		separatorPaint.setARGB(255, 128, 141, 128);		
-		battery = FactoryDrawable.createDrawable(DrawableType.BATTERY);		
+		battery = FactoryDrawable.createDrawable(DrawableType.HUD_BATTERY);
 	}
 }

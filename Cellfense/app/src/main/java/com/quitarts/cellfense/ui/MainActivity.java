@@ -14,6 +14,9 @@ import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
 
+/**
+ * Main menu screen
+ */
 public class MainActivity extends Activity implements OnClickListener {
     private SharedPreferences sharedPreferences;
     private Button buttonUnlockedArt;
@@ -95,7 +98,7 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     /**
-     * Check if the button (Unlocked Art) should be displayed.
+     * Check if the button (Unlocked Art) should be displayed
      */
     private void checkUnlockedArt() {
         // TODO: UNLOCKED_ART should by int value instead of string.

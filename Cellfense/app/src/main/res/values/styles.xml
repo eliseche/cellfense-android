@@ -2,7 +2,7 @@
 <resources>
 
     <style name="PreferenceTheme" parent="@android:style/Theme.NoTitleBar.Fullscreen">
-        <item name="android:windowBackground">@drawable/menu</item>
+        <item name="android:windowBackground">@drawable/screen_menu</item>
     </style>
 
 </resources>

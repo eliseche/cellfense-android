@@ -8,6 +8,9 @@ import android.util.TypedValue;
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 
+/**
+ * Preference screen
+ */
 public class OptionsPreferenceActivity extends PreferenceActivity {
     // TODO: total refactor, move to LinearLayout instead of PreferenceActivity (no flexifility)
     // Music vars

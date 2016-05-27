@@ -5,9 +5,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
 
-import com.quitarts.cellfense.GameSurfaceView;
 import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.game.GameSurfaceView;
 
+/**
+ * Main screen used for running the game
+ * Here it'll run the SurfaceView (GameSurfaceView)
+ */
 public class GameActivity extends Activity {
     private GameSurfaceView gameSurfaceView;
 
@@ -30,12 +34,8 @@ public class GameActivity extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
-            if (gameSurfaceView != null && !gameSurfaceView.getGameControl().isGamePaused()) {
-                gameSurfaceView.getGameControl().pause();
-                gameSurfaceView.showExitConfirmDialog(this);
-            }
-        }
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0)
+            gameSurfaceView.pauseGame();
 
         return super.onKeyDown(keyCode, event);
     }
@@ -52,6 +52,6 @@ public class GameActivity extends Activity {
         intent.putExtra(Intent.EXTRA_SUBJECT, subject);
         intent.putExtra(Intent.EXTRA_TEXT, text);
         startActivity(Intent.createChooser(intent, getResources().getText(R.string.post_score)));
-        gameSurfaceView.destroyGameThread();
+        gameSurfaceView.destroyGame();
     }
 }
