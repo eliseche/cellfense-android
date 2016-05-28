@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import com.quitarts.cellfense.R;
 
+/**
+ * About screen
+ */
 public class AboutActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,8 +23,8 @@ public class AboutActivity extends Activity {
         // Load custom font
         Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/apexnew_medium.ttf");
 
-        // Set font
         // TODO: We can get root view, get children views and set font
+        // Set font to views
         TextView textViewDevelopedBy = (TextView) findViewById(R.id.about_developed_by);
         textViewDevelopedBy.setTypeface(typeface);
 

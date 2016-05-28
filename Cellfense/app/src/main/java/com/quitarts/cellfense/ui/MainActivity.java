@@ -12,8 +12,11 @@ import android.widget.Button;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.torefactor.Utils;
 
+/**
+ * Main menu screen
+ */
 public class MainActivity extends Activity implements OnClickListener {
     private SharedPreferences sharedPreferences;
     private Button buttonUnlockedArt;
@@ -28,8 +31,9 @@ public class MainActivity extends Activity implements OnClickListener {
         initViews();
     }
 
-    public void onClick(View v) {
-        switch (v.getId()) {
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
             case R.id.main_button_newgame:
                 startActivity(new Intent(MainActivity.this, LevelActivity.class));
                 break;
@@ -61,7 +65,7 @@ public class MainActivity extends Activity implements OnClickListener {
 
     private void init() {
         // Set ApplicationContext
-        ContextContainer.setApplicationContext(getApplicationContext());
+        ContextContainer.setContext(getApplicationContext());
         // Set canvas
         Display display = getWindowManager().getDefaultDisplay();
         Utils.setCanvasSize(display.getWidth(), display.getHeight());
@@ -70,31 +74,31 @@ public class MainActivity extends Activity implements OnClickListener {
     }
 
     private void initViews() {
-        Typeface typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/apexnew_medium.ttf");
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/apexnew_medium.ttf");
 
         Button buttonNewGame = (Button) findViewById(R.id.main_button_newgame);
         buttonNewGame.setTypeface(typeface);
-        buttonNewGame.setBackgroundDrawable(this.getApplicationContext().getResources().getDrawable(R.drawable.button_menu));
+        buttonNewGame.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_menu));
         buttonNewGame.setOnClickListener(this);
 
         Button buttonOptions = (Button) findViewById(R.id.main_button_options);
         buttonOptions.setTypeface(typeface);
-        buttonOptions.setBackgroundDrawable(this.getApplicationContext().getResources().getDrawable(R.drawable.button_menu));
+        buttonOptions.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_menu));
         buttonOptions.setOnClickListener(this);
 
         Button buttonAbout = (Button) findViewById(R.id.main_button_about);
         buttonAbout.setTypeface(typeface);
-        buttonAbout.setBackgroundDrawable(this.getApplicationContext().getResources().getDrawable(R.drawable.button_menu));
+        buttonAbout.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_menu));
         buttonAbout.setOnClickListener(this);
 
         buttonUnlockedArt = (Button) findViewById(R.id.main_button_unlocked);
         buttonUnlockedArt.setTypeface(typeface);
-        buttonUnlockedArt.setBackgroundDrawable(this.getApplicationContext().getResources().getDrawable(R.drawable.button_menu));
+        buttonUnlockedArt.setBackgroundDrawable(getResources().getDrawable(R.drawable.button_menu));
         buttonUnlockedArt.setOnClickListener(this);
     }
 
     /**
-     * Check if the button (Unlocked Art) should be displayed.
+     * Check if the button (Unlocked Art) should be displayed
      */
     private void checkUnlockedArt() {
         // TODO: UNLOCKED_ART should by int value instead of string.

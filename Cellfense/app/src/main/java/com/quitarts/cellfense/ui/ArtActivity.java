@@ -10,20 +10,22 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.torefactor.Utils;
 
+/**
+ * Display art images based on unlocked levels. Trophy.
+ */
 public class ArtActivity extends Activity {
     private int imageCounter = 0;
     private int imageCounterLimit;
     private RelativeLayout layoutContainer;
     private TextView textViewImageCounter;
-
     private int[] idsImages = {
-            R.drawable.art01, R.drawable.art02, R.drawable.art03, R.drawable.art04,
-            R.drawable.art05, R.drawable.art06, R.drawable.art07, R.drawable.art08,
-            R.drawable.art09, R.drawable.art10, R.drawable.art11, R.drawable.art12,
-            R.drawable.art13, R.drawable.art14, R.drawable.art15, R.drawable.art16,
-            R.drawable.art17, R.drawable.art18, R.drawable.art19, R.drawable.art20
+            R.drawable.art_01, R.drawable.art_02, R.drawable.art_03, R.drawable.art_04,
+            R.drawable.art_05, R.drawable.art_06, R.drawable.art_07, R.drawable.art_08,
+            R.drawable.art_09, R.drawable.art_10, R.drawable.art_11, R.drawable.art_12,
+            R.drawable.art_13, R.drawable.art_14, R.drawable.art_15, R.drawable.art_16,
+            R.drawable.art_17, R.drawable.art_18, R.drawable.art_19, R.drawable.art_20
     };
 
     @Override
@@ -34,23 +36,6 @@ public class ArtActivity extends Activity {
 
         init();
         initViews();
-        ;
-    }
-
-    private void init() {
-        SharedPreferences sharedPreferences = getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
-        imageCounterLimit = Integer.valueOf(sharedPreferences.getString(Utils.UNLOCKED_ART, "0"));
-    }
-
-    private void initViews() {
-        Typeface typeface = Typeface.createFromAsset(getApplicationContext().getAssets(), "fonts/tseries_c.ttf");
-
-        layoutContainer = (RelativeLayout) findViewById(R.id.art_layout_container);
-
-        textViewImageCounter = (TextView) findViewById(R.id.art_textview_image_counter);
-        textViewImageCounter.setTypeface(typeface);
-
-        updateUi();
     }
 
     @Override
@@ -67,8 +52,24 @@ public class ArtActivity extends Activity {
         return true;
     }
 
+    private void init() {
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
+        imageCounterLimit = Integer.valueOf(sharedPreferences.getString(Utils.UNLOCKED_ART, "0"));
+    }
+
+    private void initViews() {
+        Typeface typeface = Typeface.createFromAsset(getAssets(), "fonts/tseries_c.ttf");
+
+        layoutContainer = (RelativeLayout) findViewById(R.id.art_layout_container);
+
+        textViewImageCounter = (TextView) findViewById(R.id.art_textview_image_counter);
+        textViewImageCounter.setTypeface(typeface);
+
+        updateUi();
+    }
+
     private void updateUi() {
-        layoutContainer.setBackgroundDrawable(getApplicationContext().getResources().getDrawable(idsImages[imageCounter]));
+        layoutContainer.setBackgroundDrawable(getResources().getDrawable(idsImages[imageCounter]));
         textViewImageCounter.setText(String.valueOf(imageCounter + 1) + "/" + String.valueOf(imageCounterLimit));
     }
 }

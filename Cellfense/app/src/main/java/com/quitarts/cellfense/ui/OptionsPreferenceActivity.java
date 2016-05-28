@@ -3,10 +3,14 @@ package com.quitarts.cellfense.ui;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceManager;
+import android.util.TypedValue;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 
+/**
+ * Preference screen
+ */
 public class OptionsPreferenceActivity extends PreferenceActivity {
     // TODO: total refactor, move to LinearLayout instead of PreferenceActivity (no flexifility)
     // Music vars
@@ -25,21 +29,28 @@ public class OptionsPreferenceActivity extends PreferenceActivity {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.settings);
+
+        initViews();
     }
 
     public static boolean getMusic() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getBoolean(OPT_MUSIC, OPT_MUSIC_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getBoolean(OPT_MUSIC, OPT_MUSIC_VALUE);
     }
 
     public static int getMusicVolume() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getInt(OPT_MUSIC_VOLUME, OPT_MUSIC_VOLUME_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getInt(OPT_MUSIC_VOLUME, OPT_MUSIC_VOLUME_VALUE);
     }
 
     public static boolean getSound() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getBoolean(OPT_SOUND, OPT_SOUND_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getBoolean(OPT_SOUND, OPT_SOUND_VALUE);
     }
 
     public static int getSoundVolume() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getInt(OPT_SOUND_VOLUME, OPT_SOUND_VOLUME_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getInt(OPT_SOUND_VOLUME, OPT_SOUND_VOLUME_VALUE);
+    }
+
+    private void initViews() {
+        int paddingPixels = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 98, getResources().getDisplayMetrics());
+        getListView().setPadding(0, paddingPixels, 0, 0);
     }
 }

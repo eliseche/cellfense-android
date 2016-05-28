@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
     <!-- Main -->
     <string name="main_newgame">New Game</string>
     <string name="main_unlocked">Unlocked Art</string>
@@ -17,7 +20,7 @@
     <string name="about_author05">Ezequiel Salatino</string>
     <string name="about_author06">Alejandro Romero</string>
     <string name="about_music_by">Music by Taking Off</string>
-    <string name="about_version">Cellfesne v1.2</string>
+    <string name="about_version">Cellfense v1.2</string>
     <!-- End About -->
 
     <!-- Options -->
@@ -35,6 +38,10 @@
     <string name="option_play_sound_volume_summary">Set the sound volume</string>
     <!-- End Options -->
 
+    <!-- Dialog -->
+    <string name="dialog_message_exit">Exit Game?</string>
+    <!-- End Dialog -->
+
     <string name="app_name">Cellfense</string>
     <string name="button_new_game_static">Challenge Mode</string>
     <string name="button_tutorial">Tutorial</string>
@@ -44,9 +51,6 @@
     <string name="game_over_dialog_message">- GAME OVER -</string>
     <string name="gameover_maxcombo_dialog_message">MaxCombo:</string>
     <string name="gameover_try_again_dialog_message">Try it Again?</string>
-    <string name="yes_dialog_message">Yes</string>
-    <string name="no_dialog_message">No</string>
-    <string name="exit_game_dialog_message">Exit Game?</string>
     <string name="score">Score: </string>
     <string name="Wave">L</string>
     <string name="Block_Message">Blocking!</string>

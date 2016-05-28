@@ -2,17 +2,14 @@ package com.quitarts.cellfense;
 
 import android.content.Context;
 
-public class ContextContainer { 
+public class ContextContainer {
     private static Context context;
 
-    private ContextContainer() {
+    public static void setContext(Context context) {
+        ContextContainer.context = context;
     }
 
-    public static synchronized void setApplicationContext(Context context) {
-    	ContextContainer.context = context;   
-    }
-
-    public static synchronized Context getApplicationContext() {
-        return context;
+    public static synchronized Context getContext() {
+        return ContextContainer.context;
     }
 }

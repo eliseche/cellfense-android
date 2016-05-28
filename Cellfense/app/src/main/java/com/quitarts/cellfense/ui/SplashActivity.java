@@ -23,6 +23,14 @@ public class SplashActivity extends Activity {
         init();
     }
 
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() == MotionEvent.ACTION_DOWN)
+            active = false;
+
+        return true;
+    }
+
     private void init() {
         Thread threadSplash = new Thread() {
             @Override
@@ -42,13 +50,5 @@ public class SplashActivity extends Activity {
             }
         };
         threadSplash.start();
-    }
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == MotionEvent.ACTION_DOWN)
-            active = false;
-
-        return true;
     }
 }
