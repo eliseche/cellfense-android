@@ -11,10 +11,10 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.quitarts.cellfense.GameControl;
+import com.quitarts.cellfense.torefactor.GameControl;
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.SoundManager;
-import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.torefactor.SoundManager;
+import com.quitarts.cellfense.torefactor.Utils;
 import com.quitarts.cellfense.ui.GameActivity;
 
 /**
@@ -159,7 +159,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                  * Podria ser la siguiente linea (pasando el metodo a esta clase) pero
                  * debido a que hace modificaciones al gameControl y utiliza informacion del gameWorld
                  * por comodidad se lo deja asi.
-                 * showLevelWinDialog(ContextContainer.getApplicationContext());
+                 * showLevelWinDialog(ContextContainer.getContext());
                  */
             } else if (msg.what == Utils.DIALOG_GAMEOVER_ID) {
                 destroyGame();

@@ -1,12 +1,12 @@
 
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 
 
+import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
-import com.quitarts.cellfense.SoundManager.MusicType;
-import com.quitarts.cellfense.SoundManager.SoundType;
-import com.quitarts.cellfense.Tower.TowerType;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -103,9 +103,9 @@ public class GameControl {
 	}
 	
 	public GameControl(SurfaceHolder pSurfaceHolder, Handler handler, int startLevel) {		
-		sharedPreferences = ContextContainer.getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
-		Typeface tf = Typeface.createFromAsset(ContextContainer.getApplicationContext().getAssets(),"fonts/Discognate.ttf");
-		Typeface tf2 = Typeface.createFromAsset(ContextContainer.getApplicationContext().getAssets(),"fonts/apexnew_medium.ttf");
+		sharedPreferences = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
+		Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(),"fonts/Discognate.ttf");
+		Typeface tf2 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(),"fonts/apexnew_medium.ttf");
 
 		gameSurfaceViewHandler = handler;
 		surfaceHolder = pSurfaceHolder;			
@@ -397,11 +397,11 @@ public class GameControl {
 									addTower.getGraphic().mutate().setColorFilter(null);
 									config.resources -= addTower.getPrice();
 								}
-								if(addTower.getType() == TowerType.TURRET_CAPACITOR) 
-		                    		SoundManager.playSound(SoundType.LOCK1, false);
+								if(addTower.getType() == Tower.TowerType.TURRET_CAPACITOR)
+		                    		SoundManager.playSound(SoundManager.SoundType.LOCK1, false);
 		                    
-		                    	else if(addTower.getType() == TowerType.TURRET_TANK) 
-		                    		SoundManager.playSound(SoundType.LOCK2, false);
+		                    	else if(addTower.getType() == Tower.TowerType.TURRET_TANK)
+		                    		SoundManager.playSound(SoundManager.SoundType.LOCK2, false);
 								
 							}							
 						}						
@@ -481,7 +481,7 @@ public class GameControl {
 			 bullet.setSpeedPixel(velX, velY);
 			 
 			 gameWorld.addBulletToWorld((Bullet)bullet.Clone());
-			 SoundManager.playSound(SoundType.FIREBALL, false);
+			 SoundManager.playSound(SoundManager.SoundType.FIREBALL, false);
 			 config.resources -= GameRules.getLTAPrice();
 		 }
 		 ltaStartShoot = false;
@@ -490,7 +490,7 @@ public class GameControl {
 	public void update(int dt) {
 		
 		if(enemyState == EnemyState.UNAVAILABLE) {
-			SoundManager.resumeMusicFade(MusicType.STRATEGY);			
+			SoundManager.resumeMusicFade(SoundManager.MusicType.STRATEGY);
 			resetGame();
 			if(config.wave != TUTORIAL_LEVEL)
 				gameWorld.createNewHorde();			
@@ -514,8 +514,8 @@ public class GameControl {
 				enemyState = EnemyState.MOVING;								
 				gameState = GameState.SCREEN2;
 				gameWorld.slideToBottomScreen();
-				SoundManager.pauseMusicFade(MusicType.STRATEGY);
-				SoundManager.resumeMusicFade(MusicType.ACTION);
+				SoundManager.pauseMusicFade(SoundManager.MusicType.STRATEGY);
+				SoundManager.resumeMusicFade(SoundManager.MusicType.ACTION);
 			}
 			else 				
 				gameWorld.resetTowerAngle();			
@@ -532,7 +532,7 @@ public class GameControl {
 					gameWorld.slideToTopScreen(10);		
 					addScore(bonusTime + ((config.resources /5)*150));
 					accumWaveKillDt = 0;					
-					ContextContainer.getApplicationContext();
+					ContextContainer.getContext();
 					saveScoreLevel();
 					pause();
 					if(config.wave == TUTORIAL_LEVEL && tutorialState == TutorialState.S4_L1_PLAY_PRESSED){
@@ -624,8 +624,8 @@ public class GameControl {
 		else if(tutorialState == TutorialState.S7_L2_SCREEN1_NEW_ORDE){
 			gameWorld.setTutorialWordState(tutorialState);
 			gameWorld.clearTowers();
-			setResources(50 - gameWorld.getTowers()*GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR));
-			hud.addTowerVisibleTowerType(TowerType.TURRET_TANK);
+			setResources(50 - gameWorld.getTowers()*GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_CAPACITOR));
+			hud.addTowerVisibleTowerType(Tower.TowerType.TURRET_TANK);
 			tutorialState = TutorialState.S8_L2_BEFORE_NEW_ORDE;
 		}
 		else if(tutorialState == TutorialState.S12_L3_SCREEN1){
@@ -636,13 +636,13 @@ public class GameControl {
 		else if(tutorialState == TutorialState.S13_L3_SCREEN1_NEW_ORDE){
 			gameWorld.setTutorialWordState(tutorialState);
 			gameWorld.clearTowers();
-			setResources(45- gameWorld.getTowers()*GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR));			
+			setResources(45- gameWorld.getTowers()*GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_CAPACITOR));
 			tutorialState = TutorialState.S14_L3_BEFORE_NEW_ORDE;
 		}
 		else if(tutorialState == TutorialState.S21_L4_SCREEN1_NEW_ORDE){
 			gameWorld.setTutorialWordState(tutorialState);
 			gameWorld.clearTowers();
-			setResources(45- gameWorld.getTowers()*GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR));			
+			setResources(45- gameWorld.getTowers()*GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_CAPACITOR));
 			tutorialState = TutorialState.S22_L4_BEFORE_NEW_ORDE;
 			gameWorld.ltaOff();
 		}
@@ -662,7 +662,7 @@ public class GameControl {
 		}
 	}
 	private void saveScoreLevel() {
-		SharedPreferences sp = ContextContainer.getApplicationContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
+		SharedPreferences sp = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
 		String scoreSaved = sp.getString(String.valueOf(config.wave), "");
 		SharedPreferences.Editor editor = sharedPreferences.edit();
 		if(scoreSaved == "" || Integer.valueOf(scoreSaved) < config.score){			
@@ -769,31 +769,31 @@ public class GameControl {
 	}
 	
 	public boolean showNewUnlockedArtMessage() {
-		Toast.makeText(ContextContainer.getApplicationContext(), ContextContainer.getApplicationContext().getResources().getText(R.string.main_unlocked) , Toast.LENGTH_LONG).show();
+		Toast.makeText(ContextContainer.getContext(), ContextContainer.getContext().getResources().getText(R.string.main_unlocked) , Toast.LENGTH_LONG).show();
 		return true;
 	}
 	
 	public boolean showGameOverDialog(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.game_over_dialog_message)
+    			ContextContainer.getContext().getResources().getText(R.string.game_over_dialog_message)
     			+ "\n" +
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.gameover_try_again_dialog_message)
+    			ContextContainer.getContext().getResources().getText(R.string.gameover_try_again_dialog_message)
     			);
     	builder.setCancelable(false);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.yes),
+	    		ContextContainer.getContext().getResources().getText(R.string.yes),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				
 	    			}
 	    		});
 	    builder.setNegativeButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.no),
+	    		ContextContainer.getContext().getResources().getText(R.string.no),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				gameSurfaceViewHandler.sendEmptyMessage(Utils.DIALOG_GAMEOVER_ID);
@@ -806,12 +806,12 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialOVerDialog(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.game_over_dialog_message));
+    			ContextContainer.getContext().getResources().getText(R.string.game_over_dialog_message));
  	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok),
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				gameSurfaceViewHandler.sendEmptyMessage(Utils.DIALOG_GAMEOVER_ID);
@@ -825,12 +825,12 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialEndPopUp(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_S27_L4_END_TUTORIAL));
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_S27_L4_END_TUTORIAL));
  	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok),
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				gameSurfaceViewHandler.sendEmptyMessage(Utils.DIALOG_GAMEOVER_ID);
@@ -844,13 +844,13 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialWrongPlaceTower(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
     	builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_try_again_message_1)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_try_again_message_1)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {	    				
 	    				resume();
@@ -858,8 +858,8 @@ public class GameControl {
 	    				 * if the user tryed to move the existing tower
 	    				 */
 	    				if(config.resources == 0)
-	    					setResources(GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR));
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    					setResources(GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_CAPACITOR));
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    			}
 	    		});
 	    
@@ -869,19 +869,19 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialLevel2Lose(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_L2_tip)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_L2_tip)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S7_L2_SCREEN1_NEW_ORDE; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -892,19 +892,19 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialLevel3Lose(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_L2_tip)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_L2_tip)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S13_L3_SCREEN1_NEW_ORDE; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -916,19 +916,19 @@ public class GameControl {
 	
 	
 	public boolean showTutorialLevel1Win(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_s5_popup_win)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_s5_popup_win)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S5_L2_POPUP_TOWER_POWER; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -940,21 +940,21 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialLevel2Win(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
-		builder.setTitle(ContextContainer.getApplicationContext().getResources().getText(R.string.congratulations));
+		builder.setTitle(ContextContainer.getContext().getResources().getText(R.string.congratulations));
 		
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_L2_next_Level)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_L2_next_Level)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S12_L3_SCREEN1; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -965,19 +965,19 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialLevel3Win(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_S19_L3_POPUP_WIN)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_S19_L3_POPUP_WIN)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S20_L4_SCREEN1; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -988,19 +988,19 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialLevel4Win(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_S19_L3_POPUP_WIN)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_S19_L3_POPUP_WIN)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S27_L4_END_TUTORIAL; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -1011,19 +1011,19 @@ public class GameControl {
 	}
 	
 	public boolean showTutorialLevel4Lose(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.tutorial_L2_tip)
+    			ContextContainer.getContext().getResources().getText(R.string.tutorial_L2_tip)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.Ok), 
+	    		ContextContainer.getContext().getResources().getText(R.string.Ok),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				tutorialState = TutorialState.S21_L4_SCREEN1_NEW_ORDE; 	    				
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	    			}
 	    		});
@@ -1034,28 +1034,28 @@ public class GameControl {
 	}
 	
 	public boolean showLevelWinDialog(){
-		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getApplicationContext());
+		AlertDialog.Builder builder = new AlertDialog.Builder(ContextContainer.getContext());
 		builder.setCancelable(false);
 		builder.setMessage(
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.Level_complete_dialog_message)
+    			ContextContainer.getContext().getResources().getText(R.string.Level_complete_dialog_message)
     			+ "\n" +
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.score)
+    			ContextContainer.getContext().getResources().getText(R.string.score)
     			+ String.valueOf(config.score) 
     			+ "\n" +
-    			ContextContainer.getApplicationContext().getResources().getText(R.string.Play_Again_dialog_message)
+    			ContextContainer.getContext().getResources().getText(R.string.Play_Again_dialog_message)
     			);
 	    builder.setPositiveButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.yes),
+	    		ContextContainer.getContext().getResources().getText(R.string.yes),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				resetGame();
 	    				resume();
-	    				SoundManager.pauseMusicFade(MusicType.ACTION);
+	    				SoundManager.pauseMusicFade(SoundManager.MusicType.ACTION);
 	    				isNativePopUpShow = false;
 	           }
 	       });
 	    builder.setNegativeButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.no),
+	    		ContextContainer.getContext().getResources().getText(R.string.no),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				gameSurfaceViewHandler.sendEmptyMessage(Utils.DIALOG_GAMEOVER_ID);
@@ -1063,7 +1063,7 @@ public class GameControl {
 	            }
 	       });
 	    builder.setNeutralButton(
-	    		ContextContainer.getApplicationContext().getResources().getText(R.string.post_score),
+	    		ContextContainer.getContext().getResources().getText(R.string.post_score),
 	    		new DialogInterface.OnClickListener() {
 	    			public void onClick(DialogInterface dialog, int id) {
 	    				Message msg = Message.obtain();
@@ -1092,7 +1092,7 @@ public class GameControl {
 	
 	private void drawSellIcon(Canvas c) {
 		if(sellTower) {
-			String sellMessage = ContextContainer.getApplicationContext().getString(R.string.Sell_Tower) + "?";
+			String sellMessage = ContextContainer.getContext().getString(R.string.Sell_Tower) + "?";
 			c.drawText(sellMessage, Utils.getCanvasWidth() / 2 - sellTowerPaint.measureText(sellMessage) / 2, Utils.getCanvasHeight() / 2 - sellTowerPaint.getTextSize(), sellTowerPaint);
 		}
 	}
@@ -1106,7 +1106,7 @@ public class GameControl {
 				else
 					blockMessagePaint.setColor(Color.WHITE);
 				
-				String blockMessage = ContextContainer.getApplicationContext().getString(R.string.Block_Message);
+				String blockMessage = ContextContainer.getContext().getString(R.string.Block_Message);
 				c.drawText(blockMessage, 
 						   Utils.getCanvasWidth() / 2 - blockMessagePaint.measureText(blockMessage) / 2,
 						   (Utils.getCanvasWidth() / 2) - blockMessagePaint.getTextSize(), 
@@ -1125,7 +1125,7 @@ public class GameControl {
 				c.drawCircle(addTower.getXcenter(), addTower.getYcenter(), addTower.getRange(), addTower.getRangeShootPaint());
 				
 				addTower.getGraphic().setBounds(addTower.getFixXPositionElement(), addTower.getFixYPositionElement(), addTower.getFixXPositionElement() + addTower.getWidth(), addTower.getFixYPositionElement() + addTower.getHeight());				
-				if(addTower.getType() == TowerType.TURRET_TANK) {
+				if(addTower.getType() == Tower.TowerType.TURRET_TANK) {
 					BitmapDrawable turretTankBase = addTower.getTurretBase();
 					turretTankBase.setBounds(addTower.getGraphic().getBounds());										
 					turretTankBase.draw(c);					
@@ -1137,9 +1137,9 @@ public class GameControl {
 	
 	private void drawTutorialInfo(Canvas c, int dt){
 		if(tutorialState == TutorialState.S1_L1_SCREEN1){
-			drawTutorialText(c,ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S1_SCREEN1),	3);
-			drawTutorialText(c,ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S1_SCREEN1_2), 2);
-			drawTutorialText(c,ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S1_SCREEN1_3), 1);
+			drawTutorialText(c,ContextContainer.getContext().getResources().getString(R.string.tutorial_S1_SCREEN1),	3);
+			drawTutorialText(c,ContextContainer.getContext().getResources().getString(R.string.tutorial_S1_SCREEN1_2), 2);
+			drawTutorialText(c,ContextContainer.getContext().getResources().getString(R.string.tutorial_S1_SCREEN1_3), 1);
 		}		
 		else if(tutorialState == TutorialState.S2_L1_SCREEN2 && gameState == GameState.SCREEN2){			
 			/*
@@ -1158,17 +1158,17 @@ public class GameControl {
 					right + Utils.getCellSize()/2,
 					top + (int)Utils.getCellSize(),
 					tutorialRectPaint);		
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S2_SCREEN2),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S2_SCREEN2_2),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S2_SCREEN2),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S2_SCREEN2_2),1);
 			/*
 			 * Tower cost enerty position text
 			 */
 			int arrowWidth = (int)Utils.getCellSize()/2;
 			int arrayHeight = (int)(Utils.getCellSize()*0.2);
-			int xStartTextValue = (int) (Utils.getCanvasWidth()/2 - tutorialMessagesPaint.measureText(ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S2_SCREEN2_3))/2 - arrowWidth);
-			int xStartArrowEnergyValue = (int) (xStartTextValue + tutorialMessagesPaint.measureText(ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S2_SCREEN2_3) + 1));
+			int xStartTextValue = (int) (Utils.getCanvasWidth()/2 - tutorialMessagesPaint.measureText(ContextContainer.getContext().getResources().getString(R.string.tutorial_S2_SCREEN2_3))/2 - arrowWidth);
+			int xStartArrowEnergyValue = (int) (xStartTextValue + tutorialMessagesPaint.measureText(ContextContainer.getContext().getResources().getString(R.string.tutorial_S2_SCREEN2_3) + 1));
 			int xEndArrowX = xStartArrowEnergyValue + arrowWidth;
-			c.drawText(ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S2_SCREEN2_3),
+			c.drawText(ContextContainer.getContext().getResources().getString(R.string.tutorial_S2_SCREEN2_3),
 					xStartTextValue,
 					tutorialMessagesPaint.getTextSize(),
 					tutorialMessagesPaint);
@@ -1193,11 +1193,11 @@ public class GameControl {
 			gameWorld.ltaOff();
 		}
 		else if(tutorialState == TutorialState.S3_L1_TOWER_DRAGED){
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S3_TOWER_DRAGED),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S3_TOWER_DRAGED_2),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S3_TOWER_DRAGED),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S3_TOWER_DRAGED_2),1);
 		}	
 		else if(tutorialState == TutorialState.S4_L1_PLAY_PRESSED){
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S4_PLAY_PRESSED),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S4_PLAY_PRESSED),1);
 		}
 		else if(tutorialState == TutorialState.S5_POP_UP_WIN){
 			isNativePopUpShow = true;
@@ -1213,22 +1213,22 @@ public class GameControl {
 					xValue + tutorialImage.getMinimumWidth(),
 					yValue + tutorialImage.getMinimumHeight());
 			tutorialImage.draw(c);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_pop_up_vs),5);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_pop_up_vs_1),4);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_pop_up_vs_2),3);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_pop_up_vs_3),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_pop_up_vs_4),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_pop_up_vs),5);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_pop_up_vs_1),4);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_pop_up_vs_2),3);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_pop_up_vs_3),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_pop_up_vs_4),1);
 		}
 		else if(tutorialState == TutorialState.S9_2_L2_TOWER_DRAGED && gameState == GameState.SCREEN2){	
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_L2_tower_draged),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_L2_tower_draged_1),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_L2_tower_draged),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_L2_tower_draged_1),1);
 		}
 		else if(tutorialState == TutorialState.S15_L3_SCREEN2){
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S15_L3_SCREEN2),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S15_L3_SCREEN2),1);
 		}
 		else if(tutorialState == TutorialState.S16_L3_PLAY_PRESSED){
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S16_L3_PLAY_PRESSED),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S16_L3_PLAY_PRESSED_2),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S16_L3_PLAY_PRESSED),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S16_L3_PLAY_PRESSED_2),1);
 		}
 		else if(tutorialState == TutorialState.S11_L2_POPUP_LOSE){
 			gameSurfaceViewHandler.sendEmptyMessage(Utils.TUTORIAL_S11_L2_POPUP_LOSE);			
@@ -1240,9 +1240,9 @@ public class GameControl {
 		}
 		else if(tutorialState == TutorialState.S17_L3_GAME_PAUSE){
 			int speedAnimationFactor = 6;
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S17_L3_GAME_PAUSE),3);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S17_L3_GAME_PAUSE_2),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S17_L3_GAME_PAUSE_3),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S17_L3_GAME_PAUSE),3);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S17_L3_GAME_PAUSE_2),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S17_L3_GAME_PAUSE_3),1);
 			xValueFingerImage = (int) (gameWorld.getLTAxCenter() - tutorialImageFinger.getMinimumHeight()/2);
 		
 			tutorialImageFinger.setBounds(xValueFingerImage - tutotialFingerImageZoomFactor,
@@ -1274,9 +1274,9 @@ public class GameControl {
 		}
 		else if(tutorialState == TutorialState.S25_L4_GAME_PAUSE){
 			int speedAnimationFactor = 10;
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE),3);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE_2),2);
-			drawTutorialText(c, ContextContainer.getApplicationContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE_3),1);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE),3);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE_2),2);
+			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE_3),1);
 			xValueFingerImage = (int) gameWorld.getUnicTower().getXcenter()- tutorialImageFinger.getMinimumWidth()/2;
 			yValueFingerImage = (int) gameWorld.getUnicTower().getYcenter()- tutorialImageFinger.getMinimumHeight()/2;
 			

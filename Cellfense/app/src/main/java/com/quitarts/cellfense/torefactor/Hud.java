@@ -1,9 +1,9 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 import java.util.ArrayList;
 
+import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
-import com.quitarts.cellfense.Tower.TowerType;
 import com.quitarts.cellfense.game.LevelDataSet;
 
 import android.graphics.Canvas;
@@ -51,8 +51,8 @@ public class Hud {
 		drawRes(c, dt);
 	}
 	
-	public void addTowerVisibleTowerType(TowerType tt){
-		if(tt == TowerType.TURRET_TANK)
+	public void addTowerVisibleTowerType(Tower.TowerType tt){
+		if(tt == Tower.TowerType.TURRET_TANK)
 			visibleTowers.add("tt");
 	}
 	
@@ -121,21 +121,21 @@ public class Hud {
 	}
 		
 	public boolean hudClick(int x, int y) {		
-		if(buttonCapacitor.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR)) {			
+		if(buttonCapacitor.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_CAPACITOR)) {
 			Tower towerHud = new Tower(DrawableType.GUN_TURRET_CAPACITOR_SPRITE, 1, 7, 30, false);
 			towerHud.setX(x);
 			towerHud.setY(y);			
 			gameControl.addTower(towerHud);
 			return true;
 		}
-		else if(buttonTank.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(TowerType.TURRET_TANK)) {
+		else if(buttonTank.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_TANK)) {
 			Tower towerHud = new Tower(DrawableType.GUN_TURRET_TANK_SPRITE, 1, 7, 50, false);
 			towerHud.setX(x);
 			towerHud.setY(y);			
 			gameControl.addTower(towerHud);	
 			return true;
 		}
-		else if(buttonBomb.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(TowerType.TURRET_BOMB)) {
+		else if(buttonBomb.isClicked(x, y) && resources >= GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_BOMB)) {
 			Tower towerHud = new Tower(DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
 			towerHud.setX(x);
 			towerHud.setY(y);			
@@ -204,7 +204,7 @@ public class Hud {
 			buttonCapacitor.setX(c.getWidth() - buttonCapacitor.getWidth());
 			buttonCapacitor.setY(c.getHeight() - (buttonCapacitor.getHeight() * 2 - buttonCapacitor.getHeight() / 2));
 			buttonCapacitor.getGraphic().setBounds((int)buttonCapacitor.getX(), (int)buttonCapacitor.getY(), (int)buttonCapacitor.getX() + buttonCapacitor.getWidth(), (int)buttonCapacitor.getY() + buttonCapacitor.getHeight());
-			if(resources < GameRules.getTowerInitialPrice(TowerType.TURRET_CAPACITOR))
+			if(resources < GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_CAPACITOR))
 				buttonCapacitor.getGraphic().setAlpha(80);
 			else
 				buttonCapacitor.getGraphic().setAlpha(255);
@@ -215,7 +215,7 @@ public class Hud {
 		buttonTank.setX(c.getWidth() - buttonTank.getWidth() * 2);
 		buttonTank.setY(c.getHeight() - (buttonTank.getHeight() * 2 - buttonTank.getHeight() / 2));
 		buttonTank.getGraphic().setBounds((int)buttonTank.getX(), (int)buttonTank.getY(), (int)buttonTank.getX() + buttonTank.getWidth(), (int)buttonTank.getY() + buttonTank.getHeight());
-		if(resources < GameRules.getTowerInitialPrice(TowerType.TURRET_TANK))
+		if(resources < GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_TANK))
 			buttonTank.getGraphic().setAlpha(80);
 		else
 			buttonTank.getGraphic().setAlpha(255);
@@ -226,7 +226,7 @@ public class Hud {
 		buttonBomb.setX(c.getWidth() - buttonBomb.getWidth() * 3);
 		buttonBomb.setY(c.getHeight() - (buttonBomb.getHeight() * 2 - buttonBomb.getHeight() / 2));
 		buttonBomb.getGraphic().setBounds((int)buttonBomb.getX(), (int)buttonBomb.getY(), (int)buttonBomb.getX() + buttonBomb.getWidth(), (int)buttonBomb.getY() + buttonBomb.getHeight());
-		if(resources < GameRules.getTowerInitialPrice(TowerType.TURRET_BOMB))
+		if(resources < GameRules.getTowerInitialPrice(Tower.TowerType.TURRET_BOMB))
 			buttonBomb.getGraphic().setAlpha(80);
 		else
 			buttonBomb.getGraphic().setAlpha(255);
@@ -301,7 +301,7 @@ public class Hud {
 		buttonNextWave = new Button(DrawableType.HUD_READY);
 		buttonNextWave.setX(buttonNextWave.getWidth());
 		buttonNextWave.setY(Utils.getCanvasHeight() - (buttonNextWave.getHeight()));
-		Typeface tf = Typeface.createFromAsset(ContextContainer.getApplicationContext().getAssets(),"fonts/Discognate.ttf");		
+		Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(),"fonts/Discognate.ttf");
 		resourceAndLifePaint = new Paint();
 		resourceAndLifePaint.setTypeface(tf);
 		resourceAndLifePaint.setTextSize(15 * Utils.getScaleFactor());

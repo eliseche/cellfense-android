@@ -1,7 +1,7 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 
 import java.util.ArrayList;
-import com.quitarts.cellfense.Critter.CritterType;
+import com.quitarts.cellfense.torefactor.Critter.CritterType;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 
 public class CritterFactory {

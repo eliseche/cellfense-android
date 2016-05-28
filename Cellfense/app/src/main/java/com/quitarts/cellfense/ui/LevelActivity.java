@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.torefactor.Utils;
 import com.quitarts.cellfense.game.LevelDataSet;
 import com.quitarts.cellfense.helpers.ParserLevelXml;
 

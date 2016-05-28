@@ -1,17 +1,15 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
+
+import com.quitarts.cellfense.ContextContainer;
 
 import java.util.Hashtable;
 
 
 public class Utils {	
     private static int width;
-    private static int height;    
+    private static int height;
     private static float cellSize;
-    private static int startLevel;
     private static int offsetY;
-
-    private Utils() {
-    }
 
     public static final int DIALOG_GAMEOVER_ID = 0;
     public static final int DIALOG_PLAYAGAIN_ID = 1;
@@ -33,7 +31,7 @@ public class Utils {
     public static final int NEW_UNLOCKED_ART = 17;
     
     public static final String UNLOCKED_ART = "unlocked";
-    
+
 	public static final Hashtable<String, Integer>  LevelUnlock = new Hashtable<String, Integer>();
     
     public static void setCanvasSize(int width, int height) {
@@ -41,13 +39,7 @@ public class Utils {
         Utils.height = height;        
     }
     
-    public static void setStartLevel(int lv) {
-    	startLevel = lv;    	
-    }
-    
-    public static int getStartLevel() {
-    	return startLevel;
-    }
+
     
     public static void setCellSize(float cs){
     	cellSize = cs;
@@ -58,23 +50,21 @@ public class Utils {
     }
     
     public static int getCanvasWidth() {
-    	return width;    	
+    	return width;
     }
     
     public static int getCanvasHeight() {
-    	return height;    	
-    }    
+    	return height;
+    }
     
-    public static int getFramePerSecondControlValue(){    	
+    public static int getFramePerSecondControlValue(){
     	return 25;
     }
     
-    public static float getCanvasRatio(){
-    	return height/width;
-    }
+
     
     public static float getScaleFactor() {
-    	return ContextContainer.getApplicationContext().getResources().getDisplayMetrics().density;
+    	return ContextContainer.getContext().getResources().getDisplayMetrics().density;
     }
     
     public static int convertXGridToWorld(int x, int widthOfObject) {
@@ -88,8 +78,8 @@ public class Utils {
     }
     
     public static int convertXWorldToGrid(float x, int widthOfObject) {
-    	float tileWidth = getCanvasWidth() / GameMap.WIDTH;    
-    	return (int)(x / tileWidth);    	
+    	float tileWidth = getCanvasWidth() / GameMap.WIDTH;
+    	return (int)(x / tileWidth);
     }
     
     public static int convertYWorldToGrid(float y, int heightObject) {
@@ -98,7 +88,7 @@ public class Utils {
     }
     
     public static int getGridYOffset(){
-    	return (int)((height - cellSize * 12)/cellSize);    
+    	return (int)((height - cellSize * 12)/cellSize);
     }
     
     public static void setOffsetY(int offSet){
@@ -114,7 +104,7 @@ public class Utils {
     	 * 5% of the cellSize
     	 */
     	return (int)cellSize*5/100;
-    } 
+    }
     
     public static void setLevelUnlockedValues(){
     	LevelUnlock.put(String.valueOf(2), 2);

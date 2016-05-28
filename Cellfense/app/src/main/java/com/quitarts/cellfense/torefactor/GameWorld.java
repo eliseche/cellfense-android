@@ -1,13 +1,13 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import com.quitarts.cellfense.Critter.CritterType;
+import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.torefactor.Critter.CritterType;
+import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
-import com.quitarts.cellfense.GameControl.TutorialState;
-import com.quitarts.cellfense.SoundManager.SoundType;
-import com.quitarts.cellfense.Tower.TowerType;
+import com.quitarts.cellfense.torefactor.GameControl.TutorialState;
 import com.quitarts.cellfense.game.LevelDataSet;
 import com.quitarts.particles.Explosion;
 import com.quitarts.pathfinder.AStarPathFinder;
@@ -48,7 +48,7 @@ public class GameWorld {
 		gameWorldWidth = screenWidth;
 		gameWorldHeight = screenHeight * 2;
 		background = BitmapFactory.decodeResource(ContextContainer
-				.getApplicationContext().getResources(), R.drawable.screen_background);
+				.getContext().getResources(), R.drawable.screen_background);
 		lta = new Lta(DrawableType.GUN_LTA_POWER_SPRITE, 1, 15, 100);
 		lta.start();
 		generateMap();
@@ -135,10 +135,10 @@ public class GameWorld {
             			|| !isOnRange(tower,tower.getVictim())
             			|| tower.getVictim().lives() <= 0){
             		tower.setVictim(null);            		
-            		if(tower.getType() == TowerType.TURRET_BOMB) {
+            		if(tower.getType() == Tower.TowerType.TURRET_BOMB) {
             			if(tower.destroy()) {            				
             				ArrayList<Critter> critters = findNearestCritters(tower);
-            				((Vibrator)ContextContainer.getApplicationContext().getSystemService(ContextContainer.getApplicationContext().VIBRATOR_SERVICE)).vibrate(300);
+            				((Vibrator)ContextContainer.getContext().getSystemService(ContextContainer.getContext().VIBRATOR_SERVICE)).vibrate(300);
             				tower.stopAndResetFrame();            				
             				for(Critter critter : critters) {
             					float damage = GameRules.getDamageEnemy(tower, critter);
@@ -160,11 +160,11 @@ public class GameWorld {
                     if(tower.mustShoot()) {
                     	tower.start();
                     	
-                    	if(tower.getType() == TowerType.TURRET_CAPACITOR){
-                    		SoundManager.playSound(SoundType.MACHINE_GUN, false);
+                    	if(tower.getType() == Tower.TowerType.TURRET_CAPACITOR){
+                    		SoundManager.playSound(SoundManager.SoundType.MACHINE_GUN, false);
                     	}
-                    	else if(tower.getType() == TowerType.TURRET_TANK) {
-                    		SoundManager.playSound(SoundType.CANNON, false);                    		
+                    	else if(tower.getType() == Tower.TowerType.TURRET_TANK) {
+                    		SoundManager.playSound(SoundManager.SoundType.CANNON, false);
                     	}
                     	tower.getVictim().hit(damage);
                     	tower.justShoot();
@@ -289,7 +289,7 @@ public class GameWorld {
 			for(Tower tower : towers) {				
 				tower.getGraphic().setBounds((int)tower.getX(), gameWorldHeight / 2 + (int)tower.getY() - offSetY, (int)tower.getX() + tower.getWidth(), gameWorldHeight / 2 + (int)tower.getY() + tower.getHeight() - offSetY);
 			
-				if(tower.getType() == TowerType.TURRET_TANK) {
+				if(tower.getType() == Tower.TowerType.TURRET_TANK) {
 					BitmapDrawable turretTankBase = tower.getTurretBase();
 					turretTankBase.setBounds(tower.getGraphic().getBounds());										
 					turretTankBase.draw(c);					
@@ -300,7 +300,7 @@ public class GameWorld {
                 tower.getGraphic().draw(c);
                 c.restore();               
                               
-                if(tower.getType() == TowerType.TURRET_BOMB){
+                if(tower.getType() == Tower.TowerType.TURRET_BOMB){
                 	tower.drawExplotion(c);
                 }
                 else
@@ -386,10 +386,10 @@ public class GameWorld {
 		synchronized (towers) {
 			for(Tower tower : towers) {
 				if(tower.getGraphic().getBounds().contains(x, y)) {
-					if(tower.getType() == TowerType.TURRET_BOMB && tower.hasCharge()) {
+					if(tower.getType() == Tower.TowerType.TURRET_BOMB && tower.hasCharge()) {
 						tower.detonate();											
 					}
-					else if(tower.getType() != TowerType.TURRET_BOMB  
+					else if(tower.getType() != Tower.TowerType.TURRET_BOMB
 							&& gameControl.getResources() >= GameRules.getCrazyPopUpPrice()
 							&& !tower.isCrazy()){
 							tower.goCrazy();	
@@ -556,7 +556,7 @@ public class GameWorld {
 		}
 		synchronized (towers) {
 			for(Tower tower : towers) {				
-				if(tower.getType() == TowerType.TURRET_BOMB) {
+				if(tower.getType() == Tower.TowerType.TURRET_BOMB) {
 					tower.resetState();
 				}
 				tower.setVictim(null);

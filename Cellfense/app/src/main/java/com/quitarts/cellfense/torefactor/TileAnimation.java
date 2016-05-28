@@ -1,6 +1,8 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 
 import java.util.ArrayList;
+
+import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -109,7 +111,7 @@ public class TileAnimation extends GraphicObject {
 			for(int j = 0; j < tileColumns; j++) {				
 				if(offsetX + stepX <= super.getGraphic().getMinimumWidth()) {
 					Bitmap tmpBitmap = Bitmap.createBitmap(super.getGraphic().getBitmap(), offsetX, offsetY, stepX, stepY);
-					BitmapDrawable tmpBitmapDrawable = new BitmapDrawable(ContextContainer.getApplicationContext().getResources(), tmpBitmap); 
+					BitmapDrawable tmpBitmapDrawable = new BitmapDrawable(ContextContainer.getContext().getResources(), tmpBitmap);
 					imageList.add(tmpBitmapDrawable);
 					offsetX += stepX;
 				}

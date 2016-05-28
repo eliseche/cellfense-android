@@ -1,4 +1,4 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 
 import com.quitarts.pathfinder.Mover;
 import com.quitarts.pathfinder.TileBasedMap;

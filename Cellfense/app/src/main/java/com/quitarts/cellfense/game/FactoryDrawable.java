@@ -38,64 +38,64 @@ public class FactoryDrawable {
         if (bitmapDrawable == null) {
             switch (typeToBuild) {
                 case GUN_TURRET_CAPACITOR:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_capacitor);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_capacitor);
                     break;
                 case GUN_TURRET_CAPACITOR_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_capacitor_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_capacitor_sprite);
                     break;
                 case GUN_TURRET_TANK:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_tank);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_tank);
                     break;
                 case GUN_TURRET_TANK_BASE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_tank_base);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_tank_base);
                     break;
                 case GUN_TURRET_TANK_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_tank_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_tank_sprite);
                     break;
                 case GUN_TURRET_BOMB:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_bomb);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_bomb);
                     break;
                 case GUN_TURRET_BOMB_CRATER:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_bomb_crater);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_bomb_crater);
                     break;
                 case GUN_TURRET_BOMB_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_turret_bomb_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_bomb_sprite);
                     break;
                 case ENEMY_SPIDER_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.enemy_spider_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.enemy_spider_sprite);
                     break;
                 case ENEMY_CATERPILLAR_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.enemy_caterpillar_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.enemy_caterpillar_sprite);
                     break;
                 case ENEMY_CHIP_INFECTED_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.enemy_chip_infected);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.enemy_chip_infected);
                     break;
                 case GUN_LTA_POWER_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_lta_power_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_lta_power_sprite);
                     break;
                 case GUN_LTA_FIRE_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.gun_lta_fire_sprite);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_lta_fire_sprite);
                     break;
                 case HUD:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.hud);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud);
                     break;
                 case HUD_ARROW:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.hud_arrow);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_arrow);
                     break;
                 case HUD_READY:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.hud_ready);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_ready);
                     break;
                 case HUD_READY_PUSHED:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.hud_ready_pushed);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_ready_pushed);
                     break;
                 case HUD_BATTERY:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.hud_battery);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_battery);
                     break;
                 case TUTORIAL_VS:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.tutorial_vs);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.tutorial_vs);
                     break;
                 case TUTORIAL_FINGER:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getApplicationContext(), R.drawable.tutorial_finger);
+                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.tutorial_finger);
                     break;
                 default:
                     break;

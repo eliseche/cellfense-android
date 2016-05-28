@@ -1,4 +1,4 @@
-package com.quitarts.cellfense;
+package com.quitarts.cellfense.torefactor;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -9,6 +9,8 @@ import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.SoundPool;
 
+import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.ui.OptionsPreferenceActivity;
 
 public class SoundManager {	
@@ -31,17 +33,17 @@ public class SoundManager {
 	public static void loadSounds() {	      
 		soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
 		soundPoolHash = new HashMap<SoundType, Integer>();
-		soundPoolHash.put(SoundType.FIREBALL, soundPool.load(ContextContainer.getApplicationContext(), R.raw.fireball, 1));
-		soundPoolHash.put(SoundType.MACHINE_GUN, soundPool.load(ContextContainer.getApplicationContext(), R.raw.machine_gun, 1));
-		soundPoolHash.put(SoundType.CANNON, soundPool.load(ContextContainer.getApplicationContext(), R.raw.cannon, 1));
-		soundPoolHash.put(SoundType.LOCK1, soundPool.load(ContextContainer.getApplicationContext(), R.raw.lock1, 1));
-		soundPoolHash.put(SoundType.LOCK2, soundPool.load(ContextContainer.getApplicationContext(), R.raw.lock2, 1));
+		soundPoolHash.put(SoundType.FIREBALL, soundPool.load(ContextContainer.getContext(), R.raw.fireball, 1));
+		soundPoolHash.put(SoundType.MACHINE_GUN, soundPool.load(ContextContainer.getContext(), R.raw.machine_gun, 1));
+		soundPoolHash.put(SoundType.CANNON, soundPool.load(ContextContainer.getContext(), R.raw.cannon, 1));
+		soundPoolHash.put(SoundType.LOCK1, soundPool.load(ContextContainer.getContext(), R.raw.lock1, 1));
+		soundPoolHash.put(SoundType.LOCK2, soundPool.load(ContextContainer.getContext(), R.raw.lock2, 1));
 	}	
 	
 	public static void loadMusic() {		
 		mediaPlayerHash = new HashMap<MusicType, MediaPlayer>();
-		mediaPlayerHash.put(MusicType.STRATEGY, MediaPlayer.create(ContextContainer.getApplicationContext(), R.raw.defense2));		
-		mediaPlayerHash.put(MusicType.ACTION, MediaPlayer.create(ContextContainer.getApplicationContext(), R.raw.virus2));
+		mediaPlayerHash.put(MusicType.STRATEGY, MediaPlayer.create(ContextContainer.getContext(), R.raw.defense2));
+		mediaPlayerHash.put(MusicType.ACTION, MediaPlayer.create(ContextContainer.getContext(), R.raw.virus2));
 	}
 	
 	public static void playSound(SoundType soundType, boolean loopSound) {		

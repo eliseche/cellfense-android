@@ -34,19 +34,19 @@ public class OptionsPreferenceActivity extends PreferenceActivity {
     }
 
     public static boolean getMusic() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getBoolean(OPT_MUSIC, OPT_MUSIC_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getBoolean(OPT_MUSIC, OPT_MUSIC_VALUE);
     }
 
     public static int getMusicVolume() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getInt(OPT_MUSIC_VOLUME, OPT_MUSIC_VOLUME_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getInt(OPT_MUSIC_VOLUME, OPT_MUSIC_VOLUME_VALUE);
     }
 
     public static boolean getSound() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getBoolean(OPT_SOUND, OPT_SOUND_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getBoolean(OPT_SOUND, OPT_SOUND_VALUE);
     }
 
     public static int getSoundVolume() {
-        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getApplicationContext()).getInt(OPT_SOUND_VOLUME, OPT_SOUND_VOLUME_VALUE);
+        return PreferenceManager.getDefaultSharedPreferences(ContextContainer.getContext()).getInt(OPT_SOUND_VOLUME, OPT_SOUND_VOLUME_VALUE);
     }
 
     private void initViews() {
