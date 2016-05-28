@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.object.base.TileAnimation;
 
 public class Tower extends TileAnimation {
 	private int gridPositionX;

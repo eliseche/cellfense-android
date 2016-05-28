@@ -4,6 +4,7 @@ package com.quitarts.cellfense.torefactor;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 

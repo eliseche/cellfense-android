@@ -1,6 +1,7 @@
-package com.quitarts.cellfense.torefactor;
+package com.quitarts.cellfense.game.object.base;
 
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.torefactor.Utils;
 
 public class MovableTileAnimation extends TileAnimation {
 	private float speedX;

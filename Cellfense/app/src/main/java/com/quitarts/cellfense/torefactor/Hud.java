@@ -2,6 +2,7 @@ package com.quitarts.cellfense.torefactor;
 import java.util.ArrayList;
 
 import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.game.object.Button;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.game.LevelDataSet;
@@ -20,7 +21,7 @@ public class Hud {
 	private Paint scorePaint;
 	private Paint wavePaint;
 	private BitmapDrawable hud;
-	private Button buttonCapacitor;		
+	private Button buttonCapacitor;
 	private Button buttonTank;
 	private Button buttonBomb;
 	private Button buttonNextWave;

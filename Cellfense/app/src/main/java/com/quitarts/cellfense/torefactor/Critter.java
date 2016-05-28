@@ -8,7 +8,9 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
+import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.object.base.MovableTileAnimation;
 import com.quitarts.pathfinder.Path;
 import com.quitarts.pathfinder.Path.Step;
 

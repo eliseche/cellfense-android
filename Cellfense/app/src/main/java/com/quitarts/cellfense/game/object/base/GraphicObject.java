@@ -1,4 +1,4 @@
-package com.quitarts.cellfense.torefactor;
+package com.quitarts.cellfense.game.object.base;
 
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
@@ -6,10 +6,10 @@ import android.graphics.drawable.BitmapDrawable;
 
 public class GraphicObject implements Cloneable {
 	private BitmapDrawable bitmap;
-	protected float x = 0;
-	protected float y = 0;
-	protected float xCenter = 0;
-	protected float yCenter = 0;
+	public float x = 0;
+	public float y = 0;
+	public float xCenter = 0;
+	public float yCenter = 0;
 	
 	public GraphicObject(DrawableType drawableType) {
 		bitmap = FactoryDrawable.createDrawable(drawableType);
