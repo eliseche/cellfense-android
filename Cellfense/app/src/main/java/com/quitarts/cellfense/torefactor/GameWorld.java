@@ -24,6 +24,7 @@ import com.quitarts.pathfinder.PathFinder;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class GameWorld {
     private Bitmap background;
@@ -95,7 +96,7 @@ public class GameWorld {
             for (Critter critter : critters) {
                 critter.start();
                 critter.advance(dt, offSetY);
-                critter.tileAnimationUpdate(dt);
+                critter.updateTile(dt);
                     /*
 					 * Debug Info on LogCat
 					 */
@@ -140,12 +141,12 @@ public class GameWorld {
                         if (tower.destroy()) {
                             ArrayList<Critter> critters = findNearestCritters(tower);
                             ((Vibrator) ContextContainer.getContext().getSystemService(ContextContainer.getContext().VIBRATOR_SERVICE)).vibrate(300);
-                            tower.stopAndResetFrame();
+                            tower.stopAndReset();
                             for (Critter critter : critters) {
                                 float damage = GameRules.getDamageEnemy(tower, critter);
                                 critter.hit(damage);
-                                explosions.add(new Explosion(50, (int) critter.getXcenter(),
-                                        (int) critter.getYcenter() - offSetY, 0, 0));
+                                explosions.add(new Explosion(50, (int) critter.getXCenter(),
+                                        (int) critter.getYCenter() - offSetY, 0, 0));
                             }
                         }
                     } else {
@@ -167,12 +168,12 @@ public class GameWorld {
                         }
                         tower.getVictim().hit(damage);
                         tower.justShoot();
-                        float dx = tower.getVictim().getXcenter() - tower.getXcenter();
-                        float dy = (tower.getVictim().getYcenter() - offSetY) - tower.getYcenter();
+                        float dx = tower.getVictim().getXCenter() - tower.getXCenter();
+                        float dy = (tower.getVictim().getYCenter() - offSetY) - tower.getYCenter();
                         float v = (float) Math.sqrt(this.distance(tower, tower.getVictim()));
 
-                        explosions.add(new Explosion(25, (int) tower.getVictim().getXcenter(),
-                                (int) tower.getVictim().getYcenter() - offSetY,
+                        explosions.add(new Explosion(25, (int) tower.getVictim().getXCenter(),
+                                (int) tower.getVictim().getYCenter() - offSetY,
                                 dx / v, dy / v));
                     	/*
                     	 * Debug Info on Log Cat
@@ -188,8 +189,8 @@ public class GameWorld {
                         //if(dist <= tower.getRange() && critters.size() == 1)
                         //System.out.println("dist " + dist);
                         if (tower.getVictim().lives() <= 0) {
-                            explosions.add(new Explosion(50, (int) tower.getVictim().getXcenter(),
-                                    (int) tower.getVictim().getYcenter() - offSetY, 0, 0));
+                            explosions.add(new Explosion(50, (int) tower.getVictim().getXCenter(),
+                                    (int) tower.getVictim().getYCenter() - offSetY, 0, 0));
 
                             critters.remove(tower.getVictim());
                             tower.setVictim(null);
@@ -204,7 +205,7 @@ public class GameWorld {
 
     private void processLta(int dt) {
         if (!ltaIsOff) {
-            lta.tileAnimationUpdate(dt);
+            lta.updateTile(dt);
             lta.setX(Utils.getCanvasWidth() / 2 - (lta.getWidth() / 2));
             lta.setY(gameWorldHeight - (lta.getHeight() + lta.getHeight() / 2) - offSetY);
         }
@@ -218,8 +219,8 @@ public class GameWorld {
 				/*
 				 * Clean bullet out of the screen
 				 */
-                if (tmpBullet.getXcenter() < 0 || tmpBullet.getXcenter() > Utils.getCanvasWidth() ||
-                        tmpBullet.getYcenter() < 0 || tmpBullet.getYcenter() > Utils.getCanvasHeight()) {
+                if (tmpBullet.getXCenter() < 0 || tmpBullet.getXCenter() > Utils.getCanvasWidth() ||
+                        tmpBullet.getYCenter() < 0 || tmpBullet.getYCenter() > Utils.getCanvasHeight()) {
                     bullets.remove(tmpBullet);
                 }
 								
@@ -228,7 +229,7 @@ public class GameWorld {
 				 */
                 for (Critter critter : critters) {
                     if (critter.isHit(tmpBullet)) {
-                        ArrayList<BitmapDrawable> tmpGraphics = critter.getGraphics();
+                        List<BitmapDrawable> tmpGraphics = critter.getGraphics();
                         for (BitmapDrawable bd : tmpGraphics) {
                             bd.mutate().setColorFilter(Color.argb(70, 100, 100, 255), Mode.SRC_ATOP);
                         }
@@ -241,7 +242,7 @@ public class GameWorld {
             synchronized (bullets) {
                 for (Bullet bullet : bullets) {
                     bullet.advance(dt);
-                    bullet.tileAnimationUpdate(dt);
+                    bullet.updateTile(dt);
                 }
             }
         }
@@ -294,7 +295,7 @@ public class GameWorld {
                 }
 
                 c.save();
-                c.rotate(tower.rotAngle, tower.getXcenter(), (gameWorldHeight / 2 + tower.getYcenter() - offSetY));
+                c.rotate(tower.getRotationAngle(), tower.getXCenter(), (gameWorldHeight / 2 + tower.getYCenter() - offSetY));
                 tower.getGraphic().draw(c);
                 c.restore();
 
@@ -322,17 +323,17 @@ public class GameWorld {
     }
 
     public float getLTAxCenter() {
-        return lta.getXcenter();
+        return lta.getXCenter();
     }
 
     public float getLTAyCenter() {
-        return lta.getYcenter();
+        return lta.getYCenter();
     }
 
     public float getTutorialCritterXCenter() {
         for (Critter critter : critters) {
             if (critters.size() == 1)
-                return critter.xCenter;
+                return critter.getXCenter();
         }
         return 0;
     }
@@ -340,7 +341,7 @@ public class GameWorld {
     public float getTutorialCritterYCenter() {
         for (Critter critter : critters) {
             if (critters.size() == 1)
-                return critter.yCenter - offSetY;
+                return critter.getYCenter() - offSetY;
         }
         return 0;
     }
@@ -349,7 +350,7 @@ public class GameWorld {
         synchronized (bullets) {
             for (Bullet bullet : bullets) {
                 c.save();
-                c.rotate(bullet.rotAngle, bullet.getXcenter(), (gameWorldHeight / 2 + bullet.getYcenter() - offSetY));
+                c.rotate(bullet.getRotationAngle(), bullet.getXCenter(), (gameWorldHeight / 2 + bullet.getYCenter() - offSetY));
                 bullet.getGraphic().setBounds((int) bullet.getX(), gameWorldHeight / 2 + (int) bullet.getY() - offSetY, (int) bullet.getX() + bullet.getWidth(), gameWorldHeight / 2 + (int) bullet.getY() + bullet.getHeight() - offSetY);
                 bullet.getGraphic().draw(c);
                 c.restore();
@@ -522,11 +523,11 @@ public class GameWorld {
     public void resetTowerAngle() {
         synchronized (towers) {
             for (Tower tower : towers) {
-                if (tower.rotAngle > 0 && tower.rotAngle <= 180) {
-                    tower.rotAngle -= 2;
+                if (tower.getRotationAngle() > 0 && tower.getRotationAngle() <= 180) {
+                    tower.setRotationAngle(tower.getRotationAngle() - 2);
                 }
-                if (tower.rotAngle > 180 && tower.rotAngle < 360) {
-                    tower.rotAngle += 2;
+                if (tower.getRotationAngle() > 180 && tower.getRotationAngle() < 360) {
+                    tower.setRotationAngle(tower.getRotationAngle() + 2);
                 }
             }
         }
@@ -571,8 +572,8 @@ public class GameWorld {
     }
 
     private double distance(Tower tower, Critter critter) {
-        double dx = Math.abs(tower.getXCenterOriginal() - critter.getXcenter());
-        double dy = Math.abs((gameWorldHeight / 2.0 + tower.getYCenterOriginal()) - (critter.getYcenter()));
+        double dx = Math.abs(tower.getXCenterOriginal() - critter.getXCenter());
+        double dy = Math.abs((gameWorldHeight / 2.0 + tower.getYCenterOriginal()) - (critter.getYCenter()));
         double ndx, ndy;
 
         if (dx < dy) {

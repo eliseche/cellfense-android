@@ -1,136 +1,153 @@
 package com.quitarts.cellfense.game.object.base;
 
-import java.util.ArrayList;
-
-import com.quitarts.cellfense.ContextContainer;
-import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 
-public class TileAnimation extends GraphicObject {		
-	private int tileRows;
-	private int tileColumns;
-	private int frameSkipDelay;
-	
-	private ArrayList<BitmapDrawable> imageList = new ArrayList<BitmapDrawable>();
-	protected int currentFrame = 0;
-	private int accumTime;
-	private boolean isStarted = false;	
-	private int stepX;
-	private int stepY;
-	private boolean repeatAnimation;
-	public int rotAngle;
-		
-	public TileAnimation(DrawableType drawableType, int tileRows, int tileColumns, int frameSkipDelay, boolean repeatAnimation) {
-		super(drawableType);		
-		this.tileRows = tileRows;
-		this.tileColumns = tileColumns;
-		this.frameSkipDelay = frameSkipDelay;
-		this.repeatAnimation = repeatAnimation;
-		if(repeatAnimation == true) {
-			this.start();
-		}
-		
-		cutImage();		
-	}		
-	
-	public BitmapDrawable getGraphic() {
-		return imageList.get(currentFrame);
-	}
-	
-	public ArrayList<BitmapDrawable> getGraphics() {
-		return imageList;
-	}
-	
-	public void setTileAnimation(DrawableType drawableType, int tileRows, int tileColumns, int frameSkipDelay, boolean repeatAnimation) {
-		setGraphicObject(drawableType);
-		this.tileRows = tileRows;
-		this.tileColumns = tileColumns;
-		this.frameSkipDelay = frameSkipDelay;
-		this.repeatAnimation = repeatAnimation;
-		if(repeatAnimation == true) {
-			this.start();
-		}
-		imageList.clear();
-		cutImage();		
-	}
-		
-	public void setX(float value) {
-		x = value;
-		recalcCenter();
-	}
-		
-	public void setY(float value) {
-		y = value;
-		recalcCenter();
-	}	
-	
-	public int getWidth() {		
-		return imageList.get(currentFrame).getMinimumWidth();		
-	}
-	
-	public int getHeight() {
-		return imageList.get(currentFrame).getMinimumHeight();
-	}
-	
-	private void recalcCenter() {
-		xCenter = x + getWidth() / 2.0f;
-		yCenter = y + getHeight() / 2.0f;
-	}
-	
-	public void tileAnimationUpdate(int dt) {
-		if(isStarted) {	
-			accumTime += dt;			
-			if(accumTime >= frameSkipDelay) {
-				accumTime = 0;
-				nextFrame();
-			}
-		}
-	}
-	
-	public void start() {
-		isStarted = true;		
-	}
-	
-	public void stop() {
-		isStarted = false;		
-	}
-	
-	public void stopAndResetFrame() {
-		isStarted = false;
-		currentFrame = 0;
-	}
-	
-	private void cutImage() {
-		int offsetX = 0;
-		int offsetY = 0;
-		stepX = super.getGraphic().getMinimumWidth() / tileColumns;
-		stepY = super.getGraphic().getMinimumHeight() / tileRows;		
-		
-		for(int i = 0; i < tileRows; i++) {
-			for(int j = 0; j < tileColumns; j++) {				
-				if(offsetX + stepX <= super.getGraphic().getMinimumWidth()) {
-					Bitmap tmpBitmap = Bitmap.createBitmap(super.getGraphic().getBitmap(), offsetX, offsetY, stepX, stepY);
-					BitmapDrawable tmpBitmapDrawable = new BitmapDrawable(ContextContainer.getContext().getResources(), tmpBitmap);
-					imageList.add(tmpBitmapDrawable);
-					offsetX += stepX;
-				}
-			}
-			offsetX = 0;
-			if(offsetY + stepY <= super.getGraphic().getMinimumHeight()) {
-				offsetY += stepY;
-			}
-		}		
-	}	
-		
-	private void nextFrame() {			
-		if(currentFrame < imageList.size() -1) {
-			currentFrame++;
-		}
-		else {
-			currentFrame = 0;
-			if(!repeatAnimation)
-				isStarted = false;
-		}		
-	}	
+import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.game.FactoryDrawable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class TileAnimation extends GraphicObject {
+    private List<BitmapDrawable> tiles = new ArrayList<>();
+    private int rows;
+    private int columns;
+    private int frameSkipDelay;
+    private boolean repeatAnimation;
+    private int currentFrame = 0;
+    private boolean isStarted = false;
+    private int accumTime;
+    private int rotationAngle;
+
+    public TileAnimation(FactoryDrawable.DrawableType drawableType, int rows, int columns, int frameSkipDelay, boolean repeatAnimation) {
+        super(drawableType);
+
+        this.rows = rows;
+        this.columns = columns;
+        this.frameSkipDelay = frameSkipDelay;
+        this.repeatAnimation = repeatAnimation;
+
+		/*if (repeatAnimation == true)
+            start();*/
+
+        generateTiles();
+    }
+
+    public void setTileAnimation(FactoryDrawable.DrawableType drawableType, int rows, int columns, int frameSkipDelay, boolean repeatAnimation) {
+        tiles.clear();
+        setGraphic(drawableType);
+
+        this.rows = rows;
+        this.columns = columns;
+        this.frameSkipDelay = frameSkipDelay;
+        this.repeatAnimation = repeatAnimation;
+
+        /*if (repeatAnimation == true)
+            start();*/
+
+        generateTiles();
+    }
+
+    public BitmapDrawable getGraphic() {
+        return tiles.get(currentFrame);
+    }
+
+    public List<BitmapDrawable> getGraphics() {
+        return tiles;
+    }
+
+    @Override
+    public void setX(float x) {
+        super.setX(x);
+        calculateCenter();
+    }
+
+    @Override
+    public void setY(float y) {
+        super.setY(y);
+        calculateCenter();
+    }
+
+    @Override
+    public int getWidth() {
+        return tiles.get(currentFrame).getMinimumWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return tiles.get(currentFrame).getMinimumHeight();
+    }
+
+    @Override
+    public void calculateCenter() {
+        super.setXCenter(super.getX() + getWidth() / 2.0f);
+        super.setYCenter(super.getY() + getHeight() / 2.0f);
+    }
+
+    public int getRotationAngle() {
+        return rotationAngle;
+    }
+
+    public void setRotationAngle(int rotationAngle) {
+        this.rotationAngle = rotationAngle;
+    }
+
+    public void start() {
+        isStarted = true;
+    }
+
+    public void stop() {
+        isStarted = false;
+    }
+
+    public void reset() {
+        currentFrame = 0;
+    }
+
+    public void stopAndReset() {
+        stop();
+        reset();
+    }
+
+    public void updateTile(int dt) {
+        if (isStarted) {
+            accumTime += dt;
+            if (accumTime >= frameSkipDelay) {
+                accumTime = 0;
+                nextFrame();
+            }
+        }
+    }
+
+    private void nextFrame() {
+        if (currentFrame < tiles.size() - 1)
+            currentFrame++;
+        else {
+            currentFrame = 0;
+            if (!repeatAnimation)
+                isStarted = false;
+        }
+    }
+
+    private void generateTiles() {
+        int offsetX = 0;
+        int offsetY = 0;
+        int stepX = super.getWidth() / columns;
+        int stepY = super.getHeight() / rows;
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < columns; j++) {
+                if (offsetX + stepX <= super.getWidth()) {
+                    Bitmap bitmap = Bitmap.createBitmap(super.getGraphic().getBitmap(), offsetX, offsetY, stepX, stepY);
+                    BitmapDrawable bitmapDrawable = new BitmapDrawable(ContextContainer.getContext().getResources(), bitmap);
+                    tiles.add(bitmapDrawable);
+                    offsetX += stepX;
+                }
+            }
+
+            if (offsetY + stepY <= super.getHeight())
+                offsetY += stepY;
+        }
+    }
 }

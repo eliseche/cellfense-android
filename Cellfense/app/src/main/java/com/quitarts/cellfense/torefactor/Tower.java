@@ -81,7 +81,7 @@ public class Tower extends TileAnimation {
 	}	
 	
 	public void resetFrame() {
-		currentFrame = 0;
+		reset();
 	}
 	
 	public float getRange() {
@@ -180,16 +180,16 @@ public class Tower extends TileAnimation {
 		accumCrazyTime += dt;
 		shootingTime = GameRules.getTowerInitialShootingTime(type)/3;
 		if(accumCrazyTime <= crazyTime){
-			this.x = (this.xOriginalPosition + (float)((new Random()).nextInt(3) - 1));
-			this.y = (this.yOriginalPosition + (float)((new Random()).nextInt(3) - 1));
+			setX(this.xOriginalPosition + (float)((new Random()).nextInt(3) - 1));
+			setY(this.yOriginalPosition + (float)((new Random()).nextInt(3) - 1));
 			rangeShootPaint.setStrokeWidth(2);
 		}
 		else{
 			shootingTime = GameRules.getTowerInitialShootingTime(type);
 			rangeShootPaint.setColor(Color.rgb(0, 120, 0));
 			rangeShootPaint.setStrokeWidth(1);
-			this.x = this.xOriginalPosition;
-			this.y = this.yOriginalPosition;
+			setX(this.xOriginalPosition);
+			setY(this.yOriginalPosition);
 			accumCrazyTime = 0;
 			isCrazy = false;
 		}	
@@ -197,11 +197,11 @@ public class Tower extends TileAnimation {
 	
 	public void drawExplotion(Canvas c){
 		if(isTheExplotionActive){
-			c.drawCircle(getXcenter(), getYcenter() + Utils.getCanvasHeight() - Utils.getOffsetY(), getRange(), getRangeShootPaint());
-			c.drawCircle(getXcenter(), getYcenter() + Utils.getCanvasHeight() - Utils.getOffsetY(), explosionRange, explosionPaint);			
+			c.drawCircle(getXCenter(), getYCenter() + Utils.getCanvasHeight() - Utils.getOffsetY(), getRange(), getRangeShootPaint());
+			c.drawCircle(getXCenter(), getYCenter() + Utils.getCanvasHeight() - Utils.getOffsetY(), explosionRange, explosionPaint);
 		}
 		else
-			c.drawCircle(getXcenter(), getYcenter() + Utils.getCanvasHeight() - Utils.getOffsetY(), getRange(), getRangeShootPaint());
+			c.drawCircle(getXCenter(), getYCenter() + Utils.getCanvasHeight() - Utils.getOffsetY(), getRange(), getRangeShootPaint());
 	}
 	
 	public void resetState() {	
@@ -221,8 +221,8 @@ public class Tower extends TileAnimation {
 	
 	public void aimAndShot(Critter critter, int offsetY) {        
 	    try {	    	
-	    	double dx = critter.getXcenter() - getXcenter();
-	        double dy = (critter.getYcenter() - offsetY) - (Utils.getCanvasHeight() + getYcenter() - offsetY);	                    
+	    	double dx = critter.getXCenter() - getXCenter();
+	        double dy = (critter.getYCenter() - offsetY) - (Utils.getCanvasHeight() + getYCenter() - offsetY);
 	        int angle = (int)Math.toDegrees(Math.atan2(dx, dy));                
 	        
 	        if(angle < 0) {
@@ -232,12 +232,12 @@ public class Tower extends TileAnimation {
 	        	angle = 180 - angle;
 	        }     
 	        	        
-	        rotAngle = angle;                
+	        setRotationAngle(angle);
 	    }catch (ArithmeticException ex) {}
 	}	
 	
 	public void tileAnimationUpdate(int dt) {
-		super.tileAnimationUpdate(dt);
+		super.updateTile(dt);
 		acummShootingTime += dt;
 		
 		if(!(victim == null) && victim.lives() <= 0)
@@ -275,8 +275,8 @@ public class Tower extends TileAnimation {
 	}
 	
 	public void setOriginalPosition(){
-		xOriginalPosition = this.x;
-		yOriginalPosition = this.y;
+		xOriginalPosition = getX();
+		yOriginalPosition = getY();
 	}
 	
 	private void initialize() {

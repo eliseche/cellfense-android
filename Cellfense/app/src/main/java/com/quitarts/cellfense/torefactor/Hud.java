@@ -235,19 +235,19 @@ public class Hud {
 	}
 	
 	public float getTurretCenterX(){
-		return this.buttonCapacitor.getXcenter();
+		return this.buttonCapacitor.getXCenter();
 	}
 	
 	public float getTurretCenterY(){
-		return this.buttonCapacitor.getYcenter();
+		return this.buttonCapacitor.getYCenter();
 	}
 	
 	public void pressOnNextWaveButton(){
-		buttonNextWave.setGraphicObject(DrawableType.HUD_READY_PUSHED);
+		buttonNextWave.setGraphic(DrawableType.HUD_READY_PUSHED);
 	}
 	
 	public void pressOffNextWaveButton(){
-		buttonNextWave.setGraphicObject(DrawableType.HUD_READY);
+		buttonNextWave.setGraphic(DrawableType.HUD_READY);
 	}	
 	
 	public void drawButtonNextWave(Canvas c,int dt) {	
