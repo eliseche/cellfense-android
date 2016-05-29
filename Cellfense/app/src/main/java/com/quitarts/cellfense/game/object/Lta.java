@@ -8,7 +8,7 @@ public class Lta extends TileAnimation {
         super(drawableType, rows, columns, frameSkipDelay, true); // true to repeat animation
     }
 
-    // Clicked for the double of the size of the drawable
+    // Return true (clicked) if clicked inside the double size of the drawable
     public boolean isClicked(int x, int y) {
         if (x > (getX() - getWidth()) && x < (getX() + getWidth() * 2) &&
                 y > (getY() - getHeight()) && y < (getY() + getHeight() * 2))

@@ -5,6 +5,9 @@ import android.util.Log;
 
 import com.quitarts.cellfense.game.FactoryDrawable;
 
+/**
+ * Load BitmapDrawable based on drawableType and all the info: x, y, x-center, y-center
+ */
 public class GraphicObject implements Cloneable {
     private BitmapDrawable graphic;
     private float x = 0.0f;

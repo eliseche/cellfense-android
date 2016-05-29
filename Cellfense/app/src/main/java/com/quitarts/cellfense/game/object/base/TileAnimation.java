@@ -9,6 +9,9 @@ import com.quitarts.cellfense.game.FactoryDrawable;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Load animated sprite
+ */
 public class TileAnimation extends GraphicObject {
     private List<BitmapDrawable> tiles = new ArrayList<>();
     private int rows;
@@ -28,9 +31,6 @@ public class TileAnimation extends GraphicObject {
         this.frameSkipDelay = frameSkipDelay;
         this.repeatAnimation = repeatAnimation;
 
-		/*if (repeatAnimation == true)
-            start();*/
-
         generateTiles();
     }
 
@@ -42,9 +42,6 @@ public class TileAnimation extends GraphicObject {
         this.columns = columns;
         this.frameSkipDelay = frameSkipDelay;
         this.repeatAnimation = repeatAnimation;
-
-        /*if (repeatAnimation == true)
-            start();*/
 
         generateTiles();
     }
@@ -110,6 +107,7 @@ public class TileAnimation extends GraphicObject {
         reset();
     }
 
+    // Update tile (nextFrame) in {dt} time
     public void updateTile(int dt) {
         if (isStarted) {
             accumTime += dt;
@@ -130,6 +128,7 @@ public class TileAnimation extends GraphicObject {
         }
     }
 
+    // Create tiles (List<BitmapDrawable>) by splitting the whole image in columns and rows
     private void generateTiles() {
         int offsetX = 0;
         int offsetY = 0;

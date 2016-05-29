@@ -8,6 +8,7 @@ public class Button extends GraphicObject {
         super(drawableType);
     }
 
+    // Return true (clicked) if clicked inside of the drawable
     public boolean isClicked(int x, int y) {
         if (x > getX() && x < (getX() + getWidth()) && y > getY() && y < (getY() + getHeight()))
             return true;
