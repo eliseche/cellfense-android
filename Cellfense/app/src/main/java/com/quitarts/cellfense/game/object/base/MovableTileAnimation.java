@@ -1,67 +1,49 @@
 package com.quitarts.cellfense.game.object.base;
 
-import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
-import com.quitarts.cellfense.torefactor.Utils;
+import com.quitarts.cellfense.game.FactoryDrawable;
 
 public class MovableTileAnimation extends TileAnimation {
-	private float speedX;
-	private float speedY;
-	private int movX;
-	private int movY;
+    private float speedX;
+    private float speedY;
+    private int directionX;
+    private int directionY;
 
-	public MovableTileAnimation(DrawableType drawableType, int tileRows,
-			int tileColumns, int frameSkipDelay, boolean repeatAnimation) {
-		super(drawableType, tileRows, tileColumns, frameSkipDelay,
-				repeatAnimation);
-	}
+    public MovableTileAnimation(FactoryDrawable.DrawableType drawableType, int rows, int columns, int frameSkipDelay, boolean repeatAnimation) {
+        super(drawableType, rows, columns, frameSkipDelay, repeatAnimation);
+    }
 
-	public void setAdvanceDirection(int velX, int velY) {
-		this.movX = velX;
-		this.movY = velY;
-	}
+    public void setSpeed(float speedX, float speedY) {
+        this.speedX = speedX;
+        this.speedY = speedY;
+    }
 
-	public void advance(int dt) {
-		// Convert dt to seconds
-		float dtSeg = dt / 1000.0f;
-		float incX = 0;
-		float incY = 0;
-		
-		incX = (float) (movX * (dtSeg * speedX));
-		incY = (float) (movY * (dtSeg * speedY));
+    public void setSpeedY(float speedY) {
+        this.speedY = speedY;
+        this.speedX = this.speedY;
+    }
 
-		
-		setX(getX() + incX);
-		setY(getY() + incY);
+    public void setDirection(int directionX, int directionY) {
+        this.directionX = directionX;
+        this.directionY = directionY;
+    }
 
-	}
+    public int[] getDirection() {
+        int[] direction = {directionX, directionY};
+        return direction;
+    }
 
-	public void setSpeedPercentageXY(float spX, float spY) {
-		speedX = Utils.getCellSize() * spX;
-		speedY = Utils.getCellSize() * spY;
-	}
+    public void advance(int dt) {
+        // Convert dt to seconds
+        float dtSeg = dt / 1000.0f;
+        float incX = 0;
+        float incY = 0;
 
-	public float getSpeedX() {
-		return speedX;
-	}
+        incX = directionX * dtSeg * speedX;
+        incY = directionY * dtSeg * speedY;
 
-	public float getSpeedY() {
-		return speedY;
-	}
-
-	public void setSpeedPixel(float speedPixelX, float speedPixelY) {
-		speedX = speedPixelX;
-		speedY = speedPixelY;
-	}
-
-	public void setSpeedToVerticalValue(float verticalSpeed) {
-		speedY = Utils.getCellSize() * verticalSpeed;
-		speedX = speedY;
-	}
-
-	public int[] getDirection() {
-		int[] directions = { movX, movY };
-		return directions;
-	}
+        setX(getX() + incX);
+        setY(getY() + incY);
+    }
 }
 
 

@@ -1,5 +1,6 @@
 package com.quitarts.cellfense.torefactor;
 
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.torefactor.Critter.CritterType;
 
 public class GameRules {
@@ -37,26 +38,6 @@ public class GameRules {
 		return 0;
 	}
 	
-	public static void setShootingRange(Tower tower) {
-		if(tower.getType() == Tower.TowerType.TURRET_CAPACITOR){
-			tower.setShootingRange((Utils.getCellSize() * 1.8f));
-			return;
-		}
-		
-		if(tower.getType() == Tower.TowerType.TURRET_TANK) {
-			tower.setShootingRange((Utils.getCellSize() * 1.8f));
-			return;						
-		}		
-	}
-	
-	public static int getLtaDamage() {
-		return 10;
-	}
-	
-	public static int getLTAUpgradePrice(){
-		return 10;
-	}
-	
 	public static int getTowerInitialShootingTime(Tower.TowerType type) {
 		if(type == Tower.TowerType.TURRET_CAPACITOR) {
 			return 500;			
@@ -92,14 +73,7 @@ public class GameRules {
 		}
 		return 0;
 	}
-	
-	public static int getTimeBar() {
-		return 20000;
-	}
-	
-	public static int getComboTime(){
-		return 4000;
-	}	
+
 	
 	public static int getStartLives(){
 		return 1;
@@ -121,14 +95,7 @@ public class GameRules {
 		}
 		return 1.4f;
 	}
-	
-	public static int getBonusTimeFactor(){
-		return 100;
-	}
-	
-	public static float getBUGSpeedXFactor(){
-		return 15;
-	}
+
 	
 	public static int getLTAPrice(){
 		return 5;

@@ -1,6 +1,8 @@
 package com.quitarts.cellfense.torefactor;
 
 import java.util.ArrayList;
+
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.torefactor.Critter.CritterType;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 
@@ -61,8 +63,8 @@ public class CritterFactory {
 		 */
 		float fixYValue = Utils.getCanvasHeight()/(int)Utils.getCellSize();
 		critter.setY(critter.getY() + fixYValue);		
-		critter.setAdvanceDirection(0,1);
-		critter.setSpeedToVerticalValue(GameRules.getCrittersStartSpeed(critter.getEnemyType()));
+		critter.setDirection(0,1);
+		critter.setSpeedY(GameRules.getCrittersStartSpeed(critter.getEnemyType()) * Utils.getCellSize());
 	}
 	
 	public static Critter createCritter(CritterType ct, int xGrid, int yGrid){
@@ -87,8 +89,8 @@ public class CritterFactory {
 		 */
 		float fixYValue = Utils.getCanvasHeight()/(int)Utils.getCellSize();
 		cr1.setY(cr1.getY() + fixYValue);		
-		cr1.setAdvanceDirection(0,1);
-		cr1.setSpeedToVerticalValue(GameRules.getCrittersStartSpeed(cr1.getEnemyType()));
+		cr1.setDirection(0,1);
+		cr1.setSpeedY(GameRules.getCrittersStartSpeed(cr1.getEnemyType()) * Utils.getCellSize());
 		return cr1;
 	}
 }

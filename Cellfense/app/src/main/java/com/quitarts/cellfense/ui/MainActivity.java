@@ -12,7 +12,7 @@ import android.widget.Button;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.torefactor.Utils;
+import com.quitarts.cellfense.Utils;
 
 /**
  * Main menu screen
@@ -69,6 +69,7 @@ public class MainActivity extends Activity implements OnClickListener {
         // Set canvas
         Display display = getWindowManager().getDefaultDisplay();
         Utils.setCanvasSize(display.getWidth(), display.getHeight());
+        Utils.setCellSize(display.getWidth() / 8, display.getHeight() / 12);
         // Get SharedPreferences
         sharedPreferences = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
     }

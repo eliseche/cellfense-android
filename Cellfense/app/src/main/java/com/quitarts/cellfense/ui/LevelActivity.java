@@ -10,7 +10,7 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.torefactor.Utils;
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.LevelDataSet;
 import com.quitarts.cellfense.helpers.ParserLevelXml;
 
@@ -53,7 +53,7 @@ public class LevelActivity extends Activity implements AdapterView.OnItemClickLi
 
     private void init() {
         // Instantiate unlocked art per level
-        Utils.setLevelUnlockedValues();
+        Utils.setLevelUnlock();
         // Load levels from xml and fill data in LevelDataSet
         loadAndParseLevels();
         LinkedHashMap<Integer, ArrayList<String>> levels = LevelDataSet.getLevels();

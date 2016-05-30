@@ -14,7 +14,7 @@ import android.view.SurfaceView;
 import com.quitarts.cellfense.torefactor.GameControl;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.torefactor.SoundManager;
-import com.quitarts.cellfense.torefactor.Utils;
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.ui.GameActivity;
 
 /**
@@ -145,7 +145,9 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         return true;
     }
 
-    /////////////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
+    ////////////////////////////NOT REFACTORED///////////////////////////////////////////////
+    /////////////////////////////////////////////////////////////////////////////////////////
     private final Handler gameSurfaceViewHandler = new Handler() {
         public void handleMessage(Message msg) {
             if (msg.what == Utils.DIALOG_PLAYAGAIN_ID) {

@@ -11,6 +11,7 @@ import android.os.Vibrator;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.game.LevelDataSet;
 import com.quitarts.cellfense.game.object.Bullet;

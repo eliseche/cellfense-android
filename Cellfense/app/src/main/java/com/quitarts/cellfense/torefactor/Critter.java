@@ -1,6 +1,5 @@
 package com.quitarts.cellfense.torefactor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.graphics.Canvas;
@@ -9,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.game.object.base.MovableTileAnimation;
@@ -47,15 +47,15 @@ public class Critter extends MovableTileAnimation {
 		
 		if(drawableType == DrawableType.ENEMY_SPIDER_SPRITE) {
 			type = CritterType.SPIDER;
-			setAdvanceDirection(0, 1);
+			setDirection(0, 1);
 		}
 		if(drawableType == DrawableType.ENEMY_CATERPILLAR_SPRITE) {
 			type = CritterType.CATERPILLAR;
-			setAdvanceDirection(0, 1);			
+			setDirection(0, 1);
 		}			
 		if(drawableType == DrawableType.ENEMY_CHIP_INFECTED_SPRITE) {
 			type = CritterType.CHIP;
-			setAdvanceDirection(0, 1);
+			setDirection(0, 1);
 		}
 	}	
 	
@@ -117,10 +117,10 @@ public class Critter extends MovableTileAnimation {
 		if(isSlow){			
 			accumSlowTime += dt;
 			if(accumSlowTime <= GameRules.getSlowCritterTime()){
-				this.setSpeedToVerticalValue(GameRules.getCrittersStartSpeed(type)*0.5f);				
+				this.setSpeedY((GameRules.getCrittersStartSpeed(type)*0.5f) * Utils.getCellSize());
 			}
 			else{
-				this.setSpeedToVerticalValue(GameRules.getCrittersStartSpeed(type));
+				this.setSpeedY(GameRules.getCrittersStartSpeed(type) * Utils.getCellSize());
 				accumSlowTime = 0; 
 				isSlow = false;
 				List<BitmapDrawable> tmpGraphics = this.getGraphics();
@@ -133,11 +133,11 @@ public class Critter extends MovableTileAnimation {
 	
 	private void decideDirections(int actualIndexStep, int lastIndexStep) {
 		if(lastIndexStep >= this.getCritterWorldPath().getLength()){
-			setAdvanceDirection(0,1);
+			setDirection(0,1);
 			setRotationAngle(0);
 		}	
 		else if (actualIndexStep >= this.getCritterWorldPath().getLength()){
-			setAdvanceDirection(0,1);
+			setDirection(0,1);
 			setRotationAngle(0);
 		}	
 		else{			
@@ -146,25 +146,25 @@ public class Critter extends MovableTileAnimation {
 			
 			if(actualStep.getY() == lastStep.getY()) {
 				if(actualStep.getX() > lastStep.getX()) {
-					setAdvanceDirection(1, 0);				
+					setDirection(1, 0);
 					return;
 				}
 				else if(actualStep.getX() <= lastStep.getX()) {
-					setAdvanceDirection(-1,0);
+					setDirection(-1,0);
 					return;
 				}					
 			}
 			else {
 				if(actualStep.getY() > lastStep.getY()) {						
-					setAdvanceDirection(0, 1);
+					setDirection(0, 1);
 					return;
 				}
 				else if(actualStep.getY() <= lastStep.getY()) {
-					setAdvanceDirection(0,-1);
+					setDirection(0,-1);
 					return;
 				}
 			}
-			setAdvanceDirection(0,1);
+			setDirection(0,1);
 			setRotationAngle(0);
 		}		
 	}

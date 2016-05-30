@@ -4,6 +4,7 @@ package com.quitarts.cellfense.torefactor;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
@@ -112,7 +113,7 @@ public class GameControl {
 		surfaceHolder = pSurfaceHolder;			
 		
 		blockMessagePaint = new Paint();
-		blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());		
+		blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
 		blockMessagePaint.setColor(Color.WHITE);
 		blockMessagePaint.setAntiAlias(true);
 		blockMessagePaint.setTypeface(tf);
@@ -478,8 +479,8 @@ public class GameControl {
 			 bullet.start();			 
 			 bullet.setX(ev.getX());				
 			 bullet.setY(ev.getY());
-			 bullet.setAdvanceDirection(1,1);
-			 bullet.setSpeedPixel(velX, velY);
+			 bullet.setDirection(1,1);
+			 bullet.setSpeed(velX, velY);
 			 
 			 gameWorld.addBulletToWorld((Bullet)bullet.clone());
 			 SoundManager.playSound(SoundManager.SoundType.FIREBALL, false);
@@ -670,7 +671,7 @@ public class GameControl {
 			editor.putString(String.valueOf(config.wave),String.valueOf(config.score));
 			editor.commit();
 		}
-		int levelUnlock = Utils.getLevelUnlocked(config.wave);		
+		int levelUnlock = Utils.getLevelUnlock(config.wave);
 		String result = sp.getString(Utils.UNLOCKED_ART,"0");		
 		if(levelUnlock != 0 && levelUnlock > Integer.valueOf(result)){
 			editor.putString(Utils.UNLOCKED_ART,String.valueOf(levelUnlock));
