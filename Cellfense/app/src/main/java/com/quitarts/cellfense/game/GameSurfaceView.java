@@ -4,17 +4,13 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Handler;
-import android.os.Message;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.quitarts.cellfense.torefactor.GameControl;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.torefactor.SoundManager;
-import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.ui.GameActivity;
 
 /**
@@ -33,7 +29,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         showLoading();
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
-        this.gameControl = new GameControl(surfaceHolder, gameSurfaceViewHandler, level);
+        this.gameControl = new GameControl(this, surfaceHolder, level);
     }
 
     @Override
@@ -143,56 +139,5 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         alertDialog.show();
 
         return true;
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////NOT REFACTORED///////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-    private final Handler gameSurfaceViewHandler = new Handler() {
-        public void handleMessage(Message msg) {
-            if (msg.what == Utils.DIALOG_PLAYAGAIN_ID) {
-                /**
-                 * Misma observacion que en DIALOG_LEVEL_PASS_ID
-                 */
-                gameControl.showGameOverDialog();
-            } else if (msg.what == Utils.DIALOG_LEVEL_PASS_ID) {
-                gameControl.showLevelWinDialog();
-                /**
-                 * Podria ser la siguiente linea (pasando el metodo a esta clase) pero
-                 * debido a que hace modificaciones al gameControl y utiliza informacion del gameWorld
-                 * por comodidad se lo deja asi.
-                 * showLevelWinDialog(ContextContainer.getContext());
-                 */
-            } else if (msg.what == Utils.DIALOG_GAMEOVER_ID) {
-                destroyGame();
-                gameActivity.finish();
-            } else if (msg.what == Utils.DIALOG_LOADING_OFF_ID) {
-                cancelLoading();
-            } else if (msg.what == Utils.POST_SCORE_ID) {
-                gameActivity.postScore("Cellfense", "Cellfense: Level: " + msg.arg1 + " - Score: " + msg.arg2);
-            } else if (msg.what == Utils.TUTORIAL_S5_L1_POPUP_WIN) {
-                gameControl.showTutorialLevel1Win();
-            } else if (msg.what == Utils.TUTORIAL_S11_L2_POPUP_LOSE) {
-                gameControl.showTutorialLevel2Lose();
-            } else if (msg.what == Utils.TUTORIAL_S11_L2_POPUP_WIN) {
-                gameControl.showTutorialLevel2Win();
-            } else if (msg.what == Utils.TUTORIAL_S19_L3_POPUP_LOSE) {
-                gameControl.showTutorialLevel3Lose();
-            } else if (msg.what == Utils.TUTORIAL_S19_L3_POPUP_WIN) {
-                gameControl.showTutorialLevel3Win();
-            } else if (msg.what == Utils.TUTORIAL_S26_L4_POPUP_LOSE) {
-                gameControl.showTutorialLevel4Lose();
-            } else if (msg.what == Utils.TUTORIAL_S26_L4_POPUP_WIN) {
-                gameControl.showTutorialLevel4Win();
-            } else if (msg.what == Utils.TUTORIAL_END) {
-                gameControl.showTutorialEndPopUp();
-            } else if (msg.what == Utils.NEW_UNLOCKED_ART) {
-                gameControl.showNewUnlockedArtMessage();
-            }
-        }
-    };
-
-    public Handler getGameSurfaceViewHandler() {
-        return gameSurfaceViewHandler;
     }
 }
