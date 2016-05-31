@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.torefactor.Utils;
+import com.quitarts.cellfense.Utils;
 
 /**
  * Display art images based on unlocked levels. Trophy.

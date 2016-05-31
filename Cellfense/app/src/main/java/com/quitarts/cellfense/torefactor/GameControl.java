@@ -4,6 +4,8 @@ package com.quitarts.cellfense.torefactor;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 
@@ -111,7 +113,7 @@ public class GameControl {
 		surfaceHolder = pSurfaceHolder;			
 		
 		blockMessagePaint = new Paint();
-		blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());		
+		blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
 		blockMessagePaint.setColor(Color.WHITE);
 		blockMessagePaint.setAntiAlias(true);
 		blockMessagePaint.setTypeface(tf);
@@ -232,7 +234,7 @@ public class GameControl {
 				addTower.setY(addTower.getFixYPositionElement());
 			}
 			if(gameWorld.isTowerTouch((int)ev.getX(), (int)ev.getY())) {
-				tmpMovingTower = (Tower)addTower.Clone();
+				tmpMovingTower = (Tower)addTower.clone();
 				movingExistingTower = true;				
 			}
 			else {
@@ -370,7 +372,7 @@ public class GameControl {
 								tutorialState = TutorialState.S2_L1_SCREEN2;
 							}
 							else{
-								gameWorld.addTowerToWorld((Tower)addTower.Clone());
+								gameWorld.addTowerToWorld((Tower)addTower.clone());
 								addTower.getGraphic().mutate().setColorFilter(null);
 							}
 						}
@@ -379,7 +381,7 @@ public class GameControl {
 								if(config.wave == TUTORIAL_LEVEL && tutorialState == TutorialState.S2_L1_SCREEN2){
 									if(isTowerOnTutorialPlace(addTower)){
 										tutorialState = TutorialState.S3_L1_TOWER_DRAGED;
-										gameWorld.addTowerToWorld((Tower)addTower.Clone());
+										gameWorld.addTowerToWorld((Tower)addTower.clone());
 										addTower.getGraphic().mutate().setColorFilter(null);
 										config.resources -= addTower.getPrice();
 									}
@@ -388,12 +390,12 @@ public class GameControl {
 								}
 								else if(config.wave == TUTORIAL_LEVEL && tutorialState == TutorialState.S9_L2_SCREEN2){									
 										tutorialState = TutorialState.S9_2_L2_TOWER_DRAGED;
-										gameWorld.addTowerToWorld((Tower)addTower.Clone());
+										gameWorld.addTowerToWorld((Tower)addTower.clone());
 										addTower.getGraphic().mutate().setColorFilter(null);
 										config.resources -= addTower.getPrice();									
 								}
 								else{
-									gameWorld.addTowerToWorld((Tower)addTower.Clone());
+									gameWorld.addTowerToWorld((Tower)addTower.clone());
 									addTower.getGraphic().mutate().setColorFilter(null);
 									config.resources -= addTower.getPrice();
 								}
@@ -408,7 +410,7 @@ public class GameControl {
 					}
 					else {
 						if(movingExistingTower) {						
-							gameWorld.addTowerToWorld((Tower)tmpMovingTower.Clone());
+							gameWorld.addTowerToWorld((Tower)tmpMovingTower.clone());
 							addTower.getGraphic().mutate().setColorFilter(null);
 						}						
 						pathBlock = true;
@@ -416,7 +418,7 @@ public class GameControl {
 				}
 				else {
 					if(movingExistingTower) {						
-						gameWorld.addTowerToWorld((Tower)tmpMovingTower.Clone());
+						gameWorld.addTowerToWorld((Tower)tmpMovingTower.clone());
 						addTower.getGraphic().mutate().setColorFilter(null);
 					}						
 				}				
@@ -473,14 +475,14 @@ public class GameControl {
 		     else if(angle >= 0) {
 		    	 angle = 180 - angle;
 		     }     
-			 bullet.rotAngle = angle;
+			 bullet.setRotationAngle(angle);
 			 bullet.start();			 
 			 bullet.setX(ev.getX());				
 			 bullet.setY(ev.getY());
-			 bullet.setAdvanceDirection(1,1);
-			 bullet.setSpeedPixel(velX, velY);
+			 bullet.setDirection(1,1);
+			 bullet.setSpeed(velX, velY);
 			 
-			 gameWorld.addBulletToWorld((Bullet)bullet.Clone());
+			 gameWorld.addBulletToWorld((Bullet)bullet.clone());
 			 SoundManager.playSound(SoundManager.SoundType.FIREBALL, false);
 			 config.resources -= GameRules.getLTAPrice();
 		 }
@@ -503,7 +505,7 @@ public class GameControl {
 			if(executeLevel) {
 				if(addTower != null) {
 					if(movingExistingTower) {						
-						gameWorld.addTowerToWorld((Tower)tmpMovingTower.Clone());
+						gameWorld.addTowerToWorld((Tower)tmpMovingTower.clone());
 						addTower.getGraphic().mutate().setColorFilter(null);						
 					}
 					synchronized (addTower) {
@@ -669,7 +671,7 @@ public class GameControl {
 			editor.putString(String.valueOf(config.wave),String.valueOf(config.score));
 			editor.commit();
 		}
-		int levelUnlock = Utils.getLevelUnlocked(config.wave);		
+		int levelUnlock = Utils.getLevelUnlock(config.wave);
 		String result = sp.getString(Utils.UNLOCKED_ART,"0");		
 		if(levelUnlock != 0 && levelUnlock > Integer.valueOf(result)){
 			editor.putString(Utils.UNLOCKED_ART,String.valueOf(levelUnlock));
@@ -1122,7 +1124,7 @@ public class GameControl {
 	private void drawAddingTower(Canvas c) {		
 		if(addTower != null) {
 			synchronized (addTower) {				
-				c.drawCircle(addTower.getXcenter(), addTower.getYcenter(), addTower.getRange(), addTower.getRangeShootPaint());
+				c.drawCircle(addTower.getXCenter(), addTower.getYCenter(), addTower.getRange(), addTower.getRangeShootPaint());
 				
 				addTower.getGraphic().setBounds(addTower.getFixXPositionElement(), addTower.getFixYPositionElement(), addTower.getFixXPositionElement() + addTower.getWidth(), addTower.getFixYPositionElement() + addTower.getHeight());				
 				if(addTower.getType() == Tower.TowerType.TURRET_TANK) {
@@ -1277,8 +1279,8 @@ public class GameControl {
 			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE),3);
 			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE_2),2);
 			drawTutorialText(c, ContextContainer.getContext().getResources().getString(R.string.tutorial_S25_L4_GAME_PAUSE_3),1);
-			xValueFingerImage = (int) gameWorld.getUnicTower().getXcenter()- tutorialImageFinger.getMinimumWidth()/2;
-			yValueFingerImage = (int) gameWorld.getUnicTower().getYcenter()- tutorialImageFinger.getMinimumHeight()/2;
+			xValueFingerImage = (int) gameWorld.getUnicTower().getXCenter()- tutorialImageFinger.getMinimumWidth()/2;
+			yValueFingerImage = (int) gameWorld.getUnicTower().getYCenter()- tutorialImageFinger.getMinimumHeight()/2;
 			
 			tutorialImageFinger.setBounds(xValueFingerImage  - tutotialFingerImageZoomFactor,
 					yValueFingerImage  - tutotialFingerImageZoomFactor,

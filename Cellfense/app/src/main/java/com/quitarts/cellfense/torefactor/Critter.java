@@ -1,6 +1,6 @@
 package com.quitarts.cellfense.torefactor;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -8,7 +8,10 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
+import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.object.base.MovableTileAnimation;
 import com.quitarts.pathfinder.Path;
 import com.quitarts.pathfinder.Path.Step;
 
@@ -44,15 +47,15 @@ public class Critter extends MovableTileAnimation {
 		
 		if(drawableType == DrawableType.ENEMY_SPIDER_SPRITE) {
 			type = CritterType.SPIDER;
-			setAdvanceDirection(0, 1);
+			setDirection(0, 1);
 		}
 		if(drawableType == DrawableType.ENEMY_CATERPILLAR_SPRITE) {
 			type = CritterType.CATERPILLAR;
-			setAdvanceDirection(0, 1);			
+			setDirection(0, 1);
 		}			
 		if(drawableType == DrawableType.ENEMY_CHIP_INFECTED_SPRITE) {
 			type = CritterType.CHIP;
-			setAdvanceDirection(0, 1);
+			setDirection(0, 1);
 		}
 	}	
 	
@@ -72,7 +75,7 @@ public class Critter extends MovableTileAnimation {
 				this.setY(actualStep.getY() + offSetY - Utils.getCellSize());				
 				nextStepIndex++;
 				decideDirections(nextStepIndex, nextStepIndex-1);
-				rotAngle = 0;
+				setRotationAngle(0);
 				return;
 			}			
 			if(nextStepIndex > 0) {
@@ -81,29 +84,29 @@ public class Critter extends MovableTileAnimation {
 						this.setX(actualStep.getX());
 						nextStepIndex++;
 						decideDirections(nextStepIndex, nextStepIndex+1);											
-					}	
-					rotAngle = 90;	
+					}
+					setRotationAngle(90);
 				} else if (this.getDirection()[0] == 1) {
 					if(getX() >= actualStep.getX()){
 						this.setX(actualStep.getX());
 						nextStepIndex++;
 						decideDirections(nextStepIndex, nextStepIndex+1);						
 					}
-					rotAngle = -90;
+					setRotationAngle(-90);
 				} else if (this.getDirection()[1] == -1) {
 					if(getY() - offSetY + Utils.getCellSize()< actualStep.getY() ) {
 						this.setY(actualStep.getY() + offSetY - Utils.getCellSize());
 						nextStepIndex++;	
 						decideDirections(nextStepIndex, nextStepIndex+1);						
-					}	
-					rotAngle = 180;
+					}
+					setRotationAngle(180);
 				} else if (this.getDirection()[1] == 1) {
 					if(getY() - offSetY + Utils.getCellSize()>= actualStep.getY()) {	
 						this.setY(actualStep.getY() + offSetY - Utils.getCellSize());
 						nextStepIndex++;				
 						decideDirections(nextStepIndex, nextStepIndex+1);						
 					}
-					rotAngle = 0;			
+					setRotationAngle(0);
 				}
 				decideDirections(nextStepIndex, nextStepIndex-1);
 			}
@@ -114,13 +117,13 @@ public class Critter extends MovableTileAnimation {
 		if(isSlow){			
 			accumSlowTime += dt;
 			if(accumSlowTime <= GameRules.getSlowCritterTime()){
-				this.setSpeedToVerticalValue(GameRules.getCrittersStartSpeed(type)*0.5f);				
+				this.setSpeedY((GameRules.getCrittersStartSpeed(type)*0.5f) * Utils.getCellSize());
 			}
 			else{
-				this.setSpeedToVerticalValue(GameRules.getCrittersStartSpeed(type));
+				this.setSpeedY(GameRules.getCrittersStartSpeed(type) * Utils.getCellSize());
 				accumSlowTime = 0; 
 				isSlow = false;
-				ArrayList<BitmapDrawable> tmpGraphics = this.getGraphics();
+				List<BitmapDrawable> tmpGraphics = this.getGraphics();
 				for(BitmapDrawable bd : tmpGraphics) {
 					bd.mutate().setColorFilter(null);
 				}
@@ -130,12 +133,12 @@ public class Critter extends MovableTileAnimation {
 	
 	private void decideDirections(int actualIndexStep, int lastIndexStep) {
 		if(lastIndexStep >= this.getCritterWorldPath().getLength()){
-			setAdvanceDirection(0,1);
-			rotAngle = 0 ;
+			setDirection(0,1);
+			setRotationAngle(0);
 		}	
 		else if (actualIndexStep >= this.getCritterWorldPath().getLength()){
-			setAdvanceDirection(0,1);
-			rotAngle = 0;
+			setDirection(0,1);
+			setRotationAngle(0);
 		}	
 		else{			
 			Step actualStep = this.getCritterWorldPath().getStep(actualIndexStep);
@@ -143,26 +146,26 @@ public class Critter extends MovableTileAnimation {
 			
 			if(actualStep.getY() == lastStep.getY()) {
 				if(actualStep.getX() > lastStep.getX()) {
-					setAdvanceDirection(1, 0);				
+					setDirection(1, 0);
 					return;
 				}
 				else if(actualStep.getX() <= lastStep.getX()) {
-					setAdvanceDirection(-1,0);
+					setDirection(-1,0);
 					return;
 				}					
 			}
 			else {
 				if(actualStep.getY() > lastStep.getY()) {						
-					setAdvanceDirection(0, 1);
+					setDirection(0, 1);
 					return;
 				}
 				else if(actualStep.getY() <= lastStep.getY()) {
-					setAdvanceDirection(0,-1);
+					setDirection(0,-1);
 					return;
 				}
 			}
-			setAdvanceDirection(0,1);
-			rotAngle = 0;
+			setDirection(0,1);
+			setRotationAngle(0);
 		}		
 	}
 	
@@ -330,7 +333,7 @@ public class Critter extends MovableTileAnimation {
 	
 	public void draw(Canvas c, int offSetY){
 		c.save();
-		c.rotate(rotAngle,getXcenter(),getYcenter() - offSetY);
+		c.rotate(getRotationAngle(), getXCenter(), getYCenter() - offSetY);
 		getGraphic().setBounds((int)getX(), (int)getY() - offSetY, (int)getX() + getWidth(), (int)getY() + getHeight() - offSetY);		
 		getGraphic().draw(c);
 		c.restore();

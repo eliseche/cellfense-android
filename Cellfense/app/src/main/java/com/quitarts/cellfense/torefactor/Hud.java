@@ -2,6 +2,8 @@ package com.quitarts.cellfense.torefactor;
 import java.util.ArrayList;
 
 import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.game.object.Button;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.game.LevelDataSet;
@@ -20,7 +22,7 @@ public class Hud {
 	private Paint scorePaint;
 	private Paint wavePaint;
 	private BitmapDrawable hud;
-	private Button buttonCapacitor;		
+	private Button buttonCapacitor;
 	private Button buttonTank;
 	private Button buttonBomb;
 	private Button buttonNextWave;
@@ -234,19 +236,19 @@ public class Hud {
 	}
 	
 	public float getTurretCenterX(){
-		return this.buttonCapacitor.getXcenter();
+		return this.buttonCapacitor.getXCenter();
 	}
 	
 	public float getTurretCenterY(){
-		return this.buttonCapacitor.getYcenter();
+		return this.buttonCapacitor.getYCenter();
 	}
 	
 	public void pressOnNextWaveButton(){
-		buttonNextWave.setGraphicObject(DrawableType.HUD_READY_PUSHED);
+		buttonNextWave.setGraphic(DrawableType.HUD_READY_PUSHED);
 	}
 	
 	public void pressOffNextWaveButton(){
-		buttonNextWave.setGraphicObject(DrawableType.HUD_READY);
+		buttonNextWave.setGraphic(DrawableType.HUD_READY);
 	}	
 	
 	public void drawButtonNextWave(Canvas c,int dt) {	
@@ -295,7 +297,7 @@ public class Hud {
 		hud = FactoryDrawable.createDrawable(DrawableType.HUD);
 		hud.setAlpha(80);
 		buttonCapacitor = new Button(DrawableType.GUN_TURRET_CAPACITOR);
-		Utils.setCellSize(buttonCapacitor.getHeight());
+		//Utils.setCellSize(buttonCapacitor.getHeight());
 		buttonTank = new Button(DrawableType.GUN_TURRET_TANK);
 		buttonBomb = new Button(DrawableType.GUN_TURRET_BOMB);
 		buttonNextWave = new Button(DrawableType.HUD_READY);
