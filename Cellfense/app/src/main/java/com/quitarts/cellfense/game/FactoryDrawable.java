@@ -29,7 +29,7 @@ public class FactoryDrawable {
         // LTA (A.K.A Fireball)
         GUN_LTA_POWER_SPRITE, GUN_LTA_FIRE_SPRITE,
         // Hud
-        HUD, HUD_ARROW, HUD_READY, HUD_READY_PUSHED, HUD_BATTERY,
+        HUD, HUD_ARROW, HUD_READY_ENABLED, HUD_READY_DISABLED, HUD_BATTERY,
         // Tutorial
         TUTORIAL_VS, TUTORIAL_FINGER
     }
@@ -85,11 +85,11 @@ public class FactoryDrawable {
                 case HUD_ARROW:
                     bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_arrow);
                     break;
-                case HUD_READY:
-                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_ready);
+                case HUD_READY_ENABLED:
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_ready_enabled);
                     break;
-                case HUD_READY_PUSHED:
-                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_ready_pushed);
+                case HUD_READY_DISABLED:
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_ready_disabled);
                     break;
                 case HUD_BATTERY:
                     bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_battery);
