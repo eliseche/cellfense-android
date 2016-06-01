@@ -6,14 +6,13 @@ import android.graphics.Canvas;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.Utils;
 
 public class GameWorld {
-    private GameControl gameControl;
     private int width;
     private int height;
+    private GameControl gameControl;
     private Bitmap background;
-    private int offSetY;
+    private int offsetY;
     private int deltaPositionY;
 
     public GameWorld(int width, int height, GameControl gameControl) {
@@ -25,18 +24,31 @@ public class GameWorld {
                 this.width, this.height, false);
     }
 
+    // region Update world
     public void update(int dt) {
         processOffsetY();
     }
 
+    // Update offsetY value to be used to slide background
     private void processOffsetY() {
-        offSetY += deltaPositionY;
-        if (offSetY < 0)
-            offSetY = 0;
-        else if (offSetY > height / 2)
-            offSetY = height / 2;
-        Utils.setOffsetY(offSetY);
+        offsetY += deltaPositionY;
+        if (offsetY < 0)
+            offsetY = 0;
+        else if (offsetY > height / 2)
+            offsetY = height / 2;
     }
+    // endregion
+
+    // region Draw world
+    public void drawWorld(Canvas canvas) {
+        drawBackground(canvas);
+    }
+
+    // Draw backgorund image, slide it based on offsetY
+    private void drawBackground(Canvas canvas) {
+        canvas.drawBitmap(background, 0, -offsetY, null);
+    }
+    // endregion
 
     public void slideToTopScreen() {
         deltaPositionY = -45;
@@ -44,17 +56,5 @@ public class GameWorld {
 
     public void slideToBottomScreen() {
         deltaPositionY = 45;
-    }
-
-    public void slideToTopScreen(int speed) {
-        deltaPositionY = -speed;
-    }
-
-    public void drawWorld(Canvas canvas) {
-        drawBackground(canvas);
-    }
-
-    private void drawBackground(Canvas canvas) {
-        canvas.drawBitmap(background, 0, -offSetY, null);
     }
 }

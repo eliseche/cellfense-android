@@ -40,6 +40,11 @@ public class Utils {
         return Utils.cellHeight;
     }
 
+    // Main game loop will be running at 25 FPS
+    public static int getFramesPerSecond() {
+        return 25;
+    }
+
     public static void setLevelUnlock() {
         Utils.levelUnlock.put(2, 2);
         Utils.levelUnlock.put(5, 5);
@@ -81,12 +86,6 @@ public class Utils {
     public static float getCellSize() {
         return 130;
     }
-
-
-    public static int getFramePerSecondControlValue() {
-        return 25;
-    }
-
 
     public static float getScaleFactor() {
         return ContextContainer.getContext().getResources().getDisplayMetrics().density;

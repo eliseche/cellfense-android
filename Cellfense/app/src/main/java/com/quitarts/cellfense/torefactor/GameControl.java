@@ -159,7 +159,7 @@ public class GameControl {
 	}
 	
 	public void play() {	
-		int FramePerSecondControlValue  = Utils.getFramePerSecondControlValue();		
+		int FramePerSecondControlValue  = Utils.getFramesPerSecond();
 		int dt = 0, fullDt = 0;	
 						
 		Canvas c = surfaceHolder.lockCanvas(null);

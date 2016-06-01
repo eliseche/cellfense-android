@@ -4,30 +4,23 @@ package com.quitarts.cellfense.game;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.Utils;
-import com.quitarts.cellfense.torefactor.GameRules;
-import com.quitarts.cellfense.torefactor.SoundManager;
-import com.quitarts.cellfense.torefactor.Tower;
 
 public class GameControl {
     private GameSurfaceView gameSurfaceView;
     private SurfaceHolder surfaceHolder;
-    private GameWorld gameWorld;
     private Hud hud;
-    private SharedPreferences sharedPreferences;
+    private GameWorld gameWorld;
     private boolean playing = true;
-    private boolean isGamePaused;
-    private int ticks = 0;
-    private long accumDt = 0;
+    private boolean paused = false;
     private GameState gameState = GameState.SCREEN1;
-    private EnemyState enemyState = EnemyState.FROZEN;
+    private EnemyState enemyState = EnemyState.UNAVAILABLE;
 
     private enum GameState {
         SCREEN1, SCREEN2
@@ -40,71 +33,76 @@ public class GameControl {
     public GameControl(GameSurfaceView gameSurfaceView, SurfaceHolder surfaceHolder, int startLevel) {
         this.gameSurfaceView = gameSurfaceView;
         this.surfaceHolder = surfaceHolder;
-
-        sharedPreferences = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
-        Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
-        Typeface tf2 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/apexnew_medium.ttf");
     }
 
+    // Game main loop, update and draw world
     public void play() {
-        int FramePerSecondControlValue = Utils.getFramePerSecondControlValue();
-        int dt = 0, fullDt = 0;
+        int fps = Utils.getFramesPerSecond();
+        long dt = 0;
+        long accumDt = 0;
 
-        Canvas c = surfaceHolder.lockCanvas(null);
-        gameWorld = new GameWorld(c.getWidth(), c.getHeight(), this);
         hud = new Hud(this);
-        surfaceHolder.unlockCanvasAndPost(c);
+        Canvas canvas = surfaceHolder.lockCanvas();
+        gameWorld = new GameWorld(canvas.getWidth(), canvas.getHeight(), this);
+        surfaceHolder.unlockCanvasAndPost(canvas);
+
         gameSurfaceView.cancelLoading();
 
         playing = true;
-
         while (playing) {
             long timeBeforeDraw = System.currentTimeMillis();
             boolean updateFlag = false;
-            if (!isGamePaused) {
-                updateFlag = false;
-                fullDt += dt;
-
-                //if running slow force update method
-                while (fullDt > FramePerSecondControlValue) {
-                    update(FramePerSecondControlValue);
-                    fullDt -= FramePerSecondControlValue;
+            // Update game
+            if (!isGamePaused()) {
+                // If running slow, froce update method
+                while (accumDt > fps) {
+                    update(fps);
+                    accumDt -= fps;
                     updateFlag = true;
                 }
             } else
                 updateFlag = true;
 
+            // Draw if updateFlag = true, else sleep
             if (updateFlag) {
                 synchronized (surfaceHolder) {
-                    c = surfaceHolder.lockCanvas(null);
-                    draw(c, dt);
-                    surfaceHolder.unlockCanvasAndPost(c);
+                    canvas = surfaceHolder.lockCanvas();
+                    draw(canvas);
+                    surfaceHolder.unlockCanvasAndPost(canvas);
                 }
             } else {
                 try {
-                    Thread.sleep(FramePerSecondControlValue / 2);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+                    Thread.sleep(fps / 2);
+
+                } catch (Exception e) {
+                    Log.e(getClass().getName(), e.getMessage(), e);
                 }
             }
 
-            ticks++;
-            dt = (int) (System.currentTimeMillis() - timeBeforeDraw);
+            dt = System.currentTimeMillis() - timeBeforeDraw;
             accumDt += dt;
         }
     }
 
+    // Update Game
     public void update(int dt) {
+        if (enemyState == EnemyState.UNAVAILABLE) {
+            enemyState = EnemyState.FROZEN;
+        }
+
         gameWorld.update(dt);
+        hud.update(dt);
     }
 
-    public void draw(Canvas canvas, int dt) {
+    // Draw Game
+    public void draw(Canvas canvas) {
         if (canvas != null) {
             gameWorld.drawWorld(canvas);
-            hud.draw(canvas, dt);
+            hud.draw(canvas);
         }
     }
 
+    // region Events
     public boolean eventActionDown(MotionEvent ev) {
         return true;
     }
@@ -114,48 +112,43 @@ public class GameControl {
     }
 
     public boolean eventActionUp(MotionEvent ev) {
-		/*
-		 * Click button slide down to Screen2
-		 */
-        if(gameState == GameState.SCREEN1 && enemyState == EnemyState.FROZEN && hud.buttonDownClicked((int)ev.getX(), (int)ev.getY())) {
-            gameState = GameState.SCREEN2;
-
-            gameWorld.slideToBottomScreen();
-        }
-
-        /*
-		 * Click button slide up to Screen1
-		 */
-        else if(gameState == GameState.SCREEN2 && enemyState == EnemyState.FROZEN && hud.buttonDownClicked((int)ev.getX(), (int)ev.getY())) {
-            gameState = GameState.SCREEN1;
-            gameWorld.slideToTopScreen();
-
+        // Click hud button arrow
+        if (enemyState == EnemyState.FROZEN && hud.buttonHudArrowClicked((int) ev.getX(), (int) ev.getY())) {
+            // Slide to SCREEN2
+            if (gameState == GameState.SCREEN1) {
+                gameState = GameState.SCREEN2;
+                gameWorld.slideToBottomScreen();
+            }
+            // Slide to SCREEN1
+            else if (gameState == GameState.SCREEN2) {
+                gameState = GameState.SCREEN1;
+                gameWorld.slideToTopScreen();
+            }
         }
 
         return true;
     }
+    // endregion
+
+    public void resume() {
+        paused = false;
+    }
 
     public void pause() {
-        isGamePaused = true;
+        paused = true;
     }
 
-    public void resume(){
-        isGamePaused = false;
-    }
-
-    public void pauseFull(){
-        isGamePaused = true;
-    }
-
-    public void resumeFull(){
-        isGamePaused = false;
-    }
-
-    public boolean isGamePaused(){
-        return isGamePaused;
-    }
-
-    public void stop(){
+    public void stop() {
         playing = false;
+    }
+
+    public boolean isGamePaused() {
+        return paused;
+    }
+
+    private void initialize() {
+        SharedPreferences sharedPreferences = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
+        Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
+        Typeface tf2 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/apexnew_medium.ttf");
     }
 }

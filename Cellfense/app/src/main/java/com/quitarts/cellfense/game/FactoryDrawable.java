@@ -1,10 +1,12 @@
 package com.quitarts.cellfense.game;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
-import android.support.v4.content.ContextCompat;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
+import com.quitarts.cellfense.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -33,74 +35,104 @@ public class FactoryDrawable {
     }
 
     public static BitmapDrawable createDrawable(DrawableType typeToBuild) {
+        Bitmap bitmap = null;
         BitmapDrawable bitmapDrawable = bitmapDrawables.get(typeToBuild);
 
         if (bitmapDrawable == null) {
             switch (typeToBuild) {
                 case GUN_TURRET_CAPACITOR:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_capacitor);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_capacitor);
                     break;
                 case GUN_TURRET_CAPACITOR_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_capacitor_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_capacitor_sprite);
                     break;
                 case GUN_TURRET_TANK:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_tank);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_tank);
                     break;
                 case GUN_TURRET_TANK_BASE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_tank_base);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_tank_base);
                     break;
                 case GUN_TURRET_TANK_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_tank_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_tank_sprite);
                     break;
                 case GUN_TURRET_BOMB:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_bomb);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_bomb);
                     break;
                 case GUN_TURRET_BOMB_CRATER:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_bomb_crater);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_bomb_crater);
                     break;
                 case GUN_TURRET_BOMB_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_turret_bomb_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_turret_bomb_sprite);
                     break;
                 case ENEMY_SPIDER_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.enemy_spider_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.enemy_spider_sprite);
                     break;
                 case ENEMY_CATERPILLAR_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.enemy_caterpillar_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.enemy_caterpillar_sprite);
                     break;
                 case ENEMY_CHIP_INFECTED_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.enemy_chip_infected);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.enemy_chip_infected_sprite);
                     break;
                 case GUN_LTA_POWER_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_lta_power_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_lta_power_sprite);
                     break;
                 case GUN_LTA_FIRE_SPRITE:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.gun_lta_fire_sprite);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.gun_lta_fire_sprite);
                     break;
                 case HUD:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud);
                     break;
                 case HUD_ARROW:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_arrow);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_arrow);
                     break;
                 case HUD_READY:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_ready);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_ready);
                     break;
                 case HUD_READY_PUSHED:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_ready_pushed);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_ready_pushed);
                     break;
                 case HUD_BATTERY:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.hud_battery);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.hud_battery);
                     break;
                 case TUTORIAL_VS:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.tutorial_vs);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.tutorial_vs);
                     break;
                 case TUTORIAL_FINGER:
-                    bitmapDrawable = (BitmapDrawable) ContextCompat.getDrawable(ContextContainer.getContext(), R.drawable.tutorial_finger);
+                    bitmap = BitmapFactory.decodeResource(ContextContainer.getContext().getResources(), R.drawable.tutorial_finger);
                     break;
                 default:
                     break;
             }
 
+            switch (typeToBuild) {
+                case GUN_TURRET_CAPACITOR:
+                case GUN_TURRET_TANK:
+                case GUN_TURRET_TANK_BASE:
+                case GUN_TURRET_BOMB:
+                case GUN_TURRET_BOMB_CRATER:
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth(), (int) Utils.getCellHeight(), false);
+                    break;
+                case GUN_TURRET_CAPACITOR_SPRITE:
+                case GUN_TURRET_TANK_SPRITE:
+                case ENEMY_SPIDER_SPRITE:
+                case ENEMY_CATERPILLAR_SPRITE:
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 7, (int) Utils.getCellHeight(), false);
+                    break;
+                case GUN_TURRET_BOMB_SPRITE:
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 8, (int) Utils.getCellHeight(), false);
+                    break;
+                case ENEMY_CHIP_INFECTED_SPRITE:
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 5, (int) Utils.getCellHeight(), false);
+                    break;
+                case GUN_LTA_POWER_SPRITE:
+                case GUN_LTA_FIRE_SPRITE:
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 15, (int) Utils.getCellHeight(), false);
+                    break;
+                default:
+                    break;
+            }
+
+            bitmapDrawable = new BitmapDrawable(ContextContainer.getContext().getResources(), bitmap);
             bitmapDrawables.put(typeToBuild, bitmapDrawable);
         }
 
