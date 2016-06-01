@@ -244,11 +244,11 @@ public class Hud {
 	}
 	
 	public void pressOnNextWaveButton(){
-		buttonNextWave.setGraphic(DrawableType.HUD_READY_PUSHED);
+		buttonNextWave.setGraphic(DrawableType.HUD_READY_DISABLED);
 	}
 	
 	public void pressOffNextWaveButton(){
-		buttonNextWave.setGraphic(DrawableType.HUD_READY);
+		buttonNextWave.setGraphic(DrawableType.HUD_READY_ENABLED);
 	}	
 	
 	public void drawButtonNextWave(Canvas c,int dt) {	
@@ -300,7 +300,7 @@ public class Hud {
 		//Utils.setCellSize(buttonCapacitor.getHeight());
 		buttonTank = new Button(DrawableType.GUN_TURRET_TANK);
 		buttonBomb = new Button(DrawableType.GUN_TURRET_BOMB);
-		buttonNextWave = new Button(DrawableType.HUD_READY);
+		buttonNextWave = new Button(DrawableType.HUD_READY_ENABLED);
 		buttonNextWave.setX(buttonNextWave.getWidth());
 		buttonNextWave.setY(Utils.getCanvasHeight() - (buttonNextWave.getHeight()));
 		Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(),"fonts/Discognate.ttf");

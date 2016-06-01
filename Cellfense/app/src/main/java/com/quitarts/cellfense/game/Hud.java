@@ -12,6 +12,8 @@ public class Hud {
     private Rect hud;
     private Paint hudPaint;
     private Button buttonHudArrow;
+    private Button buttonHudReadyEnabled;
+    private Button buttonHudReadyDisabled;
 
     public Hud(GameControl gameControl) {
         this.gameControl = gameControl;
@@ -27,6 +29,7 @@ public class Hud {
     // region Draw hud
     public void drawBaseHud(Canvas canvas) {
         drawHudArrow(canvas);
+        drawHudReady(canvas);
     }
 
     public void drawBottomHud(Canvas canvas) {
@@ -39,6 +42,10 @@ public class Hud {
 
     public void drawHudArrow(Canvas canvas) {
         buttonHudArrow.getGraphic().draw(canvas);
+    }
+
+    public void drawHudReady(Canvas canvas) {
+        buttonHudReadyDisabled.getGraphic().draw(canvas);
     }
     // endregion
 
@@ -56,6 +63,16 @@ public class Hud {
         buttonHudArrow = new Button(FactoryDrawable.DrawableType.HUD_ARROW);
         buttonHudArrow.setX(0);
         buttonHudArrow.setY(Utils.getCanvasHeight() - buttonHudArrow.getHeight());
+
+        // HudReadyEnabled
+        buttonHudReadyEnabled = new Button(FactoryDrawable.DrawableType.HUD_READY_ENABLED);
+        buttonHudReadyEnabled.setX(buttonHudArrow.getWidth());
+        buttonHudReadyEnabled.setY(Utils.getCanvasHeight() - buttonHudReadyEnabled.getHeight());
+
+        // HudReadyDisabled
+        buttonHudReadyDisabled = new Button(FactoryDrawable.DrawableType.HUD_READY_DISABLED);
+        buttonHudReadyDisabled.setX(buttonHudArrow.getWidth());
+        buttonHudReadyDisabled.setY(Utils.getCanvasHeight() - buttonHudReadyDisabled.getHeight());
 
         // Hud
         hud = new Rect(0, Utils.getCanvasHeight() - buttonHudArrow.getHeight(), Utils.getCanvasWidth(), Utils.getCanvasHeight());
