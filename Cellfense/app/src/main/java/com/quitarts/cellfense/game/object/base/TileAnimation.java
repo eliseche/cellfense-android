@@ -58,12 +58,14 @@ public class TileAnimation extends GraphicObject {
     public void setX(float x) {
         super.setX(x);
         calculateCenter();
+        calculateBounds();
     }
 
     @Override
     public void setY(float y) {
         super.setY(y);
         calculateCenter();
+        calculateBounds();
     }
 
     @Override
@@ -80,6 +82,11 @@ public class TileAnimation extends GraphicObject {
     public void calculateCenter() {
         super.setXCenter(super.getX() + getWidth() / 2.0f);
         super.setYCenter(super.getY() + getHeight() / 2.0f);
+    }
+
+    @Override
+    public void calculateBounds() {
+        super.getGraphic().setBounds((int) super.getX(), (int) super.getY(), getWidth(), getHeight());
     }
 
     public int getRotationAngle() {

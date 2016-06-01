@@ -34,6 +34,7 @@ public class GraphicObject implements Cloneable {
     public void setX(float x) {
         this.x = x;
         calculateCenter();
+        calculateBounds();
     }
 
     public float getY() {
@@ -43,6 +44,7 @@ public class GraphicObject implements Cloneable {
     public void setY(float y) {
         this.y = y;
         calculateCenter();
+        calculateBounds();
     }
 
     public float getXCenter() {
@@ -72,6 +74,10 @@ public class GraphicObject implements Cloneable {
     public void calculateCenter() {
         xCenter = x + getWidth() / 2.0f;
         yCenter = y + getHeight() / 2.0f;
+    }
+
+    public void calculateBounds() {
+        graphic.setBounds((int) x, (int) y, (int) x + getWidth(), (int) y + getHeight());
     }
 
     @Override

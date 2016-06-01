@@ -98,7 +98,9 @@ public class GameControl {
     public void draw(Canvas canvas) {
         if (canvas != null) {
             gameWorld.drawWorld(canvas);
-            hud.draw(canvas);
+            if (gameState == GameState.SCREEN2 && enemyState == EnemyState.FROZEN)
+                hud.drawBottomHud(canvas);
+            hud.drawBaseHud(canvas);
         }
     }
 
