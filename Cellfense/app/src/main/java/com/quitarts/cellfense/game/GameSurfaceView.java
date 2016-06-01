@@ -47,7 +47,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             });
             gameThread.start();
         } else {
-            gameControl.resumeFull();
+            gameControl.resume();
             SoundManager.resumeMusics();
 
         }
@@ -55,7 +55,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
-        gameControl.pauseFull();
+        gameControl.pause();
         if (gameThread != null)
             SoundManager.pauseMusics();
     }
