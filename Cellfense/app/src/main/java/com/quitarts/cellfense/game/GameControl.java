@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.Utils;
+import com.quitarts.cellfense.game.object.Bullet;
 
 public class GameControl {
     private GameSurfaceView gameSurfaceView;
@@ -21,6 +22,10 @@ public class GameControl {
     private boolean paused = false;
     private GameState gameState = GameState.SCREEN1;
     private EnemyState enemyState = EnemyState.UNAVAILABLE;
+    private int actionMoveX;
+    private int actionMoveY;
+    private long holdingDownStartTime;
+    private boolean ltaStartShoot;
 
     private enum GameState {
         SCREEN1, SCREEN2
@@ -106,6 +111,14 @@ public class GameControl {
 
     // region Events
     public boolean eventActionDown(MotionEvent ev) {
+        // User is trying to shoot using LTA
+        if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY())) {
+            ltaStartShoot = true;
+            actionMoveX = (int) ev.getX();
+            actionMoveY = (int) ev.getY();
+            holdingDownStartTime = System.currentTimeMillis();
+        }
+
         return true;
     }
 
@@ -128,6 +141,9 @@ public class GameControl {
             }
         }
 
+        if (ltaStartShoot && gameState == GameState.SCREEN2)
+            shootLTA(ev);
+
         return true;
     }
     // endregion
@@ -146,6 +162,34 @@ public class GameControl {
 
     public boolean isGamePaused() {
         return paused;
+    }
+
+    private void shootLTA(MotionEvent ev) {
+        int dx = (int) ev.getX() - actionMoveX;
+        int dy = (int) ev.getY() - actionMoveY;
+        if (dx != 0 && dy != 0) {
+            float dt = (System.currentTimeMillis() - holdingDownStartTime);
+            // Convert dt to seconds
+            dt = dt / 1000;
+            float velX = dx / dt;
+            float velY = dy / dt;
+            int angle = (int) Math.toDegrees(Math.atan2(dx, dy));
+            if (angle < 0)
+                angle = 180 + Math.abs(angle);
+            else if (angle >= 0)
+                angle = 180 - angle;
+
+            Bullet bullet = new Bullet(FactoryDrawable.DrawableType.GUN_LTA_FIRE_SPRITE, 1, 15, 15);
+            bullet.setRotationAngle(angle);
+            bullet.setX(ev.getX());
+            bullet.setY(ev.getY());
+            bullet.setDirection(1, 1);
+            bullet.setSpeed(velX, velY);
+            bullet.start();
+            gameWorld.addBulletToWorld((Bullet) bullet.clone());
+        }
+
+        ltaStartShoot = false;
     }
 
     private void initialize() {

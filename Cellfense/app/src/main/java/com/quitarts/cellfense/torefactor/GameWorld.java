@@ -16,6 +16,7 @@ import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
 import com.quitarts.cellfense.game.LevelDataSet;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Lta;
+import com.quitarts.cellfense.game.object.base.GraphicObject;
 import com.quitarts.cellfense.torefactor.Critter.CritterType;
 import com.quitarts.cellfense.torefactor.GameControl.TutorialState;
 import com.quitarts.particles.Explosion;
@@ -99,7 +100,7 @@ public class GameWorld {
                 critter.advance(dt, offSetY);
                 critter.updateTile(dt);
                     /*
-					 * Debug Info on LogCat
+                     * Debug Info on LogCat
 					 */
                 //System.out.println("Y: " + (critter.getYcenter() - offSetY) + "Time: " + gameControl.getAccumKillDt());
                 //System.out.println("Energy: " + critter.lives() +
@@ -230,9 +231,9 @@ public class GameWorld {
 				 */
                 for (Critter critter : critters) {
                     if (critter.isHit(tmpBullet)) {
-                        List<BitmapDrawable> tmpGraphics = critter.getGraphics();
-                        for (BitmapDrawable bd : tmpGraphics) {
-                            bd.mutate().setColorFilter(Color.argb(70, 100, 100, 255), Mode.SRC_ATOP);
+                        List<GraphicObject> tmpGraphics = critter.getGraphics();
+                        for (GraphicObject go : tmpGraphics) {
+                            go.getGraphic().mutate().setColorFilter(Color.argb(70, 100, 100, 255), Mode.SRC_ATOP);
                         }
                         critter.getSluggish();
                         bullets.remove(tmpBullet);

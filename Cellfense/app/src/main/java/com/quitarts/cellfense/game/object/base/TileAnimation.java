@@ -13,7 +13,7 @@ import java.util.List;
  * Load animated sprite
  */
 public class TileAnimation extends GraphicObject {
-    private List<BitmapDrawable> tiles = new ArrayList<>();
+    private List<GraphicObject> tiles = new ArrayList<>();
     private int rows;
     private int columns;
     private int frameSkipDelay;
@@ -47,46 +47,47 @@ public class TileAnimation extends GraphicObject {
     }
 
     public BitmapDrawable getGraphic() {
-        return tiles.get(currentFrame);
+        return tiles.get(currentFrame).getGraphic();
     }
 
-    public List<BitmapDrawable> getGraphics() {
+    public List<GraphicObject> getGraphics() {
         return tiles;
     }
 
     @Override
+    public int getWidth() {
+        return tiles.get(currentFrame).getWidth();
+    }
+
+    @Override
+    public int getHeight() {
+        return tiles.get(currentFrame).getHeight();
+    }
+
+    @Override
     public void setX(float x) {
-        super.setX(x);
+        super.x = x;
         calculateCenter();
         calculateBounds();
     }
 
     @Override
     public void setY(float y) {
-        super.setY(y);
+        super.y = y;
         calculateCenter();
         calculateBounds();
     }
 
     @Override
-    public int getWidth() {
-        return tiles.get(currentFrame).getMinimumWidth();
-    }
-
-    @Override
-    public int getHeight() {
-        return tiles.get(currentFrame).getMinimumHeight();
-    }
-
-    @Override
     public void calculateCenter() {
-        super.setXCenter(super.getX() + getWidth() / 2.0f);
-        super.setYCenter(super.getY() + getHeight() / 2.0f);
+        super.xCenter = super.x + getWidth() / 2.0f;
+        super.yCenter = super.y + getHeight() / 2.0f;
     }
 
     @Override
     public void calculateBounds() {
-        super.getGraphic().setBounds((int) super.getX(), (int) super.getY(), getWidth(), getHeight());
+        for (int i = 0; i < tiles.size(); i++)
+            tiles.get(i).getGraphic().setBounds((int) super.x, (int) super.y, (int) super.getX() + tiles.get(i).getWidth(), (int) super.getY() + tiles.get(i).getHeight());
     }
 
     public int getRotationAngle() {
@@ -147,7 +148,7 @@ public class TileAnimation extends GraphicObject {
                 if (offsetX + stepX <= super.getWidth()) {
                     Bitmap bitmap = Bitmap.createBitmap(super.getGraphic().getBitmap(), offsetX, offsetY, stepX, stepY);
                     BitmapDrawable bitmapDrawable = new BitmapDrawable(ContextContainer.getContext().getResources(), bitmap);
-                    tiles.add(bitmapDrawable);
+                    tiles.add(new GraphicObject(bitmapDrawable));
                     offsetX += stepX;
                 }
             }

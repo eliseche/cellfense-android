@@ -28,7 +28,11 @@ public class MovableTileAnimation extends TileAnimation {
     }
 
     public int[] getDirection() {
-        int[] direction = {directionX, directionY};
+        int[] direction = {
+                directionX,
+                directionY
+        };
+        
         return direction;
     }
 

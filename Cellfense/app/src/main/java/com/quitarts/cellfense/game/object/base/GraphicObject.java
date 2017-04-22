@@ -10,13 +10,17 @@ import com.quitarts.cellfense.game.FactoryDrawable;
  */
 public class GraphicObject implements Cloneable {
     private BitmapDrawable graphic;
-    private float x = 0.0f;
-    private float y = 0.0f;
-    private float xCenter = 0.0f;
-    private float yCenter = 0.0f;
+    protected float x = 0.0f;
+    protected float y = 0.0f;
+    protected float xCenter = 0.0f;
+    protected float yCenter = 0.0f;
 
     public GraphicObject(FactoryDrawable.DrawableType drawableType) {
         graphic = FactoryDrawable.createDrawable(drawableType);
+    }
+
+    public GraphicObject(BitmapDrawable graphic) {
+        this.graphic = graphic;
     }
 
     public BitmapDrawable getGraphic() {
@@ -87,7 +91,6 @@ public class GraphicObject implements Cloneable {
             return clonedGraphicObject;
         } catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage(), e);
-
         }
 
         return null;
