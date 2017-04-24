@@ -12,6 +12,7 @@ import android.view.SurfaceHolder;
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
+import com.quitarts.cellfense.game.object.Tower;
 
 public class GameControl {
     private GameSurfaceView gameSurfaceView;
@@ -26,18 +27,24 @@ public class GameControl {
     private int actionMoveY;
     private long holdingDownStartTime;
     private boolean ltaStartShoot;
+    private Config config;
+    private Tower addTower;
+    private boolean executeLevel = false;
 
-    private enum GameState {
+    public enum GameState {
         SCREEN1, SCREEN2
     }
 
-    private enum EnemyState {
+    public enum EnemyState {
         UNAVAILABLE, FROZEN, MOVING
     }
 
     public GameControl(GameSurfaceView gameSurfaceView, SurfaceHolder surfaceHolder, int startLevel) {
         this.gameSurfaceView = gameSurfaceView;
         this.surfaceHolder = surfaceHolder;
+
+        this.config = new Config();
+        config.wave = startLevel;
     }
 
     // Game main loop, update and draw world
@@ -93,8 +100,22 @@ public class GameControl {
     public void update(int dt) {
         if (enemyState == EnemyState.UNAVAILABLE) {
             enemyState = EnemyState.FROZEN;
-        }
+        } else if (enemyState == EnemyState.FROZEN) {
+            if (executeLevel) {
+                enemyState = EnemyState.MOVING;
+                gameState = GameState.SCREEN2;
+                gameWorld.slideToBottomScreen();
+            }
 
+            if (gameState == GameState.SCREEN1)
+                hud.switchOffNextWaveButton();
+            else if (gameState == GameState.SCREEN2) {
+                if (gameWorld.worldHaveTowers())
+                    hud.switchOnNextWaveButton();
+                else
+                    hud.switchOffNextWaveButton();
+            }
+        }
         gameWorld.update(dt);
         hud.update(dt);
     }
@@ -103,46 +124,87 @@ public class GameControl {
     public void draw(Canvas canvas) {
         if (canvas != null) {
             gameWorld.drawWorld(canvas);
-            if (gameState == GameState.SCREEN2 && enemyState == EnemyState.FROZEN)
+            if (gameState == GameState.SCREEN2 && enemyState == EnemyState.FROZEN) {
                 hud.drawBottomHud(canvas);
+                gameWorld.drawAddingTower(canvas, addTower);
+            }
             hud.drawBaseHud(canvas);
         }
     }
 
     // region Events
     public boolean eventActionDown(MotionEvent ev) {
-        // User is trying to shoot using LTA
-        if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY())) {
-            ltaStartShoot = true;
-            actionMoveX = (int) ev.getX();
-            actionMoveY = (int) ev.getY();
-            holdingDownStartTime = System.currentTimeMillis();
+        if (enemyState == EnemyState.MOVING) {
+            // User is trying to shoot using LTA
+            if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY())) {
+                ltaStartShoot = true;
+                actionMoveX = (int) ev.getX();
+                actionMoveY = (int) ev.getY();
+                holdingDownStartTime = System.currentTimeMillis();
+            }
+        }
+
+        if (enemyState == EnemyState.FROZEN) {
+            // User is picking a tower
+            if (hud.hudTowerClick((int) ev.getX(), (int) ev.getY())) {
+                addTower.setX(ev.getX());
+                addTower.setY(hud.getTopBoundOfHud() - addTower.getHeight());
+            }
         }
 
         return true;
     }
 
     public boolean eventActionMove(MotionEvent ev) {
+        // User is sliding a Tower
+        if (addTower != null) {
+            addTower.setX(ev.getX());
+            addTower.setY(ev.getY() - addTower.getHeight());
+            addTower.setX((int) addTower.getX() / addTower.getWidth() * addTower.getWidth());
+            addTower.setY((int) addTower.getY() / addTower.getHeight() * addTower.getHeight());
+        }
+
         return true;
     }
 
     public boolean eventActionUp(MotionEvent ev) {
-        // Click hud button arrow
-        if (enemyState == EnemyState.FROZEN && hud.buttonHudArrowClicked((int) ev.getX(), (int) ev.getY())) {
-            // Slide to SCREEN2
-            if (gameState == GameState.SCREEN1) {
-                gameState = GameState.SCREEN2;
-                gameWorld.slideToBottomScreen();
+        if (enemyState == EnemyState.FROZEN) {
+            // Click hud button arrow
+            if (hud.buttonHudArrowClicked((int) ev.getX(), (int) ev.getY())) {
+                // Slide to SCREEN2
+                if (gameState == GameState.SCREEN1) {
+                    gameState = GameState.SCREEN2;
+                    gameWorld.slideToBottomScreen();
+                }
+                // Slide to SCREEN1
+                else if (gameState == GameState.SCREEN2) {
+                    gameState = GameState.SCREEN1;
+                    gameWorld.slideToTopScreen();
+                }
             }
-            // Slide to SCREEN1
-            else if (gameState == GameState.SCREEN2) {
-                gameState = GameState.SCREEN1;
-                gameWorld.slideToTopScreen();
+
+            // Release Tower
+            if (addTower != null) {
+                gameWorld.addTowerToWorld((Tower) addTower.clone());
+
+                synchronized (addTower) {
+                    addTower = null;
+                }
+            }
+
+            // Click button to send next wave
+            if (gameState == GameState.SCREEN2 &&
+                    hud.nextWaveClicked((int) ev.getX(), (int) ev.getY())) {
+                executeLevel = true;
+                sendCrittersWave();
             }
         }
 
-        if (ltaStartShoot && gameState == GameState.SCREEN2)
-            shootLTA(ev);
+        if (enemyState == EnemyState.MOVING) {
+            // Firing LTA
+            if (ltaStartShoot)
+                shootLTA(ev);
+        }
 
         return true;
     }
@@ -192,9 +254,33 @@ public class GameControl {
         ltaStartShoot = false;
     }
 
+    public int getWave() {
+        return config.wave;
+    }
+
+    public void addTower(Tower tower) {
+        addTower = tower;
+    }
+
+    public void sendCrittersWave() {
+        executeLevel = true;
+    }
+
+    public EnemyState getEnemyState() {
+        return enemyState;
+    }
+
     private void initialize() {
         SharedPreferences sharedPreferences = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
         Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
         Typeface tf2 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/apexnew_medium.ttf");
+    }
+
+    public class Config {
+        public int lives = 1;
+        public int score = 0;
+        public int resources = 70;
+        public int wave = 0;
+        public int maxUnits = 10;
     }
 }

@@ -3,12 +3,14 @@ package com.quitarts.cellfense.game;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Lta;
+import com.quitarts.cellfense.game.object.Tower;
 
 import java.util.ArrayList;
 
@@ -22,6 +24,7 @@ public class GameWorld {
     private int deltaPositionY;
     private Lta lta;
     private ArrayList<Bullet> bullets = new ArrayList<>();
+    private ArrayList<Tower> towers = new ArrayList<>();
 
     public GameWorld(int width, int height, GameControl gameControl) {
         this.width = width;
@@ -33,8 +36,6 @@ public class GameWorld {
                 this.width, this.height, false);
         // Lta
         lta = new Lta(FactoryDrawable.DrawableType.GUN_LTA_POWER_SPRITE, 1, 15, 100);
-        lta.setX(Utils.getCanvasWidth() / 2 - (lta.getWidth() / 2));
-        lta.setY(height - (lta.getHeight() + lta.getHeight() / 2) - offsetY);
         lta.start();
     }
 
@@ -56,6 +57,8 @@ public class GameWorld {
 
     private void processLta(int dt) {
         lta.updateTile(dt);
+        lta.setX(Utils.getCanvasWidth() / 2 - (lta.getWidth() / 2));
+        lta.setY(height - (lta.getHeight() + lta.getHeight() / 2) - offsetY);
     }
 
     private void proccesBullets(int dt) {
@@ -83,6 +86,7 @@ public class GameWorld {
         drawBackground(canvas);
         drawLta(canvas);
         drawBullets(canvas);
+        drawTowers(canvas);
     }
 
     // Draw backgorund image, slide it based on offsetY
@@ -105,6 +109,24 @@ public class GameWorld {
             }
         }
     }
+
+    private void drawTowers(Canvas canvas) {
+        synchronized (towers) {
+            for (Tower tower : towers) {
+                tower.getGraphic().setBounds((int) tower.getX(), (int) tower.getY() + heightVisible - offsetY, (int) tower.getX() + tower.getWidth(), (int) tower.getY() + heightVisible + tower.getHeight() - offsetY);
+
+                if (tower.getType() == Tower.TowerType.TURRET_TANK) {
+                    BitmapDrawable turretTankBase = tower.getTurretBase();
+                    turretTankBase.setBounds(tower.getGraphic().getBounds());
+                    turretTankBase.draw(canvas);
+                }
+
+                canvas.save();
+                tower.getGraphic().draw(canvas);
+                canvas.restore();
+            }
+        }
+    }
     // endregion
 
     public void slideToTopScreen() {
@@ -123,5 +145,28 @@ public class GameWorld {
         synchronized (bullets) {
             bullets.add(bullet);
         }
+    }
+
+    public void addTowerToWorld(Tower tower) {
+        synchronized (towers) {
+            towers.add(tower);
+        }
+    }
+
+    public void drawAddingTower(Canvas canvas, Tower tower) {
+        if (tower != null) {
+            synchronized (tower) {
+                canvas.drawCircle(tower.getXCenter(), tower.getYCenter(), tower.getShootingRange(), tower.getShootingRangePaint());
+                if (tower.getType() == Tower.TowerType.TURRET_TANK) {
+                    BitmapDrawable turretTankBase = tower.getTurretBase();
+                    turretTankBase.draw(canvas);
+                }
+                tower.getGraphic().draw(canvas);
+            }
+        }
+    }
+
+    public boolean worldHaveTowers() {
+        return towers.size() > 0;
     }
 }
