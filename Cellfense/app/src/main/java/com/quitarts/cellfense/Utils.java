@@ -1,11 +1,10 @@
 package com.quitarts.cellfense;
 
-import com.quitarts.cellfense.torefactor.GameMap;
-
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 
 public class Utils {
+    public static final int GAMEMAP_WIDTH = 8;
+    public static final int GAMEMAP_HEIGHT = 12;
     private static int width;
     private static int height;
     private static float cellWidth;
@@ -61,6 +60,31 @@ public class Utils {
 
         return 0;
     }
+
+    public static int getOffsetY() {
+        return offsetY;
+    }
+
+    public static void setOffsetY(int offsetY) {
+        Utils.offsetY = offsetY;
+    }
+
+    public static int convertXGridToWorld(int x) {
+        return (int) (cellWidth * x);
+    }
+
+    public static int convertYGridToWorld(int y) {
+        return (int) (cellHeight * y);
+    }
+
+    public static int convertXWorldToGrid(float x) {
+        return (int) (x / cellWidth);
+    }
+
+    public static int convertYWorldToGrid(float y) {
+        return (int) (y / cellHeight);
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////NOT REFACTORED///////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -91,41 +115,9 @@ public class Utils {
         return ContextContainer.getContext().getResources().getDisplayMetrics().density;
     }
 
-    public static int convertXGridToWorld(int x, int widthOfObject) {
-        float tileWidth = getCanvasWidth() / GameMap.WIDTH;
-        return (int) (tileWidth * x);
-    }
-
-    public static int convertYGridToWorld(int y, int heightObject) {
-        float tileHeight = Utils.getCellSize();
-        return (int) (tileHeight * y);
-    }
-
-    public static int convertXWorldToGrid(float x, int widthOfObject) {
-        float tileWidth = getCanvasWidth() / GameMap.WIDTH;
-        return (int) (x / tileWidth);
-    }
-
-    public static int convertYWorldToGrid(float y, int heightObject) {
-        float tileHeight = Utils.getCellSize();
-        return Math.round(y / tileHeight);
-    }
-
-    public static int getGridYOffset() {
-        return (int) ((height - getCellSize() * 12) / getCellSize());
-    }
-
-    public static void setOffsetY(int offSet) {
-        offsetY = offSet;
-    }
-
-    public static int getOffsetY() {
-        return offsetY;
-    }
-
     public static int GetEnergyBarSize() {
         /*
-    	 * 5% of the cellSize
+         * 5% of the cellSize
     	 */
         return (int) getCellSize() * 5 / 100;
     }

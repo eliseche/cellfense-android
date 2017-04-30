@@ -12,7 +12,11 @@ import android.view.SurfaceHolder;
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
+import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Tower;
+
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 
 public class GameControl {
     private GameSurfaceView gameSurfaceView;
@@ -99,6 +103,8 @@ public class GameControl {
     // Update Game
     public void update(int dt) {
         if (enemyState == EnemyState.UNAVAILABLE) {
+            executeLevel = false;
+            createNewHorde();
             enemyState = EnemyState.FROZEN;
         } else if (enemyState == EnemyState.FROZEN) {
             if (executeLevel) {
@@ -116,6 +122,7 @@ public class GameControl {
                     hud.switchOffNextWaveButton();
             }
         }
+
         gameWorld.update(dt);
         hud.update(dt);
     }
@@ -185,7 +192,7 @@ public class GameControl {
 
             // Release Tower
             if (addTower != null) {
-                gameWorld.addTowerToWorld((Tower) addTower.clone());
+                gameWorld.addTower((Tower) addTower.clone());
 
                 synchronized (addTower) {
                     addTower = null;
@@ -248,7 +255,7 @@ public class GameControl {
             bullet.setDirection(1, 1);
             bullet.setSpeed(velX, velY);
             bullet.start();
-            gameWorld.addBulletToWorld((Bullet) bullet.clone());
+            gameWorld.addBullet((Bullet) bullet.clone());
         }
 
         ltaStartShoot = false;
@@ -270,6 +277,20 @@ public class GameControl {
         return enemyState;
     }
 
+    public GameState getGameState() {
+        return gameState;
+    }
+
+    public void createNewHorde() {
+        LinkedHashMap<Integer, ArrayList<String>> levels = LevelDataSet.getLevels();
+        LinkedHashMap<Integer, Integer> resources = LevelDataSet.getResources();
+
+        if (config.wave <= levels.size()) {
+            ArrayList<Critter> critters = new CritterFactory().createPresetLevel(levels.get(config.wave));
+            gameWorld.addCritters(critters);
+        }
+    }
+
     private void initialize() {
         SharedPreferences sharedPreferences = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
         Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
@@ -277,10 +298,10 @@ public class GameControl {
     }
 
     public class Config {
-        public int lives = 1;
+        public int lives = GameRules.getStartLives();
         public int score = 0;
-        public int resources = 70;
+        public int resources = 0;
         public int wave = 0;
-        public int maxUnits = 10;
+        public int maxUnits = GameRules.getMaxTowers();
     }
 }

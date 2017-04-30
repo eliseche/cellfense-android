@@ -13,7 +13,9 @@ import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.FactoryDrawable.DrawableType;
+import com.quitarts.cellfense.game.GameMap;
 import com.quitarts.cellfense.game.LevelDataSet;
+import com.quitarts.cellfense.game.UnitMover;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.base.GraphicObject;
@@ -60,7 +62,7 @@ public class GameWorld {
         generateMap();
 
         resetResources = true;
-        offsetGridYWorld = Utils.getGridYOffset();
+        offsetGridYWorld =0;
     }
 
     public void update(int dt) {
@@ -109,10 +111,10 @@ public class GameWorld {
                 //);
 
                 if (gameControl.getTutorialState() == TutorialState.S16_L3_PLAY_PRESSED
-                        && (towers.get(0).getGridPositionY() - Utils.convertYWorldToGrid(critter.getY() - offSetY, critter.getHeight()) == 3)) {
+                        && (towers.get(0).getGridPositionY() - Utils.convertYWorldToGrid(critter.getY() - offSetY) == 3)) {
                     gameControl.setTutorialState(TutorialState.S17_L3_GAME_PAUSE);
                 } else if (gameControl.getTutorialState() == TutorialState.S24_L4_PLAY_PRESSED
-                        && (towers.get(0).getGridPositionY() - Utils.convertYWorldToGrid(critter.getY() - offSetY, critter.getHeight()) == 3)) {
+                        && (towers.get(0).getGridPositionY() - Utils.convertYWorldToGrid(critter.getY() - offSetY) == 3)) {
                     gameControl.setTutorialState(TutorialState.S25_L4_GAME_PAUSE);
                 }
             }

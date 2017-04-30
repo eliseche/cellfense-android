@@ -197,12 +197,12 @@ public class Critter extends MovableTileAnimation {
 
     public void setX(float value) {
         super.setX(value);
-        gridPositionX = Utils.convertXWorldToGrid(value, getWidth());
+        gridPositionX = Utils.convertXWorldToGrid(value);
     }
 
     public void setY(float value) {
         super.setY(value);
-        gridPositionY = Utils.convertYWorldToGrid(value, getHeight());
+        gridPositionY = Utils.convertYWorldToGrid(value);
     }
 
     public void setCritterPath(Path path) {
@@ -214,8 +214,8 @@ public class Critter extends MovableTileAnimation {
         }
         value = 0;
         while (value < critterPathWorld.getLength()) {
-            critterPathWorld.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld.getStep(value).getX(), this.getWidth()));
-            critterPathWorld.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld.getStep(value).getY(), this.getHeight()));
+            critterPathWorld.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld.getStep(value).getX()));
+            critterPathWorld.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld.getStep(value).getY()));
             value++;
         }
     }
@@ -229,8 +229,8 @@ public class Critter extends MovableTileAnimation {
         }
         value = 0;
         while (value < critterPathWorld2.getLength()) {
-            critterPathWorld2.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld2.getStep(value).getX(), this.getWidth()));
-            critterPathWorld2.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld2.getStep(value).getY(), this.getHeight()));
+            critterPathWorld2.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld2.getStep(value).getX()));
+            critterPathWorld2.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld2.getStep(value).getY()));
             value++;
         }
     }
@@ -244,8 +244,8 @@ public class Critter extends MovableTileAnimation {
         }
         value = 0;
         while (value < critterPathWorld3.getLength()) {
-            critterPathWorld3.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld3.getStep(value).getX(), this.getWidth()));
-            critterPathWorld3.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld3.getStep(value).getY(), this.getHeight()));
+            critterPathWorld3.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld3.getStep(value).getX()));
+            critterPathWorld3.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld3.getStep(value).getY()));
             value++;
         }
     }
@@ -259,16 +259,16 @@ public class Critter extends MovableTileAnimation {
         }
         value = 0;
         while (value < critterPathWorld4.getLength()) {
-            critterPathWorld4.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld4.getStep(value).getX(), this.getWidth()));
-            critterPathWorld4.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld4.getStep(value).getY(), this.getHeight()));
+            critterPathWorld4.getStep(value).setX(Utils.convertXGridToWorld(critterPathWorld4.getStep(value).getX()));
+            critterPathWorld4.getStep(value).setY(Utils.convertYGridToWorld(critterPathWorld4.getStep(value).getY()));
             value++;
         }
     }
 
 
     public void calcStartPositionGrid() {
-        startGridPosition = Utils.convertXWorldToGrid(getX(), getWidth());
-        endGridPosition = Utils.convertYWorldToGrid(getY(), getHeight());
+        startGridPosition = Utils.convertXWorldToGrid(getX());
+        endGridPosition = Utils.convertYWorldToGrid(getY());
     }
 
     public int getStartGridPositionX() {

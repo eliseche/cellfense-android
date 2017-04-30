@@ -1,4 +1,4 @@
-package com.quitarts.cellfense.torefactor;
+package com.quitarts.cellfense.game;
 
 import com.quitarts.pathfinder.Mover;
 

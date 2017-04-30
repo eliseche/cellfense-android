@@ -6,11 +6,13 @@ import android.graphics.drawable.BitmapDrawable;
 
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.FactoryDrawable;
+import com.quitarts.cellfense.game.GameRules;
 import com.quitarts.cellfense.game.object.base.TileAnimation;
-import com.quitarts.cellfense.torefactor.GameRules;
 
 public class Tower extends TileAnimation {
     private TowerType type;
+    private int xGrid;
+    private int yGrid;
     private BitmapDrawable turretBase;
     private float shootingRange;
     private Paint shootingRangePaint;
@@ -35,6 +37,26 @@ public class Tower extends TileAnimation {
         initialize();
     }
 
+    @Override
+    public void setX(float x) {
+        super.setX(x);
+        xGrid = Utils.convertXWorldToGrid(x);
+    }
+
+    @Override
+    public void setY(float y) {
+        super.setY(y);
+        xGrid = Utils.convertYWorldToGrid(y);
+    }
+
+    public int getXGrid() {
+        return xGrid;
+    }
+
+    public int getYGrid() {
+        return yGrid;
+    }
+
     public TowerType getType() {
         return type;
     }
@@ -52,16 +74,12 @@ public class Tower extends TileAnimation {
     }
 
     private void initialize() {
-        //shootingRange = GameRules.getTowerInitialShootingRange(type, getHeight());
-        shootingRange = (Utils.getCellSize() * 1.8f);
+        shootingRange = GameRules.getTowerShootingRange(type);
 
         shootingRangePaint = new Paint();
         shootingRangePaint.setAlpha(255);
         shootingRangePaint.setAntiAlias(false);
         shootingRangePaint.setStyle(Paint.Style.STROKE);
-        if (type == TowerType.TURRET_BOMB)
-            shootingRangePaint.setColor(Color.rgb(0, 0, 125));
-        else
-            shootingRangePaint.setColor(Color.rgb(0, 120, 0));
+        shootingRangePaint.setColor(Color.rgb(0, 120, 0));
     }
 }

@@ -41,8 +41,8 @@ public class CritterFactory {
 				critter = new Critter(DrawableType.ENEMY_CHIP_INFECTED_SPRITE, 1, 5, 30);
 			}			
 			
-			critter.setX(Utils.convertXGridToWorld(Integer.parseInt(level[++pos].toString()) - 1, critter.getWidth()));			
-			critter.setY(Utils.convertYGridToWorld(Integer.parseInt(level[++pos].toString()) - 1  + Utils.getGridYOffset(), critter.getHeight()));
+			critter.setX(Utils.convertXGridToWorld(Integer.parseInt(level[++pos].toString()) - 1));
+			critter.setY(Utils.convertYGridToWorld(Integer.parseInt(level[++pos].toString()) - 1  + 0));
 			if(critter.getEnemyType() == CritterType.CATERPILLAR) {
 				critter.setY(critter.getY() - (int)((critter.getHeight() / 1.5f) * 0.25f));
 			}
@@ -73,8 +73,8 @@ public class CritterFactory {
 		 cr1 = new Critter(DrawableType.ENEMY_SPIDER_SPRITE, 1, 7, 50);
 		else// (ct == CritterType.CATERPILLAR)
 			cr1 = new Critter(DrawableType.ENEMY_CATERPILLAR_SPRITE,  1, 7, 55);
-		cr1.setX(Utils.convertXGridToWorld(xGrid - 1, cr1.getWidth()));			
-		cr1.setY(Utils.convertYGridToWorld(yGrid - 1  + Utils.getGridYOffset(), cr1.getHeight()));
+		cr1.setX(Utils.convertXGridToWorld(xGrid - 1));
+		cr1.setY(Utils.convertYGridToWorld(yGrid - 1 ));
 		/*
 		 * repeat code from critter factory 
 		 */

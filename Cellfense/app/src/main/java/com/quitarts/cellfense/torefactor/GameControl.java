@@ -1147,8 +1147,8 @@ public class GameControl {
 			/*
 			 * Tower position rect
 			 */
-			int right = Utils.convertXGridToWorld(TUTORIAL_TOWER_X,(int)Utils.getCellSize());
-			int top = Utils.convertYGridToWorld(TUTORIAL_TOWER_Y,(int)Utils.getCellSize());
+			int right = Utils.convertXGridToWorld(TUTORIAL_TOWER_X);
+			int top = Utils.convertYGridToWorld(TUTORIAL_TOWER_Y);
 			Rect rect = new Rect(right,top,	right + (int)Utils.getCellSize(),top + (int)Utils.getCellSize());
 			tutorialRectPaint.setAlpha(tutorialRectPaint.getAlpha() - 10);			
 			c.drawRect(rect, tutorialRectPaint);

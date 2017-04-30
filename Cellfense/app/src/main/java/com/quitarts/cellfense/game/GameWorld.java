@@ -9,6 +9,7 @@ import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
+import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
 
@@ -25,6 +26,8 @@ public class GameWorld {
     private Lta lta;
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private ArrayList<Tower> towers = new ArrayList<>();
+    private ArrayList<Critter> critters = new ArrayList<>();
+    private GameMap gameMap;
 
     public GameWorld(int width, int height, GameControl gameControl) {
         this.width = width;
@@ -37,13 +40,16 @@ public class GameWorld {
         // Lta
         lta = new Lta(FactoryDrawable.DrawableType.GUN_LTA_POWER_SPRITE, 1, 15, 100);
         lta.start();
+        gameMap = new GameMap(Utils.GAMEMAP_WIDTH, Utils.GAMEMAP_HEIGHT);
     }
 
     // region Update world
     public void update(int dt) {
         processOffsetY();
         processLta(dt);
-        proccesBullets(dt);
+        processBullets(dt);
+        processTowers(dt);
+        processCritters(dt);
     }
 
     // Update offsetY value to be used to slide background
@@ -53,6 +59,8 @@ public class GameWorld {
             offsetY = 0;
         else if (offsetY > height / 2)
             offsetY = height / 2;
+
+        Utils.setOffsetY(offsetY);
     }
 
     private void processLta(int dt) {
@@ -61,7 +69,7 @@ public class GameWorld {
         lta.setY(height - (lta.getHeight() + lta.getHeight() / 2) - offsetY);
     }
 
-    private void proccesBullets(int dt) {
+    private void processBullets(int dt) {
         ArrayList<Bullet> bulletsTemp = (ArrayList<Bullet>) bullets.clone();
         if (bulletsTemp.size() > 0) {
             for (Bullet bulletTemp : bulletsTemp) {
@@ -79,6 +87,20 @@ public class GameWorld {
             }
         }
     }
+
+    private void processTowers(int dt) {
+
+    }
+
+    private void processCritters(int dt) {
+        if (gameControl.getEnemyState() == GameControl.EnemyState.MOVING) {
+            for (Critter critter : critters) {
+                critter.start();
+                critter.advance(dt);
+                critter.updateTile(dt);
+            }
+        }
+    }
     // endregion
 
     // region Draw world
@@ -87,6 +109,7 @@ public class GameWorld {
         drawLta(canvas);
         drawBullets(canvas);
         drawTowers(canvas);
+        drawCritters(canvas);
     }
 
     // Draw backgorund image, slide it based on offsetY
@@ -127,6 +150,17 @@ public class GameWorld {
             }
         }
     }
+
+    private void drawCritters(Canvas canvas) {
+        synchronized (critters) {
+            for (Critter critter : critters) {
+                canvas.save();
+                critter.getGraphic().setBounds((int) critter.getX(), (int) critter.getY() - offsetY, (int) critter.getX() + critter.getWidth(), (int) critter.getY() + critter.getHeight() - offsetY);
+                critter.getGraphic().draw(canvas);
+                canvas.restore();
+            }
+        }
+    }
     // endregion
 
     public void slideToTopScreen() {
@@ -141,24 +175,13 @@ public class GameWorld {
         return lta.isClicked(x, y);
     }
 
-    public void addBulletToWorld(Bullet bullet) {
-        synchronized (bullets) {
-            bullets.add(bullet);
-        }
-    }
-
-    public void addTowerToWorld(Tower tower) {
-        synchronized (towers) {
-            towers.add(tower);
-        }
-    }
-
     public void drawAddingTower(Canvas canvas, Tower tower) {
         if (tower != null) {
             synchronized (tower) {
                 canvas.drawCircle(tower.getXCenter(), tower.getYCenter(), tower.getShootingRange(), tower.getShootingRangePaint());
                 if (tower.getType() == Tower.TowerType.TURRET_TANK) {
                     BitmapDrawable turretTankBase = tower.getTurretBase();
+                    turretTankBase.setBounds(tower.getGraphic().getBounds());
                     turretTankBase.draw(canvas);
                 }
                 tower.getGraphic().draw(canvas);
@@ -168,5 +191,28 @@ public class GameWorld {
 
     public boolean worldHaveTowers() {
         return towers.size() > 0;
+    }
+
+    public void addTower(Tower tower) {
+        synchronized (towers) {
+            towers.add(tower);
+            gameMap.setUnit(tower.getXGrid(), tower.getYGrid() + 1, 1);
+        }
+    }
+
+    public void addCritters(ArrayList<Critter> critters) {
+        synchronized (critters) {
+            this.critters = critters;
+        }
+    }
+
+    public void addBullet(Bullet bullet) {
+        synchronized (bullets) {
+            bullets.add(bullet);
+        }
+    }
+
+    public int getOffsetY() {
+        return offsetY;
     }
 }

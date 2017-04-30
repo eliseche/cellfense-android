@@ -107,12 +107,12 @@ public class Tower extends TileAnimation {
 		
 	public void setX(float value) {
 		super.setX(value);
-		gridPositionX = Utils.convertXWorldToGrid(getX(), getWidth());
+		gridPositionX = Utils.convertXWorldToGrid(getX());
 	}	
 	
 	public void setY(float value){
 		super.setY(value);
-		gridPositionY = Utils.convertYWorldToGrid(getY(),getHeight());
+		gridPositionY = Utils.convertYWorldToGrid(getY());
 	}
 	
 	public int getGridPositionX() {

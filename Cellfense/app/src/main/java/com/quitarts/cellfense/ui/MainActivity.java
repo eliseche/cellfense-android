@@ -69,7 +69,7 @@ public class MainActivity extends Activity implements OnClickListener {
         // Set canvas
         Display display = getWindowManager().getDefaultDisplay();
         Utils.setCanvasSize(display.getWidth(), display.getHeight());
-        Utils.setCellSize(display.getWidth() / 8, display.getHeight() / 12);
+        Utils.setCellSize(display.getWidth() / Utils.GAMEMAP_WIDTH, display.getHeight() / Utils.GAMEMAP_HEIGHT);
         // Get SharedPreferences
         sharedPreferences = this.getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
     }
