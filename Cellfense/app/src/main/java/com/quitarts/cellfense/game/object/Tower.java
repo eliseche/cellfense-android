@@ -49,6 +49,14 @@ public class Tower extends TileAnimation {
         xGrid = Utils.convertYWorldToGrid(y);
     }
 
+    public int getXFix() {
+        return ((int) getX() / getWidth()) * getWidth();
+    }
+
+    public int getYFix() {
+        return ((int) getY() / getHeight()) * getHeight();
+    }
+
     public int getXGrid() {
         return xGrid;
     }

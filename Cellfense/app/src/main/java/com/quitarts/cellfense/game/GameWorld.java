@@ -12,6 +12,8 @@ import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
+import com.quitarts.pathfinder.AStarPathFinder;
+import com.quitarts.pathfinder.PathFinder;
 
 import java.util.ArrayList;
 
@@ -28,6 +30,7 @@ public class GameWorld {
     private ArrayList<Tower> towers = new ArrayList<>();
     private ArrayList<Critter> critters = new ArrayList<>();
     private GameMap gameMap;
+    private PathFinder finder;
 
     public GameWorld(int width, int height, GameControl gameControl) {
         this.width = width;
@@ -155,6 +158,7 @@ public class GameWorld {
         synchronized (critters) {
             for (Critter critter : critters) {
                 canvas.save();
+                canvas.rotate(critter.getRotationAngle(), critter.getXCenter(), critter.getYCenter() - offsetY);
                 critter.getGraphic().setBounds((int) critter.getX(), (int) critter.getY() - offsetY, (int) critter.getX() + critter.getWidth(), (int) critter.getY() + critter.getHeight() - offsetY);
                 critter.getGraphic().draw(canvas);
                 canvas.restore();
@@ -214,5 +218,23 @@ public class GameWorld {
 
     public int getOffsetY() {
         return offsetY;
+    }
+
+    public void calculateCrittersPath() {
+        finder = new AStarPathFinder(gameMap, 500, false);
+
+        synchronized (critters) {
+            for (Critter critter : critters)
+                critter.setCritterPath("PATH1", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, 0, Utils.GAMEMAP_HEIGHT - 1));
+
+            for (Critter critter : critters)
+                critter.setCritterPath("PATH2", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, 3, Utils.GAMEMAP_HEIGHT - 1));
+
+            for (Critter critter : critters)
+                critter.setCritterPath("PATH3", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, Utils.convertXWorldToGrid(critter.getX()), Utils.GAMEMAP_HEIGHT - 1));
+
+            for (Critter critter : critters)
+                critter.setCritterPath("PATH4", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, Utils.GAMEMAP_WIDTH - 1, Utils.GAMEMAP_HEIGHT - 1));
+        }
     }
 }

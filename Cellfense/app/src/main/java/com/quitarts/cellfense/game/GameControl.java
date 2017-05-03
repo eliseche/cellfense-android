@@ -111,6 +111,7 @@ public class GameControl {
                 enemyState = EnemyState.MOVING;
                 gameState = GameState.SCREEN2;
                 gameWorld.slideToBottomScreen();
+                gameWorld.calculateCrittersPath();
             }
 
             if (gameState == GameState.SCREEN1)
@@ -167,8 +168,8 @@ public class GameControl {
         if (addTower != null) {
             addTower.setX(ev.getX());
             addTower.setY(ev.getY() - addTower.getHeight());
-            addTower.setX((int) addTower.getX() / addTower.getWidth() * addTower.getWidth());
-            addTower.setY((int) addTower.getY() / addTower.getHeight() * addTower.getHeight());
+            addTower.setX(addTower.getXFix());
+            addTower.setY(addTower.getYFix());
         }
 
         return true;
