@@ -46,7 +46,7 @@ public class Tower extends TileAnimation {
     @Override
     public void setY(float y) {
         super.setY(y);
-        xGrid = Utils.convertYWorldToGrid(y);
+        yGrid = Utils.convertYWorldToGrid(y);
     }
 
     public int getXFix() {

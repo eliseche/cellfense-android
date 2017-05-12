@@ -63,7 +63,7 @@ public class Critter extends MovableTileAnimation {
 
             if (indexNextStep > 0) {
                 if (getDirection()[0] == -1) {
-                    if (getX() <= indexActualStep.getX()) {
+                    if (getX() < indexActualStep.getX()) {
                         setX(indexActualStep.getX());
                         indexNextStep++;
                         decideDirection(indexNextStep, indexNextStep + 1);
@@ -84,7 +84,7 @@ public class Critter extends MovableTileAnimation {
                     }
                     setRotationAngle(180);
                 } else if (this.getDirection()[1] == 1) {
-                    if (getY() - Utils.getOffsetY() + Utils.getCellHeight() < indexActualStep.getY()) {
+                    if (getY() - Utils.getOffsetY() + Utils.getCellHeight() >= indexActualStep.getY()) {
                         setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
                         indexNextStep++;
                         decideDirection(indexNextStep, indexNextStep + 1);
