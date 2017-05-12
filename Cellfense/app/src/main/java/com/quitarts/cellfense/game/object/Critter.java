@@ -5,9 +5,17 @@ import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.object.base.MovableTileAnimation;
 import com.quitarts.pathfinder.Path;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 public class Critter extends MovableTileAnimation {
     private CritterType type;
-    private int indexNextStep;
+    private int indexNextStep = 0;
     private Path critterPath1 = new Path();
     private Path critterPath2 = new Path();
     private Path critterPath3 = new Path();
@@ -132,18 +140,21 @@ public class Critter extends MovableTileAnimation {
     }
 
     private Path getShortestPath() {
-        int minPath = Math.min(critterPath1.getLength(), critterPath2.getLength());
-        minPath = Math.min(critterPath3.getLength(), minPath);
-        minPath = Math.min(critterPath4.getLength(), minPath);
+        Map<Path, Integer> paths = new HashMap<>();
+        paths.put(critterPath1, critterPath1.getLength());
+        paths.put(critterPath2, critterPath2.getLength());
+        paths.put(critterPath3, critterPath3.getLength());
+        paths.put(critterPath4, critterPath4.getLength());
 
-        if (critterPath2.getLength() == minPath)
-            return critterPath2;
-        else if (critterPath3.getLength() == minPath)
-            return critterPath3;
-        else if (critterPath4.getLength() == minPath)
-            return critterPath4;
-        else
-            return critterPath1;
+        List<Map.Entry<Path, Integer>> pathsList = new ArrayList<>(paths.entrySet());
+        Collections.sort(pathsList, new Comparator<LinkedHashMap.Entry<Path, Integer>>() {
+            @Override
+            public int compare(LinkedHashMap.Entry<Path, Integer> path1, LinkedHashMap.Entry<Path, Integer> path2) {
+                return path1.getValue().compareTo(path2.getValue());
+            }
+        });
+
+        return pathsList.get(0).getKey();
     }
 
     public void setCritterPath(String pathName, Path path) {
