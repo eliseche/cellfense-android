@@ -12,8 +12,6 @@ import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
-import com.quitarts.pathfinder.AStarPathFinder;
-import com.quitarts.pathfinder.PathFinder;
 
 import java.util.ArrayList;
 
@@ -222,7 +220,7 @@ public class GameWorld {
     public void calculateCrittersPath() {
         synchronized (critters) {
             for (Critter critter : critters)
-                critter.setCritterPaths(gameMap);
+                critter.setCrittersPath(gameMap);
         }
     }
 }

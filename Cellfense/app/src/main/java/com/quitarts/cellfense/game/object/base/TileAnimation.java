@@ -21,7 +21,7 @@ public class TileAnimation extends GraphicObject {
     private int currentFrame = 0;
     private boolean isStarted = false;
     private int accumTime;
-    private int rotationAngle;
+    private int rotationAngle = 0;
 
     public TileAnimation(FactoryDrawable.DrawableType drawableType, int rows, int columns, int frameSkipDelay, boolean repeatAnimation) {
         super(drawableType);

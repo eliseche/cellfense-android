@@ -20,7 +20,7 @@ import java.util.Map;
 public class Critter extends MovableTileAnimation {
     private CritterType type;
     private int indexNextStep = 0;
-    private Map<Path, Integer> paths = new HashMap<>();
+    private Path shortestPath;
 
     public enum CritterType {
         SPIDER, CATERPILLAR, CHIP
@@ -59,8 +59,8 @@ public class Critter extends MovableTileAnimation {
     public void advance(int dt) {
         super.advance(dt);
 
-        if (indexNextStep < getShortestPath().getLength()) {
-            Path.Step indexActualStep = getShortestPath().getStep(indexNextStep);
+        if (indexNextStep < shortestPath.getLength()) {
+            Path.Step indexActualStep = shortestPath.getStep(indexNextStep);
 
             if (getY() > (Utils.getCanvasHeight() + indexActualStep.getY() - Utils.getCellHeight()) && indexNextStep == 0) {
                 setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
@@ -71,34 +71,22 @@ public class Critter extends MovableTileAnimation {
             }
 
             if (indexNextStep > 0) {
-                if (getDirection()[0] == -1) {
-                    if (getX() < indexActualStep.getX()) {
-                        setX(indexActualStep.getX());
-                        indexNextStep++;
-                        decideDirection(indexNextStep, indexNextStep + 1);
-                    }
-                    setRotationAngle(90);
-                } else if (this.getDirection()[0] == 1) {
-                    if (getX() >= indexActualStep.getX()) {
-                        setX(indexActualStep.getX());
-                        indexNextStep++;
-                        decideDirection(indexNextStep, indexNextStep + 1);
-                    }
-                    setRotationAngle(-90);
-                } else if (this.getDirection()[1] == -1) {
-                    if (getY() - Utils.getOffsetY() + Utils.getCellHeight() < indexActualStep.getY()) {
-                        setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
-                        indexNextStep++;
-                        decideDirection(indexNextStep, indexNextStep + 1);
-                    }
-                    setRotationAngle(180);
-                } else if (this.getDirection()[1] == 1) {
-                    if (getY() - Utils.getOffsetY() + Utils.getCellHeight() >= indexActualStep.getY()) {
-                        setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
-                        indexNextStep++;
-                        decideDirection(indexNextStep, indexNextStep + 1);
-                    }
-                    setRotationAngle(0);
+                if (getDirection()[0] == -1 && getX() < indexActualStep.getX()) {
+                    setX(indexActualStep.getX());
+                    indexNextStep++;
+                    decideDirection(indexNextStep, indexNextStep + 1);
+                } else if (this.getDirection()[0] == 1 && getX() >= indexActualStep.getX()) {
+                    setX(indexActualStep.getX());
+                    indexNextStep++;
+                    decideDirection(indexNextStep, indexNextStep + 1);
+                } else if (this.getDirection()[1] == -1 && (getY() - Utils.getOffsetY() + Utils.getCellHeight() < indexActualStep.getY())) {
+                    setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
+                    indexNextStep++;
+                    decideDirection(indexNextStep, indexNextStep + 1);
+                } else if (this.getDirection()[1] == 1 && (getY() - Utils.getOffsetY() + Utils.getCellHeight() >= indexActualStep.getY())) {
+                    setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
+                    indexNextStep++;
+                    decideDirection(indexNextStep, indexNextStep + 1);
                 }
 
                 decideDirection(indexNextStep, indexNextStep - 1);
@@ -106,58 +94,14 @@ public class Critter extends MovableTileAnimation {
         }
     }
 
-    private void decideDirection(int indexActualStep, int indexLastStep) {
-        if (indexActualStep >= getShortestPath().getLength()) {
-            setDirection(0, 1);
-            setRotationAngle(0);
-        } else if (indexLastStep >= getShortestPath().getLength()) {
-            setDirection(0, 1);
-            setRotationAngle(0);
-        } else {
-            Path.Step stepActual = getShortestPath().getStep(indexActualStep);
-            Path.Step stepLast = getShortestPath().getStep(indexLastStep);
-
-            if (stepActual.getY() == stepLast.getY()) {
-                if (stepActual.getX() <= stepLast.getX()) {
-                    setDirection(-1, 0);
-                    return;
-                } else if (stepActual.getX() > stepLast.getX()) {
-                    setDirection(1, 0);
-                    return;
-                }
-            } else {
-                if (stepActual.getY() <= stepLast.getY()) {
-                    setDirection(0, -1);
-                    return;
-                } else if (stepActual.getY() > stepLast.getY()) {
-                    setDirection(0, 1);
-                    return;
-                }
-            }
-
-            setDirection(0, 1);
-            setRotationAngle(0);
-        }
-    }
-
-    private Path getShortestPath() {
-        List<Map.Entry<Path, Integer>> pathsList = new ArrayList<>(paths.entrySet());
-        Collections.sort(pathsList, new Comparator<LinkedHashMap.Entry<Path, Integer>>() {
-            @Override
-            public int compare(LinkedHashMap.Entry<Path, Integer> path1, LinkedHashMap.Entry<Path, Integer> path2) {
-                return path1.getValue().compareTo(path2.getValue());
-            }
-        });
-
-        return pathsList.get(0).getKey();
-    }
-
-    public void setCritterPaths(GameMap gameMap) {
+    public void setCrittersPath(GameMap gameMap) {
+        Map<Path, Integer> paths = new HashMap<>();
         PathFinder finder = new AStarPathFinder(gameMap, 500, false);
 
-        // calculate path for x from 0-7
+        // Calculate paths from x:0 to x:7
         for (int position = 0; position < 8; position++) {
             Path path = finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(getX()), 0, position, Utils.GAMEMAP_HEIGHT - 1);
+
             // Convert units from gameMap to gameWorld
             int pathIndex = 0;
             while (pathIndex < path.getLength()) {
@@ -169,5 +113,49 @@ public class Critter extends MovableTileAnimation {
 
             paths.put(path, path.getLength());
         }
+
+        // Order paths from min to max and get shortest path
+        List<Map.Entry<Path, Integer>> pathsList = new ArrayList<>(paths.entrySet());
+        Collections.sort(pathsList, new Comparator<LinkedHashMap.Entry<Path, Integer>>() {
+            @Override
+            public int compare(LinkedHashMap.Entry<Path, Integer> path1, LinkedHashMap.Entry<Path, Integer> path2) {
+                return path1.getValue().compareTo(path2.getValue());
+            }
+        });
+
+        shortestPath = pathsList.get(0).getKey();
+    }
+
+    private void decideDirection(int indexActualStep, int indexLastStep) {
+        if (indexActualStep < shortestPath.getLength() && indexLastStep < shortestPath.getLength()) {
+            Path.Step stepActual = shortestPath.getStep(indexActualStep);
+            Path.Step stepLast = shortestPath.getStep(indexLastStep);
+
+            // Moving over x
+            if (stepActual.getY() == stepLast.getY()) {
+                if (stepActual.getX() <= stepLast.getX()) {
+                    setDirection(-1, 0);
+                    setRotationAngle(90);
+                    return;
+                } else if (stepActual.getX() > stepLast.getX()) {
+                    setDirection(1, 0);
+                    setRotationAngle(-90);
+                    return;
+                }
+            } else { // Moving over y
+                if (stepActual.getY() <= stepLast.getY()) {
+                    setDirection(0, -1);
+                    setRotationAngle(180);
+                    return;
+                } else if (stepActual.getY() > stepLast.getY()) {
+                    setDirection(0, 1);
+                    setRotationAngle(0);
+                    return;
+                }
+            }
+        }
+
+        setDirection(0, 1);
+        setRotationAngle(0);
     }
 }
