@@ -30,7 +30,6 @@ public class GameWorld {
     private ArrayList<Tower> towers = new ArrayList<>();
     private ArrayList<Critter> critters = new ArrayList<>();
     private GameMap gameMap;
-    private PathFinder finder;
 
     public GameWorld(int width, int height, GameControl gameControl) {
         this.width = width;
@@ -221,20 +220,9 @@ public class GameWorld {
     }
 
     public void calculateCrittersPath() {
-        finder = new AStarPathFinder(gameMap, 500, false);
-
         synchronized (critters) {
             for (Critter critter : critters)
-                critter.setCritterPath("PATH1", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, 0, Utils.GAMEMAP_HEIGHT - 1));
-
-            for (Critter critter : critters)
-                critter.setCritterPath("PATH2", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, 3, Utils.GAMEMAP_HEIGHT - 1));
-
-            for (Critter critter : critters)
-                critter.setCritterPath("PATH3", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, Utils.convertXWorldToGrid(critter.getX()), Utils.GAMEMAP_HEIGHT - 1));
-
-            for (Critter critter : critters)
-                critter.setCritterPath("PATH4", finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, Utils.GAMEMAP_WIDTH - 1, Utils.GAMEMAP_HEIGHT - 1));
+                critter.setCritterPaths(gameMap);
         }
     }
 }

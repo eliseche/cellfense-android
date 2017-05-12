@@ -2,8 +2,12 @@ package com.quitarts.cellfense.game.object;
 
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.FactoryDrawable;
+import com.quitarts.cellfense.game.GameMap;
+import com.quitarts.cellfense.game.UnitMover;
 import com.quitarts.cellfense.game.object.base.MovableTileAnimation;
+import com.quitarts.pathfinder.AStarPathFinder;
 import com.quitarts.pathfinder.Path;
+import com.quitarts.pathfinder.PathFinder;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,10 +20,7 @@ import java.util.Map;
 public class Critter extends MovableTileAnimation {
     private CritterType type;
     private int indexNextStep = 0;
-    private Path critterPath1 = new Path();
-    private Path critterPath2 = new Path();
-    private Path critterPath3 = new Path();
-    private Path critterPath4 = new Path();
+    private Map<Path, Integer> paths = new HashMap<>();
 
     public enum CritterType {
         SPIDER, CATERPILLAR, CHIP
@@ -140,12 +141,6 @@ public class Critter extends MovableTileAnimation {
     }
 
     private Path getShortestPath() {
-        Map<Path, Integer> paths = new HashMap<>();
-        paths.put(critterPath1, critterPath1.getLength());
-        paths.put(critterPath2, critterPath2.getLength());
-        paths.put(critterPath3, critterPath3.getLength());
-        paths.put(critterPath4, critterPath4.getLength());
-
         List<Map.Entry<Path, Integer>> pathsList = new ArrayList<>(paths.entrySet());
         Collections.sort(pathsList, new Comparator<LinkedHashMap.Entry<Path, Integer>>() {
             @Override
@@ -157,64 +152,22 @@ public class Critter extends MovableTileAnimation {
         return pathsList.get(0).getKey();
     }
 
-    public void setCritterPath(String pathName, Path path) {
-        switch (pathName) {
-            case "PATH1":
-                int value = 0;
-                while (value < path.getLength()) {
-                    critterPath1.appendStep(path.getStep(value).getX(), path.getStep(value).getY());
-                    value++;
-                }
-                value = 0;
-                while ((value < critterPath1.getLength())) {
-                    critterPath1.getStep(value).setX(Utils.convertXGridToWorld(critterPath1.getStep(value).getX()));
-                    critterPath1.getStep(value).setY(Utils.convertYGridToWorld(critterPath1.getStep(value).getY()));
-                    value++;
-                }
+    public void setCritterPaths(GameMap gameMap) {
+        PathFinder finder = new AStarPathFinder(gameMap, 500, false);
 
-                break;
-            case "PATH2":
-                value = 0;
-                while (value < path.getLength()) {
-                    critterPath2.appendStep(path.getStep(value).getX(), path.getStep(value).getY());
-                    value++;
-                }
-                value = 0;
-                while ((value < critterPath2.getLength())) {
-                    critterPath2.getStep(value).setX(Utils.convertXGridToWorld(critterPath2.getStep(value).getX()));
-                    critterPath2.getStep(value).setY(Utils.convertYGridToWorld(critterPath2.getStep(value).getY()));
-                    value++;
-                }
+        // calculate path for x from 0-7
+        for (int position = 0; position < 8; position++) {
+            Path path = finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(getX()), 0, position, Utils.GAMEMAP_HEIGHT - 1);
+            // Convert units from gameMap to gameWorld
+            int pathIndex = 0;
+            while (pathIndex < path.getLength()) {
+                Path.Step step = path.getStep(pathIndex);
+                step.setX(Utils.convertXGridToWorld(step.getX()));
+                step.setY(Utils.convertYGridToWorld(step.getY()));
+                pathIndex++;
+            }
 
-                break;
-            case "PATH3":
-                value = 0;
-                while (value < path.getLength()) {
-                    critterPath3.appendStep(path.getStep(value).getX(), path.getStep(value).getY());
-                    value++;
-                }
-                value = 0;
-                while ((value < critterPath3.getLength())) {
-                    critterPath3.getStep(value).setX(Utils.convertXGridToWorld(critterPath3.getStep(value).getX()));
-                    critterPath3.getStep(value).setY(Utils.convertYGridToWorld(critterPath3.getStep(value).getY()));
-                    value++;
-                }
-
-                break;
-            case "PATH4":
-                value = 0;
-                while (value < path.getLength()) {
-                    critterPath4.appendStep(path.getStep(value).getX(), path.getStep(value).getY());
-                    value++;
-                }
-                value = 0;
-                while ((value < critterPath4.getLength())) {
-                    critterPath4.getStep(value).setX(Utils.convertXGridToWorld(critterPath4.getStep(value).getX()));
-                    critterPath4.getStep(value).setY(Utils.convertYGridToWorld(critterPath4.getStep(value).getY()));
-                    value++;
-                }
-
-                break;
+            paths.put(path, path.getLength());
         }
     }
 }
