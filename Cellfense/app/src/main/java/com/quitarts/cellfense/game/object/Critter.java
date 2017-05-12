@@ -66,7 +66,6 @@ public class Critter extends MovableTileAnimation {
                 setY(indexActualStep.getY() + Utils.getOffsetY() - Utils.getCellHeight());
                 indexNextStep++;
                 decideDirection(indexNextStep, indexNextStep - 1);
-                setRotationAngle(0);
                 return;
             }
 
