@@ -44,7 +44,7 @@ public class LevelActivity extends Activity implements AdapterView.OnItemClickLi
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-        if (levelAdapter.getLevelStates().get(i)) {
+        if (true /*levelAdapter.getLevelStates().get(i)*/) {
             Intent intent = new Intent(LevelActivity.this, GameActivity.class);
             intent.putExtra("level", i);
             startActivity(intent);

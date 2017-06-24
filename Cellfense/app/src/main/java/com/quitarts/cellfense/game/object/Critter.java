@@ -1,9 +1,14 @@
 package com.quitarts.cellfense.game.object;
 
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.GameMap;
+import com.quitarts.cellfense.game.GameRules;
 import com.quitarts.cellfense.game.UnitMover;
+import com.quitarts.cellfense.game.object.base.GraphicObject;
 import com.quitarts.cellfense.game.object.base.MovableTileAnimation;
 import com.quitarts.pathfinder.AStarPathFinder;
 import com.quitarts.pathfinder.Path;
@@ -21,6 +26,8 @@ public class Critter extends MovableTileAnimation {
     private CritterType type;
     private int indexNextStep = 0;
     private Path shortestPath;
+    private boolean isSlow;
+    private int accumSlowTime;
 
     public enum CritterType {
         SPIDER, CATERPILLAR, CHIP
@@ -56,8 +63,25 @@ public class Critter extends MovableTileAnimation {
         return ((int) getY() / getHeight()) * getHeight();
     }
 
+    public boolean isHit(Bullet bullet) {
+        if (getGraphic().getBounds().intersect(bullet.getGraphic().getBounds()))
+            return true;
+
+        return false;
+    }
+
+    public void getSlugish() {
+        isSlow = true;
+        accumSlowTime = 0;
+        List<GraphicObject> critterTiles = getGraphics();
+        for (GraphicObject critterTile : critterTiles)
+            critterTile.getGraphic().mutate().setColorFilter(Color.argb(70, 100, 100, 255), PorterDuff.Mode.SRC_ATOP);
+    }
+
     public void advance(int dt) {
         super.advance(dt);
+        if (isSlow)
+            updateSlowSpeed(dt);
 
         if (indexNextStep < shortestPath.getLength()) {
             Path.Step indexActualStep = shortestPath.getStep(indexNextStep);
@@ -90,6 +114,19 @@ public class Critter extends MovableTileAnimation {
 
                 decideDirection(indexNextStep, indexNextStep - 1);
             }
+        }
+    }
+
+    private void updateSlowSpeed(int dt) {
+        accumSlowTime += dt;
+        if (accumSlowTime <= GameRules.getCritterSlowTime()) {
+            setSpeedY((GameRules.getCritterSpeed(type) * 0.5f) * Utils.getCellHeight());
+        } else {
+            isSlow = false;
+            setSpeedY(GameRules.getCritterSpeed(type) * Utils.getCellHeight());
+            List<GraphicObject> critterTiles = getGraphics();
+            for (GraphicObject critterTile : critterTiles)
+                critterTile.getGraphic().mutate().setColorFilter(null);
         }
     }
 

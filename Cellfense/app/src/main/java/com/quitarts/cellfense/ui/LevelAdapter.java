@@ -71,7 +71,7 @@ public class LevelAdapter extends BaseAdapter {
         int level = i;
         String score = getItem(i);
 
-        if (isUnlocked(level)) {
+        if (true/*isUnlocked(level)*/) {
             viewHolder.level.setText(String.valueOf(level));
             viewHolder.score.setText(score);
             view.setBackgroundDrawable(context.getResources().getDrawable(R.drawable.menu_button));

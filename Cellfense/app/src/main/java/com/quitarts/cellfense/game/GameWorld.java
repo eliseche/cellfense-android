@@ -3,6 +3,8 @@ package com.quitarts.cellfense.game;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.BitmapDrawable;
 
 import com.quitarts.cellfense.ContextContainer;
@@ -12,8 +14,10 @@ import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
+import com.quitarts.cellfense.game.object.base.GraphicObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameWorld {
     private int width;
@@ -77,6 +81,14 @@ public class GameWorld {
                 if (bulletTemp.getXCenter() < 0 || bulletTemp.getXCenter() > Utils.getCanvasWidth() ||
                         bulletTemp.getYCenter() < 0 || bulletTemp.getYCenter() > Utils.getCanvasHeight())
                     bullets.remove(bulletTemp);
+
+                // Clean bullet that hit a critter
+                for (Critter critter : critters) {
+                    if (critter.isHit(bulletTemp)) {
+                        critter.getSlugish();
+                        bullets.remove(bulletTemp);
+                    }
+                }
             }
 
             synchronized (bullets) {
