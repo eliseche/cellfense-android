@@ -37,8 +37,11 @@ public class GameControl {
     private Tower addTower;
     private boolean executeLevel = false;
     private boolean pathBlock;
-    private Paint blockMessagePaint;
-    private int blockMessageAccumDt;
+    private Paint pathBlockMessagePaint;
+    private int pathBlockMessageAccumDt;
+    private boolean sellTower;
+    private Paint sellTowerMessagePaint;
+
 
     public enum GameState {
         SCREEN1, SCREEN2
@@ -146,6 +149,7 @@ public class GameControl {
             }
             hud.drawBaseHud(canvas);
             drawBlockingMessage(canvas);
+            drawSellMessage(canvas);
         }
     }
 
@@ -182,10 +186,22 @@ public class GameControl {
     public boolean eventActionMove(MotionEvent ev) {
         if (addTower != null) {
             // User is sliding a Tower
-            addTower.setX(ev.getX());
-            addTower.setY(ev.getY() - addTower.getHeight());
-            addTower.setX(addTower.getXFix());
-            addTower.setY(addTower.getYFix());
+            // Set sellTower flag to display sell message if touching HUD
+            if (hud.isHudAreaTouch((int) ev.getY())) {
+                sellTower = true;
+
+                addTower.setX(ev.getX());
+                addTower.setY(hud.getTopBoundOfHud() - addTower.getHeight());
+                addTower.setX(addTower.getXFix());
+                addTower.setY(addTower.getYFix());
+            } else {
+                sellTower = false;
+
+                addTower.setX(ev.getX());
+                addTower.setY(ev.getY() - addTower.getHeight());
+                addTower.setX(addTower.getXFix());
+                addTower.setY(addTower.getYFix());
+            }
 
             // Change color if tower is over another placed tower
             if (gameWorld.isEmptyPlace(addTower))
@@ -220,9 +236,12 @@ public class GameControl {
                 else if (gameWorld.isEmptyPlace(addTower))
                     gameWorld.addTower(addTower);
 
-                synchronized (addTower) {
-                    addTower = null;
-                }
+                if (hud.isHudAreaTouch((int) ev.getY()))
+                    // Add resource
+
+                    synchronized (addTower) {
+                        addTower = null;
+                    }
             }
 
             // Click button to send next wave
@@ -320,11 +339,17 @@ public class GameControl {
     private void initialize() {
         Typeface font1 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
 
-        blockMessagePaint = new Paint();
-        blockMessagePaint.setTypeface(font1);
-        blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
-        blockMessagePaint.setColor(Color.WHITE);
-        blockMessagePaint.setAntiAlias(true);
+        pathBlockMessagePaint = new Paint();
+        pathBlockMessagePaint.setTypeface(font1);
+        pathBlockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
+        pathBlockMessagePaint.setColor(Color.WHITE);
+        pathBlockMessagePaint.setAntiAlias(true);
+
+        sellTowerMessagePaint = new Paint();
+        sellTowerMessagePaint.setTypeface(font1);
+        sellTowerMessagePaint.setTextSize(30 * Utils.getScaleFactor());
+        sellTowerMessagePaint.setColor(Color.WHITE);
+        sellTowerMessagePaint.setAntiAlias(true);
     }
 
     public class Config {
@@ -337,10 +362,10 @@ public class GameControl {
 
     private void updateBlockingMessage(int dt) {
         if (pathBlock) {
-            blockMessageAccumDt += dt;
-            if (blockMessageAccumDt >= 1500) {
+            pathBlockMessageAccumDt += dt;
+            if (pathBlockMessageAccumDt >= 1500) {
                 pathBlock = false;
-                blockMessageAccumDt = 0;
+                pathBlockMessageAccumDt = 0;
             }
         }
     }
@@ -350,9 +375,20 @@ public class GameControl {
             String blockingMessage = ContextContainer.getContext().getString(R.string.Block_Message);
 
             canvas.drawText(blockingMessage,
-                    (Utils.getCanvasWidth() / 2) - blockMessagePaint.measureText(blockingMessage) / 2,
-                    (Utils.getCanvasHeight() / 2) - blockMessagePaint.getTextSize(),
-                    blockMessagePaint);
+                    Utils.getCanvasWidth() / 2 - pathBlockMessagePaint.measureText(blockingMessage) / 2,
+                    Utils.getCanvasHeight() / 2 - Utils.getCellHeight() - pathBlockMessagePaint.getTextSize(),
+                    pathBlockMessagePaint);
+        }
+    }
+
+    private void drawSellMessage(Canvas canvas) {
+        if (sellTower) {
+            String sellMessage = ContextContainer.getContext().getString(R.string.Sell_Tower);
+
+            canvas.drawText(sellMessage,
+                    Utils.getCanvasWidth() / 2 - sellTowerMessagePaint.measureText(sellMessage) / 2,
+                    Utils.getCanvasHeight() / 2 - sellTowerMessagePaint.getTextSize(),
+                    sellTowerMessagePaint);
         }
     }
 }

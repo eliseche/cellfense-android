@@ -167,6 +167,13 @@ public class Hud {
         buttonHudReadyEnabled.getGraphic().setAlpha(130);
     }
 
+    public boolean isHudAreaTouch(int y) {
+        if (y > getTopBoundOfHud() + Utils.getCellHeight())
+            return true;
+
+        return false;
+    }
+
     private void initialize() {
         // HudArrow
         buttonHudArrow = new Button(FactoryDrawable.DrawableType.HUD_ARROW);
@@ -179,7 +186,7 @@ public class Hud {
         buttonHudReadyEnabled.setY(Utils.getCanvasHeight() - buttonHudReadyEnabled.getHeight());
 
         // Hud
-        hud = new Rect(0, Utils.getCanvasHeight() - buttonHudArrow.getHeight(), Utils.getCanvasWidth(), Utils.getCanvasHeight());
+        hud = new Rect(0, (int) (Utils.getCanvasHeight() - Utils.getCellHeight() * 2), Utils.getCanvasWidth(), Utils.getCanvasHeight());
         hudPaint = new Paint();
         hudPaint.setStyle(Paint.Style.FILL);
         hudPaint.setARGB(180, 0, 0, 0);
