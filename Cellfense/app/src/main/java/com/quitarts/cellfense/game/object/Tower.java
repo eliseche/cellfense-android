@@ -21,6 +21,7 @@ public class Tower extends TileAnimation {
     private int shootingTime;
     private int accumShootingTime;
     private Critter victim;
+    private int price;
 
     public enum TowerType {
         TURRET_CAPACITOR,
@@ -144,6 +145,10 @@ public class Tower extends TileAnimation {
             this.setVictim(nearestCritter);
     }
 
+    public int getPrice() {
+        return price;
+    }
+
     private double getCritterDistance(Critter critter) {
         double dx = Math.abs(this.getXCenter() - critter.getXCenter());
         double dy = Math.abs((Utils.getCanvasHeight() + this.getYCenter()) - critter.getYCenter());
@@ -163,6 +168,7 @@ public class Tower extends TileAnimation {
     }
 
     private void initialize() {
+        price = GameRules.getTowerPrice(type);
         shootingTime = GameRules.getTowerShootingTime(type);
         shootingRange = GameRules.getTowerShootingRange(type);
 

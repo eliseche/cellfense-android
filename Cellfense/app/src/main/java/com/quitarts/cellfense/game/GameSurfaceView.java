@@ -140,4 +140,28 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
         return true;
     }
+
+    public boolean showPlayAgainDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(gameActivity);
+        builder.setCancelable(false);
+        builder.setMessage("Do you want to play again?");
+        builder.setPositiveButton(
+                getResources().getText(R.string.yes),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        builder.setNegativeButton(
+                getResources().getText(R.string.no),
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                    }
+                });
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
+
+        return true;
+    }
 }

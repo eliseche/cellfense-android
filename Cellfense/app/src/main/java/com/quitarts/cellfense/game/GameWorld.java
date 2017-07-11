@@ -132,10 +132,20 @@ public class GameWorld {
 
     private void processCritters(int dt) {
         if (gameControl.getEnemyState() == GameControl.EnemyState.MOVING) {
-            for (Critter critter : critters) {
-                critter.start();
-                critter.advance(dt);
-                critter.updateTile(dt);
+            synchronized (critters) {
+                for (Critter critter : critters) {
+                    critter.start();
+                    critter.advance(dt);
+                    critter.updateTile(dt);
+
+                    if (critter.getLives() <= 0)
+                        critters.remove(critter);
+
+                    if (critter.getY() > height) {
+                        critters.remove(critter);
+                        gameControl.removeLife();
+                    }
+                }
             }
         }
     }
@@ -337,5 +347,9 @@ public class GameWorld {
         }
 
         return null;
+    }
+
+    public int getTowersCount() {
+        return towers.size();
     }
 }

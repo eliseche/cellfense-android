@@ -7,8 +7,10 @@ import android.graphics.Rect;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Button;
 import com.quitarts.cellfense.game.object.Tower;
+import com.quitarts.cellfense.game.object.base.GraphicObject;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Hud {
     private GameControl gameControl;
@@ -21,6 +23,10 @@ public class Hud {
     private Button buttonTank;
     private Button buttonBomb;
     private int slidePanelSpeed = 3;
+    private Paint barsPaint;
+    private Paint barsSeparatorPaint;
+    private GraphicObject battery;
+    private List<EnergyBar> energyBars = new ArrayList<>();
 
     public Hud(GameControl gameControl) {
         this.gameControl = gameControl;
@@ -31,8 +37,36 @@ public class Hud {
 
     // region Update hud
     public void update(int dt) {
+        updateResources(dt);
         updateHudArrow(dt);
         updateHudReady(dt);
+    }
+
+    private void updateResources(int dt) {
+        energyBars.clear();
+        int barWidth = (int) Utils.getCellWidth() * 10 / 100;
+        int barHeight = (int) Utils.getCellHeight() * 30 / 100;
+        int barSeparatorHeight = (int) Utils.getCellHeight() * 35 / 100;
+        int separator = 0;
+        int bars = gameControl.getResources() / 5;
+
+        for (int i = 1; i <= bars; i++) {
+            Rect energyBar = new Rect(battery.getGraphic().getBounds().left - separator,
+                    battery.getGraphic().getBounds().top + 1,
+                    battery.getGraphic().getBounds().left - separator - barWidth,
+                    battery.getGraphic().getBounds().bottom / 2 + barHeight / 2);
+            energyBars.add(new EnergyBar(energyBar, false));
+            if (i % 5 == 0) {
+                Rect energyBarSeparator = new Rect(energyBar.right - (int) (Utils.getCellWidth() * 8 / 100),
+                        battery.getGraphic().getBounds().top,
+                        energyBar.right - (int) (Utils.getCellWidth() * 5 / 100),
+                        battery.getGraphic().getBounds().bottom / 2 + barSeparatorHeight / 2);
+                separator += (int) (Utils.getCellWidth() * 23 / 100);
+                energyBars.add(new EnergyBar(energyBarSeparator, true));
+            } else {
+                separator += (int) (Utils.getCellWidth() * 13 / 100);
+            }
+        }
     }
 
     private void updateHudArrow(int dt) {
@@ -64,8 +98,20 @@ public class Hud {
 
     // region Draw hud
     public void drawBaseHud(Canvas canvas) {
+        drawResources(canvas);
         drawHudArrow(canvas);
         drawHudReady(canvas);
+    }
+
+    public void drawResources(Canvas canvas) {
+        battery.getGraphic().draw(canvas);
+
+        for (EnergyBar energyBar : energyBars) {
+            if (energyBar.isSeparator)
+                canvas.drawRect(energyBar.getEnergyBar(), barsSeparatorPaint);
+            else
+                canvas.drawRect(energyBar.getEnergyBar(), barsPaint);
+        }
     }
 
     public void drawBottomHud(Canvas canvas) {
@@ -195,5 +241,44 @@ public class Hud {
         buttonCapacitor = new Button(FactoryDrawable.DrawableType.GUN_TURRET_CAPACITOR);
         buttonTank = new Button(FactoryDrawable.DrawableType.GUN_TURRET_TANK);
         buttonBomb = new Button(FactoryDrawable.DrawableType.GUN_TURRET_BOMB);
+
+        // EnergyBar
+        barsPaint = new Paint();
+        barsPaint.setStyle(Paint.Style.FILL);
+        barsPaint.setARGB(255, 102, 102, 255);
+
+        barsSeparatorPaint = new Paint();
+        barsSeparatorPaint.setStyle(Paint.Style.FILL);
+        barsSeparatorPaint.setARGB(255, 128, 141, 128);
+
+        battery = new GraphicObject(FactoryDrawable.DrawableType.HUD_BATTERY);
+        battery.setX(Utils.getCanvasWidth() - battery.getGraphic().getMinimumWidth());
+        battery.setY(0);
+    }
+
+    class EnergyBar {
+        private Rect energyBar;
+        private boolean isSeparator;
+
+        public EnergyBar(Rect energyBar, boolean isSeparator) {
+            this.energyBar = energyBar;
+            this.isSeparator = isSeparator;
+        }
+
+        public Rect getEnergyBar() {
+            return energyBar;
+        }
+
+        public void setEnergyBar(Rect energyBar) {
+            this.energyBar = energyBar;
+        }
+
+        public boolean isSeparator() {
+            return isSeparator;
+        }
+
+        public void setSeparator(boolean separator) {
+            isSeparator = separator;
+        }
     }
 }

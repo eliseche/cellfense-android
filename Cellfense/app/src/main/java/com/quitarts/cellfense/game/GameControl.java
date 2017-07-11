@@ -36,6 +36,7 @@ public class GameControl {
     private Config config;
     private Tower addTower;
     private boolean executeLevel = false;
+    private boolean movingAddedTower;
     private boolean pathBlock;
     private Paint pathBlockMessagePaint;
     private int pathBlockMessageAccumDt;
@@ -132,6 +133,11 @@ public class GameControl {
                 else
                     hud.switchOffNextWaveButton();
             }
+        } else if (enemyState == EnemyState.MOVING) {
+            if (config.lives <= 0) {
+                pause();
+                gameSurfaceView.showPlayAgainDialog();
+            }
         }
 
         gameWorld.update(dt);
@@ -177,6 +183,7 @@ public class GameControl {
                 Tower tower = gameWorld.getTower((int) ev.getX(), (int) ev.getY());
                 gameWorld.removeTower(tower);
                 addTower = tower;
+                movingAddedTower = true;
             }
         }
 
@@ -231,17 +238,25 @@ public class GameControl {
 
             // Release Tower
             if (addTower != null) {
-                if (gameWorld.isBlocking(addTower))
-                    pathBlock = true;
-                else if (gameWorld.isEmptyPlace(addTower))
-                    gameWorld.addTower(addTower);
+                if (addTower.getPrice() <= config.resources && gameWorld.getTowersCount() <= config.maxUnits) {
+                    if (gameWorld.isBlocking(addTower))
+                        pathBlock = true;
+                    else if (hud.isHudAreaTouch((int) ev.getY()) || !gameWorld.isEmptyPlace(addTower)) {
+                        if (movingAddedTower)
+                            config.resources += addTower.getPrice();
+                    } else if (gameWorld.isEmptyPlace(addTower)) {
+                        gameWorld.addTower(addTower);
 
-                if (hud.isHudAreaTouch((int) ev.getY()))
-                    // Add resource
-
-                    synchronized (addTower) {
-                        addTower = null;
+                        if (!movingAddedTower)
+                            config.resources -= addTower.getPrice();
                     }
+                }
+
+                movingAddedTower = false;
+                sellTower = false;
+                synchronized (addTower) {
+                    addTower = null;
+                }
             }
 
             // Click button to send next wave
@@ -301,6 +316,7 @@ public class GameControl {
             bullet.setSpeed(velX, velY);
             bullet.start();
             gameWorld.addBullet((Bullet) bullet.clone());
+            config.resources -= GameRules.getLTAPrice();
         }
 
         ltaStartShoot = false;
@@ -333,6 +349,7 @@ public class GameControl {
         if (config.wave <= levels.size()) {
             ArrayList<Critter> critters = new CritterFactory().createPresetLevel(levels.get(config.wave));
             gameWorld.addCritters(critters);
+            config.resources = resources.get(config.wave);
         }
     }
 
@@ -350,6 +367,14 @@ public class GameControl {
         sellTowerMessagePaint.setTextSize(30 * Utils.getScaleFactor());
         sellTowerMessagePaint.setColor(Color.WHITE);
         sellTowerMessagePaint.setAntiAlias(true);
+    }
+
+    public int getResources() {
+        return config.resources;
+    }
+
+    public void removeLife() {
+        this.config.lives--;
     }
 
     public class Config {
