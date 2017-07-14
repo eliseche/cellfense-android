@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class GameControl {
+    private long accumDt = 0;
     private GameSurfaceView gameSurfaceView;
     private SurfaceHolder surfaceHolder;
     private Hud hud;
@@ -66,7 +67,6 @@ public class GameControl {
     public void play() {
         int fps = Utils.getFramesPerSecond();
         long dt = 0;
-        long accumDt = 0;
 
         hud = new Hud(this);
         Canvas canvas = surfaceHolder.lockCanvas();
@@ -87,8 +87,10 @@ public class GameControl {
                     accumDt -= fps;
                     updateFlag = true;
                 }
-            } else
+            } else {
                 updateFlag = true;
+                accumDt = 0;
+            }
 
             // Draw if updateFlag = true, else sleep
             if (updateFlag) {
@@ -100,7 +102,6 @@ public class GameControl {
             } else {
                 try {
                     Thread.sleep(fps / 2);
-
                 } catch (Exception e) {
                     Log.e(getClass().getName(), e.getMessage(), e);
                 }
@@ -123,7 +124,8 @@ public class GameControl {
                 gameState = GameState.SCREEN2;
                 gameWorld.slideToBottomScreen();
                 gameWorld.calculateCrittersPath();
-            }
+            } else
+                gameWorld.resetTowerAngle();
 
             if (gameState == GameState.SCREEN1)
                 hud.switchOffNextWaveButton();
@@ -134,9 +136,14 @@ public class GameControl {
                     hud.switchOffNextWaveButton();
             }
         } else if (enemyState == EnemyState.MOVING) {
-            if (config.lives <= 0) {
+            if (!gameWorld.worldHaveEnemies() && !isGamePaused()) {
                 pause();
-                gameSurfaceView.showPlayAgainDialog();
+
+                if (config.lives > 0) {
+                    // Win
+                } else {
+                    gameSurfaceView.showPlayAgainDialog();
+                }
             }
         }
 
@@ -383,6 +390,15 @@ public class GameControl {
         public int resources = 0;
         public int wave = 0;
         public int maxUnits = GameRules.getMaxTowers();
+    }
+
+    public void reset() {
+        config.lives = GameRules.getStartLives();
+        config.score = 0;
+        gameWorld.reset();
+        enemyState = EnemyState.UNAVAILABLE;
+        gameState = GameState.SCREEN1;
+        gameWorld.slideToTopScreen();
     }
 
     private void updateBlockingMessage(int dt) {

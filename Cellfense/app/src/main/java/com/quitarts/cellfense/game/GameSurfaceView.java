@@ -4,6 +4,8 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -141,27 +143,34 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         return true;
     }
 
-    public boolean showPlayAgainDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(gameActivity);
-        builder.setCancelable(false);
-        builder.setMessage("Do you want to play again?");
-        builder.setPositiveButton(
-                getResources().getText(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-        builder.setNegativeButton(
-                getResources().getText(R.string.no),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-
-        return true;
+    public void showPlayAgainDialog() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog.Builder builder = new AlertDialog.Builder(gameActivity);
+                builder.setCancelable(false);
+                builder.setMessage("Do you want to play again?");
+                builder.setPositiveButton(
+                        getResources().getText(R.string.yes),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                gameControl.reset();
+                                gameControl.resume();
+                            }
+                        });
+                builder.setNegativeButton(
+                        getResources().getText(R.string.no),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                destroyGame();
+                                gameActivity.finish();
+                            }
+                        });
+                AlertDialog alertDialog = builder.create();
+                alertDialog.show();
+            }
+        });
     }
 }
