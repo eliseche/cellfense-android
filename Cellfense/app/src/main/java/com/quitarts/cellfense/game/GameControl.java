@@ -245,17 +245,19 @@ public class GameControl {
 
             // Release Tower
             if (addTower != null) {
-                if (addTower.getPrice() <= config.resources && gameWorld.getTowersCount() <= config.maxUnits) {
-                    if (gameWorld.isBlocking(addTower))
-                        pathBlock = true;
-                    else if (hud.isHudAreaTouch((int) ev.getY()) || !gameWorld.isEmptyPlace(addTower)) {
-                        if (movingAddedTower)
-                            config.resources += addTower.getPrice();
-                    } else if (gameWorld.isEmptyPlace(addTower)) {
+                if (gameWorld.isBlocking(addTower))
+                    pathBlock = true;
+                else if (hud.isHudAreaTouch((int) ev.getY()) || !gameWorld.isEmptyPlace(addTower)) {
+                    if (movingAddedTower)
+                        config.resources += addTower.getPrice();
+                } else if (gameWorld.isEmptyPlace(addTower)) {
+                    if (movingAddedTower) {
                         gameWorld.addTower(addTower);
-
-                        if (!movingAddedTower)
+                    } else {
+                        if (addTower.getPrice() <= config.resources && gameWorld.getTowersCount() <= config.maxUnits) {
+                            gameWorld.addTower(addTower);
                             config.resources -= addTower.getPrice();
+                        }
                     }
                 }
 
