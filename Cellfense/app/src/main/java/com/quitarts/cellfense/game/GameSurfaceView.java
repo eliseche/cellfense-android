@@ -1,16 +1,21 @@
 package com.quitarts.cellfense.game;
 
-import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.View;
+import android.view.Window;
+import android.widget.Button;
+import android.widget.TextView;
 
+import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.torefactor.SoundManager;
 import com.quitarts.cellfense.ui.GameActivity;
@@ -116,60 +121,86 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             progressDialog.cancel();
     }
 
-    public boolean showExitDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(gameActivity);
-        builder.setCancelable(false);
-        builder.setMessage(getResources().getText(R.string.dialog_message_exit));
-        builder.setPositiveButton(
-                getResources().getText(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        destroyGame();
-                        gameActivity.finish();
-                    }
-                });
-        builder.setNegativeButton(
-                getResources().getText(R.string.no),
-                new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        resumeGame();
-                    }
-                });
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
+    public void showExitDialog() {
+        Typeface font1 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
 
-        return true;
+        final Dialog dialog = new Dialog(gameActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(false);
+        dialog.setContentView(R.layout.alert_yes_no);
+
+        TextView description = (TextView) dialog.findViewById(R.id.alert_yes_no_description);
+        Button positive = (Button) dialog.findViewById(R.id.alert_yes_no_positive);
+        Button negative = (Button) dialog.findViewById(R.id.alert_yes_no_negative);
+
+        description.setTypeface(font1);
+        description.setText("Exit Game?");
+
+        positive.setTypeface(font1);
+        positive.setText("Yes");
+        positive.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                destroyGame();
+                gameActivity.finish();
+                dialog.dismiss();
+            }
+        });
+
+        negative.setTypeface(font1);
+        negative.setText("No");
+        negative.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                resumeGame();
+                dialog.dismiss();
+            }
+        });
+
+        dialog.show();
     }
 
     public void showPlayAgainDialog() {
         new Handler(Looper.getMainLooper()).post(new Runnable() {
             @Override
             public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(gameActivity);
-                builder.setCancelable(false);
-                builder.setMessage("Do you want to play again?");
-                builder.setPositiveButton(
-                        getResources().getText(R.string.yes),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                gameControl.reset();
-                                gameControl.resume();
-                            }
-                        });
-                builder.setNegativeButton(
-                        getResources().getText(R.string.no),
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-                                destroyGame();
-                                gameActivity.finish();
-                            }
-                        });
-                AlertDialog alertDialog = builder.create();
-                alertDialog.show();
+                Typeface font1 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
+
+                final Dialog dialog = new Dialog(gameActivity);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.alert_yes_no);
+
+                TextView description = (TextView) dialog.findViewById(R.id.alert_yes_no_description);
+                Button positive = (Button) dialog.findViewById(R.id.alert_yes_no_positive);
+                Button negative = (Button) dialog.findViewById(R.id.alert_yes_no_negative);
+
+                description.setTypeface(font1);
+                description.setText("Do you want to play again?");
+
+                positive.setTypeface(font1);
+                positive.setText("Yes");
+                positive.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        gameControl.reset();
+                        gameControl.resume();
+                        dialog.dismiss();
+                    }
+                });
+
+                negative.setTypeface(font1);
+                negative.setText("No");
+                negative.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        destroyGame();
+                        gameActivity.finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
             }
         });
     }
