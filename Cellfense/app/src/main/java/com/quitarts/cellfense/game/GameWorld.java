@@ -20,6 +20,7 @@ import com.quitarts.pathfinder.Path;
 import com.quitarts.pathfinder.PathFinder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class GameWorld {
     private int width;
@@ -132,10 +133,25 @@ public class GameWorld {
 
     private void processCritters(int dt) {
         if (gameControl.getEnemyState() == GameControl.EnemyState.MOVING) {
-            for (Critter critter : critters) {
-                critter.start();
-                critter.advance(dt);
-                critter.updateTile(dt);
+            List<Critter> crittersTemp = (List<Critter>) critters.clone();
+            if (crittersTemp.size() > 0) {
+                for (Critter critterTemp : crittersTemp) {
+                    if (critterTemp.getLives() <= 0)
+                        critters.remove(critterTemp);
+
+                    if (critterTemp.getY() > height) {
+                        critters.remove(critterTemp);
+                        gameControl.removeLife();
+                    }
+                }
+
+                synchronized (critters) {
+                    for (Critter critter : critters) {
+                        critter.start();
+                        critter.advance(dt);
+                        critter.updateTile(dt);
+                    }
+                }
             }
         }
     }
@@ -249,6 +265,10 @@ public class GameWorld {
         return towers.size() > 0;
     }
 
+    public boolean worldHaveEnemies() {
+        return critters.size() > 0;
+    }
+
     public void addTower(Tower tower) {
         synchronized (towers) {
             towers.add(tower);
@@ -337,5 +357,25 @@ public class GameWorld {
         }
 
         return null;
+    }
+
+    public int getTowersCount() {
+        return towers.size();
+    }
+
+    public void resetTowerAngle() {
+        for (Tower tower : towers) {
+            if (tower.getRotationAngle() > 0 && tower.getRotationAngle() <= 180)
+                tower.setRotationAngle(tower.getRotationAngle() - 2);
+            else if (tower.getRotationAngle() > 180 && tower.getRotationAngle() <= 360)
+                tower.setRotationAngle(tower.getRotationAngle() + 2);
+        }
+    }
+
+    public void reset() {
+        bullets.clear();
+        critters.clear();
+        for (Tower tower : towers)
+            tower.setVictim(null);
     }
 }

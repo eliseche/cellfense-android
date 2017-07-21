@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 
 public class GameControl {
+    private long accumDt = 0;
     private GameSurfaceView gameSurfaceView;
     private SurfaceHolder surfaceHolder;
     private Hud hud;
@@ -36,9 +37,13 @@ public class GameControl {
     private Config config;
     private Tower addTower;
     private boolean executeLevel = false;
+    private boolean movingAddedTower;
     private boolean pathBlock;
-    private Paint blockMessagePaint;
-    private int blockMessageAccumDt;
+    private Paint pathBlockMessagePaint;
+    private int pathBlockMessageAccumDt;
+    private boolean sellTower;
+    private Paint sellTowerMessagePaint;
+
 
     public enum GameState {
         SCREEN1, SCREEN2
@@ -62,7 +67,6 @@ public class GameControl {
     public void play() {
         int fps = Utils.getFramesPerSecond();
         long dt = 0;
-        long accumDt = 0;
 
         hud = new Hud(this);
         Canvas canvas = surfaceHolder.lockCanvas();
@@ -83,8 +87,10 @@ public class GameControl {
                     accumDt -= fps;
                     updateFlag = true;
                 }
-            } else
+            } else {
                 updateFlag = true;
+                accumDt = 0;
+            }
 
             // Draw if updateFlag = true, else sleep
             if (updateFlag) {
@@ -96,7 +102,6 @@ public class GameControl {
             } else {
                 try {
                     Thread.sleep(fps / 2);
-
                 } catch (Exception e) {
                     Log.e(getClass().getName(), e.getMessage(), e);
                 }
@@ -119,7 +124,8 @@ public class GameControl {
                 gameState = GameState.SCREEN2;
                 gameWorld.slideToBottomScreen();
                 gameWorld.calculateCrittersPath();
-            }
+            } else
+                gameWorld.resetTowerAngle();
 
             if (gameState == GameState.SCREEN1)
                 hud.switchOffNextWaveButton();
@@ -128,6 +134,16 @@ public class GameControl {
                     hud.switchOnNextWaveButton();
                 else
                     hud.switchOffNextWaveButton();
+            }
+        } else if (enemyState == EnemyState.MOVING) {
+            if (!gameWorld.worldHaveEnemies() && !isGamePaused()) {
+                pause();
+
+                if (config.lives > 0) {
+                    // Win
+                } else {
+                    gameSurfaceView.showPlayAgainDialog();
+                }
             }
         }
 
@@ -146,6 +162,7 @@ public class GameControl {
             }
             hud.drawBaseHud(canvas);
             drawBlockingMessage(canvas);
+            drawSellMessage(canvas);
         }
     }
 
@@ -173,6 +190,7 @@ public class GameControl {
                 Tower tower = gameWorld.getTower((int) ev.getX(), (int) ev.getY());
                 gameWorld.removeTower(tower);
                 addTower = tower;
+                movingAddedTower = true;
             }
         }
 
@@ -182,10 +200,22 @@ public class GameControl {
     public boolean eventActionMove(MotionEvent ev) {
         if (addTower != null) {
             // User is sliding a Tower
-            addTower.setX(ev.getX());
-            addTower.setY(ev.getY() - addTower.getHeight());
-            addTower.setX(addTower.getXFix());
-            addTower.setY(addTower.getYFix());
+            // Set sellTower flag to display sell message if touching HUD
+            if (hud.isHudAreaTouch((int) ev.getY())) {
+                sellTower = true;
+
+                addTower.setX(ev.getX());
+                addTower.setY(hud.getTopBoundOfHud() - addTower.getHeight());
+                addTower.setX(addTower.getXFix());
+                addTower.setY(addTower.getYFix());
+            } else {
+                sellTower = false;
+
+                addTower.setX(ev.getX());
+                addTower.setY(ev.getY() - addTower.getHeight());
+                addTower.setX(addTower.getXFix());
+                addTower.setY(addTower.getYFix());
+            }
 
             // Change color if tower is over another placed tower
             if (gameWorld.isEmptyPlace(addTower))
@@ -217,9 +247,22 @@ public class GameControl {
             if (addTower != null) {
                 if (gameWorld.isBlocking(addTower))
                     pathBlock = true;
-                else if (gameWorld.isEmptyPlace(addTower))
-                    gameWorld.addTower(addTower);
+                else if (hud.isHudAreaTouch((int) ev.getY()) || !gameWorld.isEmptyPlace(addTower)) {
+                    if (movingAddedTower)
+                        config.resources += addTower.getPrice();
+                } else if (gameWorld.isEmptyPlace(addTower)) {
+                    if (movingAddedTower) {
+                        gameWorld.addTower(addTower);
+                    } else {
+                        if (addTower.getPrice() <= config.resources && gameWorld.getTowersCount() <= config.maxUnits) {
+                            gameWorld.addTower(addTower);
+                            config.resources -= addTower.getPrice();
+                        }
+                    }
+                }
 
+                movingAddedTower = false;
+                sellTower = false;
                 synchronized (addTower) {
                     addTower = null;
                 }
@@ -282,6 +325,7 @@ public class GameControl {
             bullet.setSpeed(velX, velY);
             bullet.start();
             gameWorld.addBullet((Bullet) bullet.clone());
+            config.resources -= GameRules.getLTAPrice();
         }
 
         ltaStartShoot = false;
@@ -314,17 +358,32 @@ public class GameControl {
         if (config.wave <= levels.size()) {
             ArrayList<Critter> critters = new CritterFactory().createPresetLevel(levels.get(config.wave));
             gameWorld.addCritters(critters);
+            config.resources = resources.get(config.wave);
         }
     }
 
     private void initialize() {
         Typeface font1 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
 
-        blockMessagePaint = new Paint();
-        blockMessagePaint.setTypeface(font1);
-        blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
-        blockMessagePaint.setColor(Color.WHITE);
-        blockMessagePaint.setAntiAlias(true);
+        pathBlockMessagePaint = new Paint();
+        pathBlockMessagePaint.setTypeface(font1);
+        pathBlockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
+        pathBlockMessagePaint.setColor(Color.WHITE);
+        pathBlockMessagePaint.setAntiAlias(true);
+
+        sellTowerMessagePaint = new Paint();
+        sellTowerMessagePaint.setTypeface(font1);
+        sellTowerMessagePaint.setTextSize(30 * Utils.getScaleFactor());
+        sellTowerMessagePaint.setColor(Color.WHITE);
+        sellTowerMessagePaint.setAntiAlias(true);
+    }
+
+    public int getResources() {
+        return config.resources;
+    }
+
+    public void removeLife() {
+        this.config.lives--;
     }
 
     public class Config {
@@ -335,12 +394,21 @@ public class GameControl {
         public int maxUnits = GameRules.getMaxTowers();
     }
 
+    public void reset() {
+        config.lives = GameRules.getStartLives();
+        config.score = 0;
+        gameWorld.reset();
+        enemyState = EnemyState.UNAVAILABLE;
+        gameState = GameState.SCREEN1;
+        gameWorld.slideToTopScreen();
+    }
+
     private void updateBlockingMessage(int dt) {
         if (pathBlock) {
-            blockMessageAccumDt += dt;
-            if (blockMessageAccumDt >= 1500) {
+            pathBlockMessageAccumDt += dt;
+            if (pathBlockMessageAccumDt >= 1500) {
                 pathBlock = false;
-                blockMessageAccumDt = 0;
+                pathBlockMessageAccumDt = 0;
             }
         }
     }
@@ -350,9 +418,20 @@ public class GameControl {
             String blockingMessage = ContextContainer.getContext().getString(R.string.Block_Message);
 
             canvas.drawText(blockingMessage,
-                    (Utils.getCanvasWidth() / 2) - blockMessagePaint.measureText(blockingMessage) / 2,
-                    (Utils.getCanvasHeight() / 2) - blockMessagePaint.getTextSize(),
-                    blockMessagePaint);
+                    Utils.getCanvasWidth() / 2 - pathBlockMessagePaint.measureText(blockingMessage) / 2,
+                    Utils.getCanvasHeight() / 2 - Utils.getCellHeight() - pathBlockMessagePaint.getTextSize(),
+                    pathBlockMessagePaint);
+        }
+    }
+
+    private void drawSellMessage(Canvas canvas) {
+        if (sellTower) {
+            String sellMessage = ContextContainer.getContext().getString(R.string.Sell_Tower);
+
+            canvas.drawText(sellMessage,
+                    Utils.getCanvasWidth() / 2 - sellTowerMessagePaint.measureText(sellMessage) / 2,
+                    Utils.getCanvasHeight() / 2 - sellTowerMessagePaint.getTextSize(),
+                    sellTowerMessagePaint);
         }
     }
 }
