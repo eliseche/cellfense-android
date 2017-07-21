@@ -9,6 +9,8 @@ import com.quitarts.cellfense.game.FactoryDrawable;
 import com.quitarts.cellfense.game.GameRules;
 import com.quitarts.cellfense.game.object.base.TileAnimation;
 
+import java.util.List;
+
 public class Tower extends TileAnimation {
     private TowerType type;
     private int xGrid;
@@ -16,11 +18,22 @@ public class Tower extends TileAnimation {
     private BitmapDrawable turretBase;
     private float shootingRange;
     private Paint shootingRangePaint;
+    private int shootingTime;
+    private int accumShootingTime;
+    private Critter victim;
 
     public enum TowerType {
         TURRET_CAPACITOR,
         TURRET_TANK,
         TURRET_BOMB
+    }
+
+    public Critter getVictim() {
+        return victim;
+    }
+
+    public void setVictim(Critter victim) {
+        this.victim = victim;
     }
 
     public Tower(FactoryDrawable.DrawableType drawableType, int rows, int columns, int frameSkipDelay, boolean repeatAnimation) {
@@ -81,7 +94,76 @@ public class Tower extends TileAnimation {
         return shootingRangePaint;
     }
 
+    public void aim(Critter critter, int offsetY) {
+        double dx = critter.getXCenter() - getXCenter();
+        double dy = critter.getYCenter() - offsetY - (Utils.getCanvasHeight() + getYCenter() - offsetY);
+        int angle = (int) Math.toDegrees(Math.atan2(dx, dy));
+
+        if (angle < 0)
+            angle = 180 + Math.abs(angle);
+        else if (angle >= 0)
+            angle = 180 - angle;
+
+        setRotationAngle(angle);
+    }
+
+    @Override
+    public void updateTile(int dt) {
+        super.updateTile(dt);
+
+        accumShootingTime += dt;
+    }
+
+    public boolean isEnemyOnRange() {
+        return getCritterDistance(this.getVictim()) <= this.getShootingRange();
+    }
+
+    public void justShoot() {
+        accumShootingTime = 0;
+    }
+
+    public boolean mustShoot() {
+        return accumShootingTime >= shootingTime;
+    }
+
+    public void findNearestCritter(List<Critter> critters) {
+        Critter nearestCritter = null;
+        double nearestDistance = Double.MAX_VALUE;
+
+        for (Critter critter : critters) {
+            double distance = getCritterDistance(critter);
+
+            if (distance <= nearestDistance && distance <= this.getShootingRange() ||
+                    (distance <= nearestDistance && Math.abs(distance - this.getShootingRange()) < 0.001)) {
+                nearestDistance = distance;
+                nearestCritter = critter;
+            }
+        }
+
+        if (nearestCritter != null)
+            this.setVictim(nearestCritter);
+    }
+
+    private double getCritterDistance(Critter critter) {
+        double dx = Math.abs(this.getXCenter() - critter.getXCenter());
+        double dy = Math.abs((Utils.getCanvasHeight() + this.getYCenter()) - critter.getYCenter());
+        double ndx, ndy;
+
+        if (dx < dy) {
+            double prop = dx / dy;
+            ndy = Utils.getCellHeight() / 2;
+            ndx = ndy * prop;
+        } else {
+            double prop = dy / dx;
+            ndx = Utils.getCellHeight() / 2;
+            ndy = ndx * prop;
+        }
+
+        return Math.sqrt(dx * dx + dy * dy) - Math.sqrt(ndx * ndx + ndy * ndy);
+    }
+
     private void initialize() {
+        shootingTime = GameRules.getTowerShootingTime(type);
         shootingRange = GameRules.getTowerShootingRange(type);
 
         shootingRangePaint = new Paint();

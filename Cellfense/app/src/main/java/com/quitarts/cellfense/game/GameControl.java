@@ -1,15 +1,17 @@
 package com.quitarts.cellfense.game;
 
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
 import android.graphics.Typeface;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 
 import com.quitarts.cellfense.ContextContainer;
+import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
@@ -34,6 +36,9 @@ public class GameControl {
     private Config config;
     private Tower addTower;
     private boolean executeLevel = false;
+    private boolean pathBlock;
+    private Paint blockMessagePaint;
+    private int blockMessageAccumDt;
 
     public enum GameState {
         SCREEN1, SCREEN2
@@ -46,6 +51,8 @@ public class GameControl {
     public GameControl(GameSurfaceView gameSurfaceView, SurfaceHolder surfaceHolder, int startLevel) {
         this.gameSurfaceView = gameSurfaceView;
         this.surfaceHolder = surfaceHolder;
+
+        initialize();
 
         this.config = new Config();
         config.wave = startLevel;
@@ -126,6 +133,7 @@ public class GameControl {
 
         gameWorld.update(dt);
         hud.update(dt);
+        updateBlockingMessage(dt);
     }
 
     // Draw Game
@@ -137,6 +145,7 @@ public class GameControl {
                 gameWorld.drawAddingTower(canvas, addTower);
             }
             hud.drawBaseHud(canvas);
+            drawBlockingMessage(canvas);
         }
     }
 
@@ -158,18 +167,31 @@ public class GameControl {
                 addTower.setX(ev.getX());
                 addTower.setY(hud.getTopBoundOfHud() - addTower.getHeight());
             }
+
+            // User is moving a tower
+            if (gameWorld.isTowerTouch((int) ev.getX(), (int) ev.getY())) {
+                Tower tower = gameWorld.getTower((int) ev.getX(), (int) ev.getY());
+                gameWorld.removeTower(tower);
+                addTower = tower;
+            }
         }
 
         return true;
     }
 
     public boolean eventActionMove(MotionEvent ev) {
-        // User is sliding a Tower
         if (addTower != null) {
+            // User is sliding a Tower
             addTower.setX(ev.getX());
             addTower.setY(ev.getY() - addTower.getHeight());
             addTower.setX(addTower.getXFix());
             addTower.setY(addTower.getYFix());
+
+            // Change color if tower is over another placed tower
+            if (gameWorld.isEmptyPlace(addTower))
+                addTower.getGraphic().mutate().setColorFilter(null);
+            else
+                addTower.getGraphic().mutate().setColorFilter(Color.argb(70, 255, 0, 0), PorterDuff.Mode.SRC_IN);
         }
 
         return true;
@@ -193,7 +215,10 @@ public class GameControl {
 
             // Release Tower
             if (addTower != null) {
-                gameWorld.addTower((Tower) addTower.clone());
+                if (gameWorld.isBlocking(addTower))
+                    pathBlock = true;
+                else if (gameWorld.isEmptyPlace(addTower))
+                    gameWorld.addTower(addTower);
 
                 synchronized (addTower) {
                     addTower = null;
@@ -293,9 +318,13 @@ public class GameControl {
     }
 
     private void initialize() {
-        SharedPreferences sharedPreferences = ContextContainer.getContext().getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
-        Typeface tf = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
-        Typeface tf2 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/apexnew_medium.ttf");
+        Typeface font1 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
+
+        blockMessagePaint = new Paint();
+        blockMessagePaint.setTypeface(font1);
+        blockMessagePaint.setTextSize(30 * Utils.getScaleFactor());
+        blockMessagePaint.setColor(Color.WHITE);
+        blockMessagePaint.setAntiAlias(true);
     }
 
     public class Config {
@@ -304,5 +333,26 @@ public class GameControl {
         public int resources = 0;
         public int wave = 0;
         public int maxUnits = GameRules.getMaxTowers();
+    }
+
+    private void updateBlockingMessage(int dt) {
+        if (pathBlock) {
+            blockMessageAccumDt += dt;
+            if (blockMessageAccumDt >= 1500) {
+                pathBlock = false;
+                blockMessageAccumDt = 0;
+            }
+        }
+    }
+
+    private void drawBlockingMessage(Canvas canvas) {
+        if (pathBlock) {
+            String blockingMessage = ContextContainer.getContext().getString(R.string.Block_Message);
+
+            canvas.drawText(blockingMessage,
+                    (Utils.getCanvasWidth() / 2) - blockMessagePaint.measureText(blockingMessage) / 2,
+                    (Utils.getCanvasHeight() / 2) - blockMessagePaint.getTextSize(),
+                    blockMessagePaint);
+        }
     }
 }

@@ -4,7 +4,8 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
+import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 
 import com.quitarts.cellfense.ContextContainer;
@@ -14,10 +15,11 @@ import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
-import com.quitarts.cellfense.game.object.base.GraphicObject;
+import com.quitarts.pathfinder.AStarPathFinder;
+import com.quitarts.pathfinder.Path;
+import com.quitarts.pathfinder.PathFinder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class GameWorld {
     private int width;
@@ -101,7 +103,31 @@ public class GameWorld {
     }
 
     private void processTowers(int dt) {
+        synchronized (towers) {
+            for (Tower tower : towers) {
+                if (tower.getVictim() == null || !tower.isEnemyOnRange() || tower.getVictim().getLives() <= 0) {
+                    tower.findNearestCritter(critters);
+                }
 
+                if (tower.getVictim() != null) {
+                    float damage = GameRules.getDamageEnemy(tower, tower.getVictim());
+                    tower.aim(tower.getVictim(), offsetY);
+                    if (tower.mustShoot()) {
+                        tower.start();
+                        tower.getVictim().hit(damage);
+                        tower.justShoot();
+
+                        if (tower.getVictim().getLives() <= 0) {
+                            critters.remove(tower.getVictim());
+                            tower.setVictim(null);
+                        }
+                    }
+                }
+
+                // override tower method
+                tower.updateTile(dt);
+            }
+        }
     }
 
     private void processCritters(int dt) {
@@ -157,6 +183,7 @@ public class GameWorld {
                 }
 
                 canvas.save();
+                canvas.rotate(tower.getRotationAngle(), tower.getXCenter(), heightVisible + tower.getYCenter() - offsetY);
                 tower.getGraphic().draw(canvas);
                 canvas.restore();
             }
@@ -171,6 +198,22 @@ public class GameWorld {
                 critter.getGraphic().setBounds((int) critter.getX(), (int) critter.getY() - offsetY, (int) critter.getX() + critter.getWidth(), (int) critter.getY() + critter.getHeight() - offsetY);
                 critter.getGraphic().draw(canvas);
                 canvas.restore();
+
+                // Draw energyBar
+                Rect energyBarRect = new Rect();
+                Paint energyBarPaint = new Paint();
+                energyBarRect.left = (int) critter.getX();
+                energyBarRect.top = (int) critter.getY() - offsetY;
+                energyBarRect.right = (int) (critter.getX() + critter.getWidth() * critter.getLives() / 100);
+                energyBarRect.bottom = (int) (critter.getY() - offsetY - (Utils.getCellHeight() * 5 / 100));
+
+                if (critter.getLives() <= 25)
+                    energyBarPaint.setColor(Color.rgb(214, 0, 48));
+                else
+                    energyBarPaint.setColor(Color.rgb(43, 180, 9));
+
+
+                canvas.drawRect(energyBarRect, energyBarPaint);
             }
         }
     }
@@ -213,6 +256,13 @@ public class GameWorld {
         }
     }
 
+    public void removeTower(Tower tower) {
+        synchronized (towers) {
+            towers.remove(tower);
+            gameMap.setUnit(tower.getXGrid(), tower.getYGrid() + 1, 0);
+        }
+    }
+
     public void addCritters(ArrayList<Critter> critters) {
         synchronized (critters) {
             this.critters = critters;
@@ -234,5 +284,58 @@ public class GameWorld {
             for (Critter critter : critters)
                 critter.setCrittersPath(gameMap);
         }
+    }
+
+    public boolean isTowerTouch(int x, int y) {
+        Tower tower = getTower(x, y);
+        if (tower != null)
+            return true;
+
+        return false;
+    }
+
+    public boolean isEmptyPlace(Tower tower) {
+        for (Tower towerPlaced : towers) {
+            if (tower.getGraphic().getBounds().intersect(towerPlaced.getGraphic().getBounds()))
+                return false;
+        }
+
+        return true;
+    }
+
+    public boolean isBlocking(Tower tower) {
+        boolean isBlocking = false;
+        int state = gameMap.getUnit(tower.getXGrid(), tower.getYGrid() + 1);
+
+        gameMap.setUnit(tower.getXGrid(), tower.getYGrid() + 1, 1);
+        synchronized (critters) {
+            for (Critter critter : critters) {
+                if (isBlocking)
+                    break;
+
+                PathFinder finder = new AStarPathFinder(gameMap, 500, false);
+                for (int position = 0; position < 8; position++) {
+                    Path path = finder.findPath(new UnitMover(0), Utils.convertXWorldToGrid(critter.getX()), 0, position, Utils.GAMEMAP_HEIGHT - 1);
+                    if (path == null) {
+                        isBlocking = true;
+                        break;
+                    }
+                }
+            }
+        }
+        gameMap.setUnit(tower.getXGrid(), tower.getYGrid() + 1, state);
+
+        return isBlocking;
+    }
+
+    public Tower getTower(int x, int y) {
+        synchronized (towers) {
+            for (Tower tower : towers) {
+                if (tower.getGraphic().getBounds().contains(x, y))
+                    return tower;
+            }
+        }
+
+        return null;
     }
 }

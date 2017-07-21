@@ -1,7 +1,9 @@
 package com.quitarts.cellfense.game.object;
 
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.PorterDuff;
+import android.graphics.Rect;
 
 import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.FactoryDrawable;
@@ -28,6 +30,7 @@ public class Critter extends MovableTileAnimation {
     private Path shortestPath;
     private boolean isSlow;
     private int accumSlowTime;
+    private float lives = 100;
 
     public enum CritterType {
         SPIDER, CATERPILLAR, CHIP
@@ -68,6 +71,15 @@ public class Critter extends MovableTileAnimation {
             return true;
 
         return false;
+    }
+
+    public void hit(float damage) {
+        if (lives > 0)
+            lives -= damage;
+    }
+
+    public float getLives() {
+        return lives;
     }
 
     public void getSlugish() {

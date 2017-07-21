@@ -85,6 +85,10 @@ public class Utils {
         return (int) (y / cellHeight);
     }
 
+    public static float getScaleFactor() {
+        return ContextContainer.getContext().getResources().getDisplayMetrics().density;
+    }
+
     /////////////////////////////////////////////////////////////////////////////////////////
     ////////////////////////////NOT REFACTORED///////////////////////////////////////////////
     /////////////////////////////////////////////////////////////////////////////////////////
@@ -111,9 +115,6 @@ public class Utils {
         return 130;
     }
 
-    public static float getScaleFactor() {
-        return ContextContainer.getContext().getResources().getDisplayMetrics().density;
-    }
 
     public static int GetEnergyBarSize() {
         /*
