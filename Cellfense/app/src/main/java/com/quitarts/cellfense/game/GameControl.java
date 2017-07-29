@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -170,11 +171,25 @@ public class GameControl {
     public boolean eventActionDown(MotionEvent ev) {
         if (enemyState == EnemyState.MOVING) {
             // User is trying to shoot using LTA
-            if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY())) {
+            if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY()) &&
+                    config.resources >= GameRules.getLTAPrice()) {
                 ltaStartShoot = true;
                 actionMoveX = (int) ev.getX();
                 actionMoveY = (int) ev.getY();
                 holdingDownStartTime = System.currentTimeMillis();
+            }
+
+            // User activate tower special ability (bomb or crazy tower)
+            Tower tower = gameWorld.getTower((int) ev.getX(), (int) ev.getY());
+            if (tower != null) {
+                if (tower.getType() == Tower.TowerType.TURRET_BOMB && tower.hasCharge()) {
+                    tower.detonate();
+                    ((Vibrator) ContextContainer.getContext().getSystemService(ContextContainer.getContext().VIBRATOR_SERVICE)).vibrate(300);
+                } else if (tower.getType() != Tower.TowerType.TURRET_BOMB && !tower.isCrazy() &&
+                        config.resources >= GameRules.getTowerCrazyPrice()) {
+                    tower.setCrazy(true);
+                    config.resources -= GameRules.getTowerCrazyPrice();
+                }
             }
         }
 

@@ -107,7 +107,18 @@ public class GameWorld {
         synchronized (towers) {
             for (Tower tower : towers) {
                 if (tower.getVictim() == null || !tower.isEnemyOnRange() || tower.getVictim().getLives() <= 0) {
-                    tower.findNearestCritter(critters);
+                    if (tower.getType() == Tower.TowerType.TURRET_BOMB) {
+                        if (tower.isDetonated()) {
+                            tower.setDetonated(false);
+                            List<Critter> crittersFound = tower.findNearestCritters(critters);
+                            for (Critter critter : crittersFound) {
+                                float damage = GameRules.getDamageEnemy(tower, critter);
+                                critter.hit(damage);
+                            }
+                        }
+                    } else {
+                        tower.findNearestCritter(critters);
+                    }
                 }
 
                 if (tower.getVictim() != null) {
@@ -202,6 +213,11 @@ public class GameWorld {
                 canvas.rotate(tower.getRotationAngle(), tower.getXCenter(), heightVisible + tower.getYCenter() - offsetY);
                 tower.getGraphic().draw(canvas);
                 canvas.restore();
+
+                if (tower.isExplosionInProgress())
+                    canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getExplosionRange(), tower.getExplosionRangePaint());
+
+                canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getShootingRange(), tower.getShootingRangePaint());
             }
         }
     }
