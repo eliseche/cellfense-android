@@ -7,6 +7,7 @@ import android.view.KeyEvent;
 
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.game.GameSurfaceView;
+import com.quitarts.cellfense.game.sound.SoundManager;
 
 /**
  * Main screen used for running the game
@@ -20,6 +21,8 @@ public class GameActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_game);
+
+        SoundManager.getInstance();
 
         Bundle extras = getIntent().getExtras();
         int level = extras.getInt("level");
