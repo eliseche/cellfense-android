@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.Typeface;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -16,6 +17,7 @@ import com.quitarts.cellfense.Utils;
 import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Tower;
+import com.quitarts.cellfense.game.sound.SoundManager;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -170,11 +172,25 @@ public class GameControl {
     public boolean eventActionDown(MotionEvent ev) {
         if (enemyState == EnemyState.MOVING) {
             // User is trying to shoot using LTA
-            if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY())) {
+            if (gameWorld.isLtaTouch((int) ev.getX(), (int) ev.getY()) &&
+                    config.resources >= GameRules.getLTAPrice()) {
                 ltaStartShoot = true;
                 actionMoveX = (int) ev.getX();
                 actionMoveY = (int) ev.getY();
                 holdingDownStartTime = System.currentTimeMillis();
+            }
+
+            // User activate tower special ability (bomb or crazy tower)
+            Tower tower = gameWorld.getTower((int) ev.getX(), (int) ev.getY());
+            if (tower != null) {
+                if (tower.getType() == Tower.TowerType.TURRET_BOMB && tower.hasCharge()) {
+                    tower.detonate();
+                    ((Vibrator) ContextContainer.getContext().getSystemService(ContextContainer.getContext().VIBRATOR_SERVICE)).vibrate(300);
+                } else if (tower.getType() != Tower.TowerType.TURRET_BOMB && !tower.isCrazy() &&
+                        config.resources >= GameRules.getTowerCrazyPrice()) {
+                    tower.setCrazy(true);
+                    config.resources -= GameRules.getTowerCrazyPrice();
+                }
             }
         }
 
@@ -245,11 +261,14 @@ public class GameControl {
 
             // Release Tower
             if (addTower != null) {
-                if (gameWorld.isBlocking(addTower))
+                if (gameWorld.isBlocking(addTower)) {
                     pathBlock = true;
-                else if (hud.isHudAreaTouch((int) ev.getY()) || !gameWorld.isEmptyPlace(addTower)) {
+                    SoundManager.getInstance().playSound(SoundManager.Sound.LOCK2);
+                } else if (hud.isHudAreaTouch((int) ev.getY()) || !gameWorld.isEmptyPlace(addTower)) {
                     if (movingAddedTower)
                         config.resources += addTower.getPrice();
+
+                    SoundManager.getInstance().playSound(SoundManager.Sound.LOCK2);
                 } else if (gameWorld.isEmptyPlace(addTower)) {
                     if (movingAddedTower) {
                         gameWorld.addTower(addTower);
@@ -257,7 +276,9 @@ public class GameControl {
                         if (addTower.getPrice() <= config.resources && gameWorld.getTowersCount() <= config.maxUnits) {
                             gameWorld.addTower(addTower);
                             config.resources -= addTower.getPrice();
-                        }
+                            SoundManager.getInstance().playSound(SoundManager.Sound.LOCK1);
+                        } else
+                            SoundManager.getInstance().playSound(SoundManager.Sound.LOCK2);
                     }
                 }
 
@@ -273,6 +294,8 @@ public class GameControl {
                     hud.nextWaveClicked((int) ev.getX(), (int) ev.getY())) {
                 executeLevel = true;
                 sendCrittersWave();
+                SoundManager.getInstance().stopAllMusic();
+                SoundManager.getInstance().playMusic(SoundManager.Music.ACTION, true);
             }
         }
 
@@ -326,6 +349,7 @@ public class GameControl {
             bullet.start();
             gameWorld.addBullet((Bullet) bullet.clone());
             config.resources -= GameRules.getLTAPrice();
+            SoundManager.getInstance().playSound(SoundManager.Sound.FIREBALL);
         }
 
         ltaStartShoot = false;
@@ -401,6 +425,9 @@ public class GameControl {
         enemyState = EnemyState.UNAVAILABLE;
         gameState = GameState.SCREEN1;
         gameWorld.slideToTopScreen();
+
+        SoundManager.getInstance().stopAllMusic();
+        SoundManager.getInstance().playMusic(SoundManager.Music.STRATEGY, true);
     }
 
     private void updateBlockingMessage(int dt) {

@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
-import com.quitarts.cellfense.torefactor.SoundManager;
+import com.quitarts.cellfense.game.sound.SoundManager;
 import com.quitarts.cellfense.ui.GameActivity;
 
 /**
@@ -45,26 +45,22 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             gameThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    SoundManager.loadMusic();
-                    SoundManager.loadSounds();
-                    SoundManager.playMusic(SoundManager.MusicType.STRATEGY, true, true, true);
-                    SoundManager.playMusic(SoundManager.MusicType.ACTION, true, true, true);
+                    SoundManager.getInstance().stopAllMusic();
+                    SoundManager.getInstance().playMusic(SoundManager.Music.STRATEGY, true);
                     gameControl.play();
                 }
             });
             gameThread.start();
         } else {
             gameControl.resume();
-            SoundManager.resumeMusics();
-
         }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         gameControl.pause();
-        if (gameThread != null)
-            SoundManager.pauseMusics();
+        //if (gameThread != null)
+        //SoundManager.getInstance().stopAllMusic();
     }
 
     @Override
@@ -106,7 +102,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         try {
             gameThread.join();
             gameThread = null;
-            SoundManager.cleanup();
+            SoundManager.getInstance().stopAllMusic();
         } catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage(), e);
         }

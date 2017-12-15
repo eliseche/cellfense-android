@@ -15,6 +15,7 @@ import com.quitarts.cellfense.game.object.Bullet;
 import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
+import com.quitarts.cellfense.game.sound.SoundManager;
 import com.quitarts.pathfinder.AStarPathFinder;
 import com.quitarts.pathfinder.Path;
 import com.quitarts.pathfinder.PathFinder;
@@ -107,7 +108,18 @@ public class GameWorld {
         synchronized (towers) {
             for (Tower tower : towers) {
                 if (tower.getVictim() == null || !tower.isEnemyOnRange() || tower.getVictim().getLives() <= 0) {
-                    tower.findNearestCritter(critters);
+                    if (tower.getType() == Tower.TowerType.TURRET_BOMB) {
+                        if (tower.isDetonated()) {
+                            tower.setDetonated(false);
+                            List<Critter> crittersFound = tower.findNearestCritters(critters);
+                            for (Critter critter : crittersFound) {
+                                float damage = GameRules.getDamageEnemy(tower, critter);
+                                critter.hit(damage);
+                            }
+                        }
+                    } else {
+                        tower.findNearestCritter(critters);
+                    }
                 }
 
                 if (tower.getVictim() != null) {
@@ -122,6 +134,11 @@ public class GameWorld {
                             critters.remove(tower.getVictim());
                             tower.setVictim(null);
                         }
+
+                        if (tower.getType() == Tower.TowerType.TURRET_CAPACITOR)
+                            SoundManager.getInstance().playSound(SoundManager.Sound.MACHINE_GUN);
+                        else if (tower.getType() == Tower.TowerType.TURRET_TANK)
+                            SoundManager.getInstance().playSound(SoundManager.Sound.CANNON);
                     }
                 }
 
@@ -202,6 +219,11 @@ public class GameWorld {
                 canvas.rotate(tower.getRotationAngle(), tower.getXCenter(), heightVisible + tower.getYCenter() - offsetY);
                 tower.getGraphic().draw(canvas);
                 canvas.restore();
+
+                if (tower.isExplosionInProgress())
+                    canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getExplosionRange(), tower.getExplosionRangePaint());
+
+                canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getShootingRange(), tower.getShootingRangePaint());
             }
         }
     }
