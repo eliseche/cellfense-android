@@ -16,6 +16,7 @@ import com.quitarts.cellfense.game.object.Critter;
 import com.quitarts.cellfense.game.object.Lta;
 import com.quitarts.cellfense.game.object.Tower;
 import com.quitarts.cellfense.game.sound.SoundManager;
+import com.quitarts.particles.Explosion;
 import com.quitarts.pathfinder.AStarPathFinder;
 import com.quitarts.pathfinder.Path;
 import com.quitarts.pathfinder.PathFinder;
@@ -35,6 +36,7 @@ public class GameWorld {
     private ArrayList<Bullet> bullets = new ArrayList<>();
     private ArrayList<Tower> towers = new ArrayList<>();
     private ArrayList<Critter> critters = new ArrayList<>();
+    private ArrayList<Explosion> explosions = new ArrayList<>();
     private GameMap gameMap;
 
     public GameWorld(int width, int height, GameControl gameControl) {
@@ -54,10 +56,11 @@ public class GameWorld {
     // region Update world
     public void update(int dt) {
         processOffsetY();
-        processLta(dt);
         processBullets(dt);
         processTowers(dt);
         processCritters(dt);
+        processLta(dt);
+        processExplosions(dt);
     }
 
     // Update offsetY value to be used to slide background
@@ -69,12 +72,6 @@ public class GameWorld {
             offsetY = height / 2;
 
         Utils.setOffsetY(offsetY);
-    }
-
-    private void processLta(int dt) {
-        lta.updateTile(dt);
-        lta.setX(Utils.getCanvasWidth() / 2 - (lta.getWidth() / 2));
-        lta.setY(height - (lta.getHeight() + lta.getHeight() / 2) - offsetY);
     }
 
     private void processBullets(int dt) {
@@ -130,7 +127,18 @@ public class GameWorld {
                         tower.getVictim().hit(damage);
                         tower.justShoot();
 
+                        // Add explosion on enemy hit
+                        float dx = tower.getVictim().getXCenter() - tower.getXCenter();
+                        float dy = (tower.getVictim().getYCenter() - offsetY) - tower.getYCenter();
+                        float v = (float) Math.sqrt(tower.getCritterDistance(tower.getVictim()));
+                        explosions.add(new Explosion(30, (int) tower.getVictim().getXCenter(), (int) tower.getVictim().getYCenter() - offsetY,
+                                dx / v, dy / v));
+
                         if (tower.getVictim().getLives() <= 0) {
+                            // Add explosion on enemy destroyed
+                            explosions.add(new Explosion(60, (int) tower.getVictim().getXCenter(), (int) tower.getVictim().getYCenter() - offsetY,
+                                    0, 0));
+
                             critters.remove(tower.getVictim());
                             tower.setVictim(null);
                         }
@@ -172,24 +180,35 @@ public class GameWorld {
             }
         }
     }
+
+    private void processLta(int dt) {
+        lta.updateTile(dt);
+        lta.setX(Utils.getCanvasWidth() / 2 - (lta.getWidth() / 2));
+        lta.setY(height - (lta.getHeight() + lta.getHeight() / 2) - offsetY);
+    }
+
+    private void processExplosions(int dt) {
+        synchronized (explosions) {
+            for (Explosion explosion : explosions) {
+                explosion.update(dt);
+            }
+        }
+    }
     // endregion
 
     // region Draw world
     public void drawWorld(Canvas canvas) {
         drawBackground(canvas);
-        drawLta(canvas);
         drawBullets(canvas);
         drawTowers(canvas);
         drawCritters(canvas);
+        drawLta(canvas);
+        drawExplosions(canvas);
     }
 
     // Draw backgorund image, slide it based on offsetY
     private void drawBackground(Canvas canvas) {
         canvas.drawBitmap(background, 0, -offsetY, null);
-    }
-
-    private void drawLta(Canvas canvas) {
-        lta.getGraphic().draw(canvas);
     }
 
     private void drawBullets(Canvas canvas) {
@@ -253,6 +272,16 @@ public class GameWorld {
 
                 canvas.drawRect(energyBarRect, energyBarPaint);
             }
+        }
+    }
+
+    private void drawLta(Canvas canvas) {
+        lta.getGraphic().draw(canvas);
+    }
+
+    private void drawExplosions(Canvas canvas) {
+        for (Explosion explosion : explosions) {
+            explosion.draw(canvas);
         }
     }
     // endregion
@@ -398,6 +427,18 @@ public class GameWorld {
         bullets.clear();
         critters.clear();
         for (Tower tower : towers)
-            tower.setVictim(null);
+            if (tower.getType() == Tower.TowerType.TURRET_BOMB)
+                tower.resetBombState();
+    }
+
+    public int calculateTowersPrice() {
+        int totalPrice = 0;
+
+        synchronized (towers) {
+            for (Tower tower : towers)
+                totalPrice += tower.getPrice();
+        }
+
+        return totalPrice;
     }
 }

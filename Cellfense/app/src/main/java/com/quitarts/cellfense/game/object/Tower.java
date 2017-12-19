@@ -230,7 +230,18 @@ public class Tower extends TileAnimation {
         return isExplosionInProgress;
     }
 
-    private double getCritterDistance(Critter critter) {
+    public void resetBombState() {
+        isDetonated = false;
+        isExplosionInProgress = false;
+        numberOfExplosions = 1;
+
+        initialize();
+
+        setTileAnimation(FactoryDrawable.DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
+        start();
+    }
+
+    public double getCritterDistance(Critter critter) {
         double dx = Math.abs(this.getXCenter() - critter.getXCenter());
         double dy = Math.abs((Utils.getCanvasHeight() + this.getYCenter()) - critter.getYCenter());
         double ndx, ndy;

@@ -45,7 +45,7 @@ public class GameControl {
     private int pathBlockMessageAccumDt;
     private boolean sellTower;
     private Paint sellTowerMessagePaint;
-
+    private boolean resetResources = true;
 
     public enum GameState {
         SCREEN1, SCREEN2
@@ -143,7 +143,9 @@ public class GameControl {
 
                 if (config.lives > 0) {
                     // Win
+                    gameSurfaceView.showLevelWinDialog();
                 } else {
+                    // Lose
                     gameSurfaceView.showPlayAgainDialog();
                 }
             }
@@ -382,7 +384,10 @@ public class GameControl {
         if (config.wave <= levels.size()) {
             ArrayList<Critter> critters = new CritterFactory().createPresetLevel(levels.get(config.wave));
             gameWorld.addCritters(critters);
-            config.resources = resources.get(config.wave);
+            if (resetResources)
+                config.resources = resources.get(config.wave);
+            else
+                config.resources = resources.get(config.wave) - calculateTowersPrice();
         }
     }
 
@@ -419,6 +424,7 @@ public class GameControl {
     }
 
     public void reset() {
+        resetResources = false;
         config.lives = GameRules.getStartLives();
         config.score = 0;
         gameWorld.reset();
@@ -428,6 +434,10 @@ public class GameControl {
 
         SoundManager.getInstance().stopAllMusic();
         SoundManager.getInstance().playMusic(SoundManager.Music.STRATEGY, true);
+    }
+
+    private int calculateTowersPrice() {
+        return gameWorld.calculateTowersPrice();
     }
 
     private void updateBlockingMessage(int dt) {
