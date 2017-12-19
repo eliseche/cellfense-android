@@ -185,8 +185,8 @@ public class GameControl {
             // User activate tower special ability (bomb or crazy tower)
             Tower tower = gameWorld.getTower((int) ev.getX(), (int) ev.getY());
             if (tower != null) {
-                if (tower.getType() == Tower.TowerType.TURRET_BOMB && tower.hasCharge()) {
-                    tower.detonate();
+                if (tower.getType() == Tower.TowerType.TURRET_BOMB && tower.getBombExplosion().hasCharge()) {
+                    tower.getBombExplosion().detonate();
                     ((Vibrator) ContextContainer.getContext().getSystemService(ContextContainer.getContext().VIBRATOR_SERVICE)).vibrate(300);
                 } else if (tower.getType() != Tower.TowerType.TURRET_BOMB && !tower.isCrazy() &&
                         config.resources >= GameRules.getTowerCrazyPrice()) {
