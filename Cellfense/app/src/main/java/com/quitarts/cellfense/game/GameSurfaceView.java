@@ -38,7 +38,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
             gameThread = new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    SoundManager.getInstance().stopAllMusic();
+                    SoundManager.getInstance().stopMusics();
                     SoundManager.getInstance().playMusic(SoundManager.Music.STRATEGY, true);
                     gameControl.play();
                 }
@@ -55,7 +55,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     public void surfaceDestroyed(SurfaceHolder surfaceHolder) {
         gameControl.pause();
         if (gameThread != null)
-            SoundManager.getInstance().stopAllMusic();
+            SoundManager.getInstance().stopMusics();
     }
 
     @Override
@@ -103,7 +103,7 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
         try {
             gameThread.join();
             gameThread = null;
-            SoundManager.getInstance().cleanup();
+            SoundManager.getInstance().stopMusics();
         } catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage(), e);
         }

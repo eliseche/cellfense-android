@@ -298,7 +298,7 @@ public class GameControl {
                     hud.nextWaveClicked((int) ev.getX(), (int) ev.getY())) {
                 executeLevel = true;
                 sendCrittersWave();
-                SoundManager.getInstance().stopAllMusic();
+                SoundManager.getInstance().stopMusics();
                 SoundManager.getInstance().playMusic(SoundManager.Music.ACTION, true);
             }
         }
@@ -438,7 +438,7 @@ public class GameControl {
         gameState = GameState.SCREEN1;
         gameWorld.slideToTopScreen();
 
-        SoundManager.getInstance().stopAllMusic();
+        SoundManager.getInstance().stopMusics();
         SoundManager.getInstance().playMusic(SoundManager.Music.STRATEGY, true);
     }
 
