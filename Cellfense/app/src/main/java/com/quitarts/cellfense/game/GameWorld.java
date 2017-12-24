@@ -106,8 +106,8 @@ public class GameWorld {
             for (Tower tower : towers) {
                 if (tower.getVictim() == null || !tower.isEnemyOnRange() || tower.getVictim().getLives() <= 0) {
                     if (tower.getType() == Tower.TowerType.TURRET_BOMB) {
-                        if (tower.isDetonated()) {
-                            tower.setDetonated(false);
+                        if (tower.getBombExplosion().isDetonated()) {
+                            tower.getBombExplosion().setDetonated(false);
                             List<Critter> crittersFound = tower.findNearestCritters(critters);
                             for (Critter critter : crittersFound) {
                                 float damage = GameRules.getDamageEnemy(tower, critter);
@@ -239,8 +239,8 @@ public class GameWorld {
                 tower.getGraphic().draw(canvas);
                 canvas.restore();
 
-                if (tower.isExplosionInProgress())
-                    canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getExplosionRange(), tower.getExplosionRangePaint());
+                if (tower.getType() == Tower.TowerType.TURRET_BOMB && tower.getBombExplosion().isExplosionInProgress())
+                    canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getBombExplosion().getExplosionRange(), tower.getBombExplosion().getExplosionRangePaint());
 
                 canvas.drawCircle(tower.getXCenter(), tower.getYCenter() + heightVisible - offsetY, tower.getShootingRange(), tower.getShootingRangePaint());
             }

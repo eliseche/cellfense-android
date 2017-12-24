@@ -34,12 +34,7 @@ public class Tower extends TileAnimation {
     private int crazyTime = 2000;
     private int accumCrazyTime;
     // Bomb vars
-    private boolean isDetonated;
-    private boolean isExplosionInProgress;
-    private int numberOfExplosions = 1;
-    private float explosionRange;
-    private Paint explosionRangePaint;
-    private MaskFilter bombBlur = new BlurMaskFilter(8, BlurMaskFilter.Blur.NORMAL);
+    private TurretBombExplosion bombExplosion;
 
     public enum TowerType {
         TURRET_CAPACITOR,
@@ -67,6 +62,9 @@ public class Tower extends TileAnimation {
             type = TowerType.TURRET_BOMB;
 
         initialize();
+
+        if (type == TowerType.TURRET_BOMB)
+            bombExplosion = new TurretBombExplosion(shootingRange);
     }
 
     @Override
@@ -134,8 +132,8 @@ public class Tower extends TileAnimation {
 
         accumShootingTime += dt;
 
-        if (isExplosionInProgress)
-            processExplosion(dt);
+        if (bombExplosion != null && bombExplosion.isExplosionInProgress)
+            bombExplosion.processExplosion(dt);
 
         if (isCrazy)
             processCrazy(dt);
@@ -197,48 +195,12 @@ public class Tower extends TileAnimation {
         isCrazy = crazy;
     }
 
-    public boolean isDetonated() {
-        return isDetonated;
-    }
-
-    public void setDetonated(boolean detonated) {
-        isDetonated = detonated;
-    }
-
-    public boolean hasCharge() {
-        if (numberOfExplosions > 0)
-            return true;
-
-        return false;
-    }
-
-    public void detonate() {
-        isDetonated = true;
-        isExplosionInProgress = true;
-        numberOfExplosions--;
-    }
-
-    public float getExplosionRange() {
-        return explosionRange;
-    }
-
-    public Paint getExplosionRangePaint() {
-        return explosionRangePaint;
-    }
-
-    public boolean isExplosionInProgress() {
-        return isExplosionInProgress;
+    public TurretBombExplosion getBombExplosion() {
+        return bombExplosion;
     }
 
     public void resetBombState() {
-        isDetonated = false;
-        isExplosionInProgress = false;
-        numberOfExplosions = 1;
-
-        initialize();
-
-        setTileAnimation(FactoryDrawable.DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
-        start();
+        bombExplosion.resetBombState();
     }
 
     public double getCritterDistance(Critter critter) {
@@ -263,35 +225,12 @@ public class Tower extends TileAnimation {
         price = GameRules.getTowerPrice(type);
         shootingTime = GameRules.getTowerShootingTime(type);
         shootingRange = GameRules.getTowerShootingRange(type);
-        explosionRange = shootingRange;
 
         shootingRangePaint = new Paint();
         shootingRangePaint.setAlpha(255);
         shootingRangePaint.setAntiAlias(false);
         shootingRangePaint.setStyle(Paint.Style.STROKE);
         shootingRangePaint.setColor(Color.rgb(0, 120, 0));
-
-        explosionRangePaint = new Paint();
-        explosionRangePaint.setAlpha(255);
-        explosionRangePaint.setAntiAlias(false);
-        explosionRangePaint.setStyle(Paint.Style.STROKE);
-        explosionRangePaint.setColor(Color.rgb(0, 0, 60));
-        explosionRangePaint.setMaskFilter(bombBlur);
-        explosionRangePaint.setStrokeWidth(Utils.getCellWidth());
-    }
-
-    private void processExplosion(int dt) {
-        if (explosionRangePaint.getAlpha() > 0) {
-            float alphaValue = explosionRangePaint.getAlpha() - shootingRangePaint.getAlpha() * 5 / 100;
-            float rangeValue = explosionRange - shootingRange * 5 / 100;
-            if (alphaValue < 10) {
-                setTileAnimation(FactoryDrawable.DrawableType.GUN_TURRET_BOMB_CRATER, 1, 1, 0, false);
-                isExplosionInProgress = false;
-            } else {
-                explosionRangePaint.setAlpha((int) alphaValue);
-                explosionRange = rangeValue;
-            }
-        }
     }
 
     private void processCrazy(int dt) {
@@ -310,6 +249,90 @@ public class Tower extends TileAnimation {
             shootingRangePaint.setStrokeWidth(1);
             accumCrazyTime = 0;
             isCrazy = false;
+        }
+    }
+
+    public class TurretBombExplosion {
+        private boolean isDetonated;
+        private boolean isExplosionInProgress;
+        private int numberOfExplosions = 1;
+        private float explosionRange;
+        private Paint explosionRangePaint;
+        private MaskFilter bombBlur = new BlurMaskFilter(8, BlurMaskFilter.Blur.NORMAL);
+
+        public TurretBombExplosion(float explosionRange) {
+            this.explosionRange = explosionRange;
+
+            initialize();
+        }
+
+        public boolean isDetonated() {
+            return isDetonated;
+        }
+
+        public void setDetonated(boolean detonated) {
+            isDetonated = detonated;
+        }
+
+        public boolean isExplosionInProgress() {
+            return isExplosionInProgress;
+        }
+
+        public void setExplosionInProgress(boolean explosionInProgress) {
+            isExplosionInProgress = explosionInProgress;
+        }
+
+        public float getExplosionRange() {
+            return explosionRange;
+        }
+
+        public Paint getExplosionRangePaint() {
+            return explosionRangePaint;
+        }
+
+        public boolean hasCharge() {
+            if (numberOfExplosions > 0)
+                return true;
+
+            return false;
+        }
+
+        public void detonate() {
+            isDetonated = true;
+            isExplosionInProgress = true;
+            numberOfExplosions--;
+        }
+
+        public void resetBombState() {
+            bombExplosion = new TurretBombExplosion(shootingRange);
+
+            setTileAnimation(FactoryDrawable.DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
+            start();
+        }
+
+        private void initialize() {
+            explosionRangePaint = new Paint();
+            explosionRangePaint.setAlpha(255);
+            explosionRangePaint.setAntiAlias(false);
+            explosionRangePaint.setStyle(Paint.Style.STROKE);
+            explosionRangePaint.setColor(Color.rgb(0, 0, 60));
+            explosionRangePaint.setMaskFilter(bombBlur);
+            explosionRangePaint.setStrokeWidth(Utils.getCellWidth());
+        }
+
+        private void processExplosion(int dt) {
+            if (explosionRangePaint.getAlpha() > 0) {
+                float alphaValue = explosionRangePaint.getAlpha() - shootingRangePaint.getAlpha() * 5 / 100;
+                float rangeValue = explosionRange - shootingRange * 5 / 100;
+                if (alphaValue < 10) {
+                    setTileAnimation(FactoryDrawable.DrawableType.GUN_TURRET_BOMB_CRATER, 1, 1, 0, false);
+                    isExplosionInProgress = false;
+                    stopAndReset();
+                } else {
+                    explosionRangePaint.setAlpha((int) alphaValue);
+                    explosionRange = rangeValue;
+                }
+            }
         }
     }
 }
