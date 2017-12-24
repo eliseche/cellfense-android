@@ -1,7 +1,6 @@
 package com.quitarts.cellfense.game;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Handler;
@@ -14,6 +13,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.quitarts.cellfense.ContextContainer;
 import com.quitarts.cellfense.R;
@@ -27,13 +27,12 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private GameActivity gameActivity;
     private GameControl gameControl;
     private Thread gameThread;
-    private ProgressDialog progressDialog;
+    private Dialog dialog;
 
     public GameSurfaceView(Context context, int level) {
         super(context);
 
         this.gameActivity = (GameActivity) context;
-        showLoading();
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         this.gameControl = new GameControl(this, surfaceHolder, level);
@@ -41,6 +40,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        showLoading();
+
         if (gameThread == null) {
             gameThread = new Thread(new Runnable() {
                 @Override
@@ -109,12 +110,15 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void showLoading() {
-        progressDialog = ProgressDialog.show(gameActivity, "", getResources().getText(R.string.loading_message), true);
+        dialog = new Dialog(gameActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.loading);
+        dialog.show();
     }
 
     public void cancelLoading() {
-        if (progressDialog != null && progressDialog.isShowing())
-            progressDialog.cancel();
+        if (dialog != null && dialog.isShowing())
+            dialog.cancel();
     }
 
     public void showExitDialog() {
@@ -193,6 +197,61 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
                         destroyGame();
                         gameActivity.finish();
                         dialog.dismiss();
+                    }
+                });
+
+                dialog.show();
+            }
+        });
+    }
+
+    public void showLevelWinDialog() {
+        new Handler(Looper.getMainLooper()).post(new Runnable() {
+            @Override
+            public void run() {
+                Typeface font1 = Typeface.createFromAsset(ContextContainer.getContext().getAssets(), "fonts/Discognate.ttf");
+
+                final Dialog dialog = new Dialog(gameActivity);
+                dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                dialog.setCancelable(false);
+                dialog.setContentView(R.layout.alert_yes_no_neutral);
+
+                TextView description = (TextView) dialog.findViewById(R.id.alert_yes_no_neutral_description);
+                Button positive = (Button) dialog.findViewById(R.id.alert_yes_no_neutral_positive);
+                Button negative = (Button) dialog.findViewById(R.id.alert_yes_no_neutral_negative);
+                Button neutral = (Button) dialog.findViewById(R.id.alert_yes_no_neutral_neutral);
+
+                description.setTypeface(font1);
+                description.setText("LEVEL COMPLETE!\nPlay again?");
+
+                positive.setTypeface(font1);
+                positive.setText("Yes");
+                positive.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        gameControl.reset();
+                        gameControl.resume();
+                        dialog.dismiss();
+                    }
+                });
+
+                negative.setTypeface(font1);
+                negative.setText("No");
+                negative.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        destroyGame();
+                        gameActivity.finish();
+                        dialog.dismiss();
+                    }
+                });
+
+                neutral.setTypeface(font1);
+                neutral.setText("Post");
+                neutral.setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Toast.makeText(gameActivity, "Available soon", Toast.LENGTH_LONG).show();
                     }
                 });
 
