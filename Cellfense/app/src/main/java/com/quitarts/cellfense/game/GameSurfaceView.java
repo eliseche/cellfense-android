@@ -1,13 +1,13 @@
 package com.quitarts.cellfense.game;
 
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.Window;
+
 import com.quitarts.cellfense.R;
 import com.quitarts.cellfense.game.sound.SoundManager;
 import com.quitarts.cellfense.ui.GameActivity;
@@ -19,13 +19,12 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     private GameActivity gameActivity;
     private GameControl gameControl;
     private Thread gameThread;
-    private ProgressDialog progressDialog;
+    private Dialog dialog;
 
     public GameSurfaceView(Context context, int level) {
         super(context);
 
         this.gameActivity = (GameActivity) context;
-        showLoading();
         SurfaceHolder surfaceHolder = getHolder();
         surfaceHolder.addCallback(this);
         this.gameControl = new GameControl(this, surfaceHolder, level);
@@ -33,6 +32,8 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
 
     @Override
     public void surfaceCreated(SurfaceHolder surfaceHolder) {
+        showLoading();
+
         if (gameThread == null) {
             gameThread = new Thread(new Runnable() {
                 @Override
@@ -117,11 +118,14 @@ public class GameSurfaceView extends SurfaceView implements SurfaceHolder.Callba
     }
 
     public void showLoading() {
-        progressDialog = ProgressDialog.show(gameActivity, "", getResources().getText(R.string.loading_message), true);
+        dialog = new Dialog(gameActivity);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.loading);
+        dialog.show();
     }
 
     public void cancelLoading() {
-        if (progressDialog != null && progressDialog.isShowing())
-            progressDialog.cancel();
+        if (dialog != null && dialog.isShowing())
+            dialog.cancel();
     }
 }
