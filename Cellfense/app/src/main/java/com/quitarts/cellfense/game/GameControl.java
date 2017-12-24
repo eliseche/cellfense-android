@@ -95,11 +95,13 @@ public class GameControl {
             }
 
             // Draw if updateFlag = true, else sleep
-            if (updateFlag) {
+            if (updateFlag && !paused) {
                 synchronized (surfaceHolder) {
                     canvas = surfaceHolder.lockCanvas();
-                    draw(canvas);
-                    surfaceHolder.unlockCanvasAndPost(canvas);
+                    if (canvas != null) {
+                        draw(canvas);
+                        surfaceHolder.unlockCanvasAndPost(canvas);
+                    }
                 }
             } else {
                 try {
@@ -317,6 +319,10 @@ public class GameControl {
 
     public void pause() {
         paused = true;
+    }
+
+    public void start() {
+        playing = true;
     }
 
     public void stop() {
