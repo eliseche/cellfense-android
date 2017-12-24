@@ -77,6 +77,15 @@ public class SoundManager {
             mediaPlayer.stop();
     }
 
+    public void cleanup() {
+        soundPool.release();
+        Collection<MediaPlayer> mediaPlayers = musics.values();
+        for (MediaPlayer mediaPlayer : mediaPlayers) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+        }
+    }
+
     private static void init() {
         initSound();
         initMusic();
