@@ -57,7 +57,7 @@ public class LevelActivity extends Activity implements AdapterView.OnItemClickLi
         // Load levels from xml and fill data in LevelDataSet
         loadAndParseLevels();
         LinkedHashMap<Integer, ArrayList<String>> levels = LevelDataSet.getLevels();
-        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_WORLD_READABLE);
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", MODE_PRIVATE);
 
         levelScore = new LinkedHashMap<>();
         for (Integer level : levels.keySet())

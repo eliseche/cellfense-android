@@ -53,7 +53,7 @@ public class ArtActivity extends Activity {
     }
 
     private void init() {
-        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_WORLD_READABLE);
+        SharedPreferences sharedPreferences = getSharedPreferences("myPrefs", Context.MODE_PRIVATE);
         imageCounterLimit = Integer.valueOf(sharedPreferences.getString(Utils.UNLOCKED_ART, "0"));
     }
 
