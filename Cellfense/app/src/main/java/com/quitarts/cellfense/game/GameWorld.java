@@ -234,6 +234,10 @@ public class GameWorld {
                     turretTankBase.draw(canvas);
                 }
 
+                if (tower.getType() == Tower.TowerType.TURRET_BOMB) {
+                    tower.start();
+                }
+
                 canvas.save();
                 canvas.rotate(tower.getRotationAngle(), tower.getXCenter(), heightVisible + tower.getYCenter() - offsetY);
                 tower.getGraphic().draw(canvas);

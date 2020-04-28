@@ -165,6 +165,8 @@ public class Hud {
             return true;
         } else if (buttonBomb.isClicked(x, y)) {
             Tower towerBomb = new Tower(FactoryDrawable.DrawableType.GUN_TURRET_BOMB_SPRITE, 1, 8, 150, true);
+            towerBomb.setX(x);
+            towerBomb.setY(y);
             gameControl.addTower(towerBomb);
 
             return true;

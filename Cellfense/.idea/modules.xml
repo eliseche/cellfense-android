@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Cellfense.iml" filepath="$PROJECT_DIR$/Cellfense.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/Cellfense-app.iml" filepath="$PROJECT_DIR$/app/Cellfense-app.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cellfense-android-Cellfense.iml" filepath="$PROJECT_DIR$/cellfense-android-Cellfense.iml" />
     </modules>
   </component>
 </project>

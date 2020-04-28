@@ -167,6 +167,8 @@ public class Tower extends TileAnimation {
 
         if (nearestCritter != null)
             this.setVictim(nearestCritter);
+        else
+            this.setVictim(null);
     }
 
     public List<Critter> findNearestCritters(List<Critter> critters) {

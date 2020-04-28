@@ -115,8 +115,10 @@ public class FactoryDrawable {
                 case GUN_TURRET_CAPACITOR_SPRITE:
                 case GUN_TURRET_TANK_SPRITE:
                 case ENEMY_SPIDER_SPRITE:
-                case ENEMY_CATERPILLAR_SPRITE:
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 7, (int) Utils.getCellHeight(), false);
+                    break;
+                case ENEMY_CATERPILLAR_SPRITE:
+                    bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 7, (int) (Utils.getCellHeight() * 1.5f), false);
                     break;
                 case GUN_TURRET_BOMB_SPRITE:
                     bitmap = Bitmap.createScaledBitmap(bitmap, (int) Utils.getCellWidth() * 8, (int) Utils.getCellHeight(), false);
