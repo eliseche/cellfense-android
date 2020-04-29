@@ -88,38 +88,4 @@ public class Utils {
     public static float getScaleFactor() {
         return ContextContainer.getContext().getResources().getDisplayMetrics().density;
     }
-
-    /////////////////////////////////////////////////////////////////////////////////////////
-    ////////////////////////////NOT REFACTORED///////////////////////////////////////////////
-    /////////////////////////////////////////////////////////////////////////////////////////
-    public static final int DIALOG_GAMEOVER_ID = 0;
-    public static final int DIALOG_PLAYAGAIN_ID = 1;
-    public static final int DIALOG_LOADING_OFF_ID = 2;
-    public static final int DIALOG_BACK_BUTTON_PRESS_ID = 3;
-    public static final int DIALOG_BACK_BUTTON_CONFIRM_ID = 4;
-    public static final int DIALOG_LEVEL_PASS_ID = 5;
-    public static final int ACTIVITY_LEVELS_ID = 6;
-    public static final int FROM_LEVEL_SELECTION_ID = 7;
-    public static final int POST_SCORE_ID = 8;
-    public static final int TUTORIAL_S5_L1_POPUP_WIN = 9;
-    public static final int TUTORIAL_S11_L2_POPUP_LOSE = 10;
-    public static final int TUTORIAL_S11_L2_POPUP_WIN = 11;
-    public static final int TUTORIAL_S19_L3_POPUP_LOSE = 12;
-    public static final int TUTORIAL_S19_L3_POPUP_WIN = 13;
-    public static final int TUTORIAL_S26_L4_POPUP_LOSE = 14;
-    public static final int TUTORIAL_S26_L4_POPUP_WIN = 15;
-    public static final int TUTORIAL_END = 16;
-    public static final int NEW_UNLOCKED_ART = 17;
-
-    public static float getCellSize() {
-        return 130;
-    }
-
-
-    public static int GetEnergyBarSize() {
-        /*
-         * 5% of the cellSize
-    	 */
-        return (int) getCellSize() * 5 / 100;
-    }
 }

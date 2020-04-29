@@ -30,7 +30,7 @@ public class CritterFactory {
             critter.setX(Utils.convertXGridToWorld(Integer.parseInt(level[++pos].toString()) - 1));
             critter.setY(Utils.convertYGridToWorld(Integer.parseInt(level[++pos].toString()) - 1));
             critter.setDirection(0, 1);
-            critter.setSpeedY(GameRules.getCritterSpeed(critter.getEnemyType()) * Utils.getCellHeight());
+            critter.setSpeedY(GameRules.getCritterSpeed(critter.getEnemyType()));
 
             critters.add(critter);
         }

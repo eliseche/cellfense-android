@@ -51,11 +51,11 @@ public class GameRules {
     public static float getTowerShootingRange(Tower.TowerType type) {
         switch (type) {
             case TURRET_CAPACITOR:
-                return Utils.getCellSize() * 1.8f;
+                return Utils.getCellHeight() * 1.8f;
             case TURRET_TANK:
-                return Utils.getCellSize() * 1.8f;
+                return Utils.getCellHeight() * 1.8f;
             case TURRET_BOMB:
-                return Utils.getCellSize() * 1.8f;
+                return Utils.getCellHeight() * 1.8f;
         }
 
         return 0f;
@@ -81,11 +81,11 @@ public class GameRules {
     public static float getCritterSpeed(Critter.CritterType type) {
         switch (type) {
             case SPIDER:
-                return 1.4f;
+                return Utils.getCellHeight() * 1.4f;
             case CATERPILLAR:
-                return 1.0f;
+                return Utils.getCellHeight() * 1.0f;
             case CHIP:
-                return 3.0f;
+                return Utils.getCellHeight() * 3.0f;
         }
 
         return 0;

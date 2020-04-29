@@ -132,10 +132,10 @@ public class Critter extends MovableTileAnimation {
     private void updateSlowSpeed(int dt) {
         accumSlowTime += dt;
         if (accumSlowTime <= GameRules.getCritterSlowTime()) {
-            setSpeedY((GameRules.getCritterSpeed(type) * 0.5f) * Utils.getCellHeight());
+            setSpeedY(GameRules.getCritterSpeed(type) * 0.5f);
         } else {
             isSlow = false;
-            setSpeedY(GameRules.getCritterSpeed(type) * Utils.getCellHeight());
+            setSpeedY(GameRules.getCritterSpeed(type));
             List<GraphicObject> critterTiles = getGraphics();
             for (GraphicObject critterTile : critterTiles)
                 critterTile.getGraphic().mutate().setColorFilter(null);
